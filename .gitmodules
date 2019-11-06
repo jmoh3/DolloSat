@@ -1,0 +1,6 @@
+[submodule "quicksampler"]
+	path = quicksampler
+	url = https://github.com/RafaelTupynamba/quicksampler.git
+[submodule "z3"]
+	path = z3
+	url = https://github.com/Z3Prover/z3.git
