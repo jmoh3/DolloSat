@@ -1,0 +1,308 @@
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b c -d -e 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e 0
+-a b c -d -f 0
+-a b c -d -f 0
+-a b c -d 0
+b c 0
+b c -d -f 0
+b c 0
+-a b -e -f 0
+-a b -d -e -f 0
+-a b -e -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+-a b c d -e -f 0
+-a b -e -f 0
+-a b -d -e -f 0
+-a b -e -f 0
+c -d -e -f 0
+b c -e 0
+b c -d -e -f 0
+b c -e 0
+-a c -d -e -f 0
+-a b c -e 0
+-a b c -d -e -f 0
+-a b c -e 0
+b c 0
+b c -d 0
+b c 0
+b c -d -e -f 0
+-a b c -d 0
+b c -d -e -f 0
+b c 0
+b c -d -f 0
+b c 0
+-a b -e -f 0
+-a b -d -e -f 0
+-a b -e 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+-a b c -e 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e 0
+-a b -e -f 0
+-a b -e 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c d -e -f 0
+-a b -d -e -f 0
+-a b -d -e -f 0
+-a b -e -f 0
+-a b c -d 0
+-a b c -d -f 0
+b c -d -e -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b c -e 0
+-a b c -d 0
+-a b c -d 0
+b c -d -e -f 0
+-a b c -d 0
+-a b c -d 0
+b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -e 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -e 0
+b c -e 0
+c -d -e -f 0
+b c -d -e -f 0
+c -d -e -f 0
+-a b c -e 0
+-a c -d -e -f 0
+-a b c -d -e -f 0
+-a c -d -e -f 0
+b c -e 0
+c -d -e -f 0
+b c -d -e -f 0
+c -d -e -f 0
+-a b -e -f 0
+-a b -d -e -f 0
+b c 0
+b c -d -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+b c 0
+b c -d -f 0
+b c 0
+b c -d 0
+b c -d -e -f 0
+-a b c -d 0
+b c 0
+b c -d 0
+b c -e 0
+c -d -e -f 0
+b c -d -e -f 0
+-a b c -e 0
+-a c -d -e -f 0
+-a b c -d -e -f 0
+b c 0
+c -d -e 0
+b c -d -f 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b -e 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e 0
+-a b -e -f 0
+b c -e 0
+c -d -e -f 0
+b c -d -e -f 0
+-a b c -e 0
+-a c -d -e -f 0
+-a b c -d -e -f 0
+-a b -e -f 0
+-a b -d -e -f 0
+b c 0
+b c -d -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+b c 0
+b c -d 0
+b c -d -e -f 0
+-a b c -d 0
+b c -e 0
+c -d -e -f 0
+b c -d -e -f 0
+-a b c -e 0
+-a c -d -e -f 0
+-a b c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e 0
+c -d -e -f 0
+c -d -e 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e 0
+c -d -e 0
+c -d -e 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a c -d -e -f 0
+b c -d -e -f 0
+b c -d -e -f 0
+c -d -e -f 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+b c -d 0
+b c -d -f 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+b c -d 0
+b c -d 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+b c -d -f 0
+b c -d -f 0
+b c 0
+b c -d -f 0
+-a b -e -f 0
+-a b -d -e -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+c -d -e -f 0
+b c -e 0
+b c -d -e -f 0
+-a c -d -e -f 0
+-a b c -e 0
+-a b c -d -e -f 0
+b c 0
+b c -d 0
+b c -d -e -f 0
+-a b c -d 0
+b c 0
+b c -d -f 0
+-a b -e -f 0
+-a b -d -e -f 0
+-a b c d -e -f 0
+-a b c -d -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d 0
+-a b c -d -f 0
+-a b c -d -e 0
+-a b c -d -e -f 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
+-a b c -d -e -f 0
