@@ -13,16 +13,44 @@ def get_lookup(filename):
 lookup = get_lookup('forbidden-submatrix-enumerations.txt')
 
 def get_clause(submatrix, submatrix_labels):
+    labels_dictionary = {
+        "a":[0,0],
+        "b":[0,1],
+        "c":[1,0],
+        "d":[1,1],
+        "e":[2,0],
+        "f":[2,1],
+    }
+    
     key = ''
 
     for row in submatrix:
         for elem in row:
-            key += str(elem)
+            if(elem == 1):
+                key += str(elem)
+            else:
+                key += '0'
     
+    clause_raw = ""
+
     if key in lookup:
-        return lookup[key]
+        clause_raw = lookup[key]
     else:
         return None
+    
+    split_cnf = clause_raw.split()[:-1]
+    clause_cnf = ""
+    for argument in split_cnf:
+        if(argument[0] == '-'):
+            clause_cnf += '-'
+            indacies_matrix = labels_dictionary[argument[1]]
+            clause_cnf += str(submatrix_labels[indacies_matrix[0]][indacies_matrix[1]])
+        else:
+            indacies_matrix = labels_dictionary[argument[0]]
+            clause_cnf += str(submatrix_labels[indacies_matrix[0]][indacies_matrix[1]])
+        clause_cnf += " "
+    clause_cnf += "0"
+    return clause_cnf
 
 def generate_cnf(matrix, outfilename):
     write_file = open(outfilename, 'w')
