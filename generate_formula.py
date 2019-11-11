@@ -1,3 +1,5 @@
+import sys
+
 def get_lookup(filename):
     lookup_file = open(filename, 'r')
     lookup = {}
@@ -43,13 +45,13 @@ def get_clause(submatrix, submatrix_labels):
     for argument in split_cnf:
         if(argument[0] == '-'):
             clause_cnf += '-'
-            indacies_matrix = labels_dictionary[argument[1]]
-            clause_cnf += str(submatrix_labels[indacies_matrix[0]][indacies_matrix[1]])
+            indicies_matrix = labels_dictionary[argument[1]]
+            clause_cnf += str(submatrix_labels[indicies_matrix[0]][indicies_matrix[1]])
         else:
-            indacies_matrix = labels_dictionary[argument[0]]
-            clause_cnf += str(submatrix_labels[indacies_matrix[0]][indacies_matrix[1]])
+            indicies_matrix = labels_dictionary[argument[0]]
+            clause_cnf += str(submatrix_labels[indicies_matrix[0]][indicies_matrix[1]])
         clause_cnf += " "
-    clause_cnf += "0"
+    clause_cnf += "0\n"
     return clause_cnf
 
 def generate_cnf(matrix, outfilename):
@@ -79,4 +81,17 @@ def generate_cnf(matrix, outfilename):
     
     write_file.close()
 
-generate_cnf([[1, 0, 0, 0],[0, 1, 0, 1],[1, 1, 1, 1],[1, 0, 0, 1]],'hello.txt')
+def read_matrix(filename):
+    matrix_file = open(filename, 'r')
+    lines = matrix_file.readlines()[2:]
+    matrix = []
+    
+    for line in lines:
+        matrix.append([int(x) for x in line.split()])
+    
+    return matrix
+
+if __name__ == '__main__':
+    matrix = read_matrix(sys.argv[1])
+    generate_cnf(matrix,sys.argv[2])
+    print('done')
