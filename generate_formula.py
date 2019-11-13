@@ -4,11 +4,10 @@ def get_lookup(filename):
     lookup_file = open(filename, 'r')
     lookup = {}
     lines = lookup_file.readlines()
+    lookup_file.close()
 
     for idx in range(0, len(lines), 2):
         lookup[lines[idx].strip()] = lines[idx+1]
-
-    lookup_file.close()
 
     return lookup
 
@@ -65,8 +64,6 @@ def get_zero_labels(matrix):
                 labels[i][j] = zero_count
                 zero_count += 1
     
-    print(zero_count-1)
-
     return labels
 
 def generate_cnf(matrix, outfilename):
@@ -90,7 +87,6 @@ def generate_cnf(matrix, outfilename):
                                            [zero_labels[row3][col1], zero_labels[row3][col2]]]
                                             
                         clause = get_clause(submatrix, submatrix_labels)
-                        # print(clause)
 
                         if clause:
                             write_file.write(clause)
@@ -108,11 +104,7 @@ def read_matrix(filename):
     
     return matrix
 
-def reconstruct_solutions(matrix, filename):
-    soln_file = open(filename, 'r')
-    soln_lines = soln_file.readlines()
-
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
     generate_cnf(matrix, sys.argv[2])
-    print('done')
+    print('Generated cnf formula')
