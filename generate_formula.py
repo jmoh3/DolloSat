@@ -52,12 +52,28 @@ def get_clause(submatrix, submatrix_labels):
             clause_cnf += str(submatrix_labels[indicies_matrix[0]][indicies_matrix[1]])
         clause_cnf += " "
     clause_cnf += "0\n"
+
     return clause_cnf
+
+def get_zero_labels(matrix):
+    labels = [[0 for x in range(len(matrix[0]))] for y in range(len(matrix))]
+    zero_count = 1
+
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if matrix[i][j] == 0:
+                labels[i][j] = zero_count
+                zero_count += 1
+    
+    print(zero_count-1)
+
+    return labels
 
 def generate_cnf(matrix, outfilename):
     write_file = open(outfilename, 'w')
     num_rows = len(matrix)
     num_cols = len(matrix[0])
+    zero_labels = get_zero_labels(matrix)
 
     for row1 in range(len(matrix)):
         for row2 in range(len(matrix)):
@@ -69,11 +85,12 @@ def generate_cnf(matrix, outfilename):
                                     [matrix[row2][col1], matrix[row2][col2]],
                                     [matrix[row3][col1], matrix[row3][col2]]]
 
-                        submatrix_labels = [[row1 * num_rows + col1, row1 * num_rows + col2],
-                                            [row2 * num_rows + col1, row2 * num_rows + col2],
-                                            [row3 * num_rows + col1, row3 * num_rows + col2]]
+                        submatrix_labels = [[zero_labels[row1][col1], zero_labels[row1][col2]],
+                                           [zero_labels[row2][col1], zero_labels[row2][col2]],
+                                           [zero_labels[row3][col1], zero_labels[row3][col2]]]
                                             
                         clause = get_clause(submatrix, submatrix_labels)
+                        # print(clause)
 
                         if clause:
                             write_file.write(clause)
@@ -91,7 +108,11 @@ def read_matrix(filename):
     
     return matrix
 
+def reconstruct_solutions(matrix, filename):
+    soln_file = open(filename, 'r')
+    soln_lines = soln_file.readlines()
+
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
-    generate_cnf(matrix,sys.argv[2])
+    generate_cnf(matrix, sys.argv[2])
     print('done')
