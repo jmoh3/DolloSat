@@ -1,3 +1,8 @@
+# Data generated files
+data/*.samples
+data/*.cnf
+data/*.valid
+
 # Python 
 # Byte-compiled / optimized / DLL files
 __pycache__/
