@@ -1,7 +1,22 @@
 import sys
+import time
 
-def get_lookup(filename):
-    lookup_file = open(filename, 'r')
+# USAGE
+# $ python3 generate_formula.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
+# 
+# Generates a boolean formula in CNF format from the matrix in INPUT_MATRIX_FILENAME
+# and writes it to SOLUTION_FILENAME.
+#
+# The boolean formula corresponds the flipping of 0's in a binary matrix to 2's
+# in such a way that produces a 1-dollo phylogeny.
+#
+# Each clause in the formula corresponds to a given submatrix of the input matrix,
+# where a certain flipping of 0's within the submatrix could produce a forbidden
+# matrix. The clause evaluates to true if the flipping configuration does NOT produce
+# a forbidden submatrix, false if it does.
+
+def get_lookup(lookup_filename):
+    lookup_file = open(lookup_filename, 'r')
     lookup = {}
     lines = lookup_file.readlines()
     lookup_file.close()
@@ -11,9 +26,7 @@ def get_lookup(filename):
 
     return lookup
 
-lookup = get_lookup('forbidden-submatrix-enumerations.txt')
-
-def get_clause(submatrix, submatrix_labels):
+def get_clause(submatrix, submatrix_labels, lookup):
     labels_dictionary = {
         "a":[0,0],
         "b":[0,1],
@@ -67,16 +80,24 @@ def get_zero_labels(matrix):
     return labels
 
 def generate_cnf(matrix, outfilename):
+    lookup = get_lookup('forbidden-submatrix-enumerations.txt')
+
     write_file = open(outfilename, 'w')
     num_rows = len(matrix)
     num_cols = len(matrix[0])
     zero_labels = get_zero_labels(matrix)
 
     for row1 in range(len(matrix)):
-        for row2 in range(len(matrix)):
-            for row3 in range(len(matrix)):
+        for row2 in range(row1+1, len(matrix)):
+            if row1 == row2:
+                continue
+            for row3 in range(row2+1, len(matrix)):
+                if row3 == row2 or row3 == row1:
+                    continue
                 for col1 in range(len(matrix[0])):
-                    for col2 in range(len(matrix[0])):
+                    for col2 in range(col2+1, len(matrix[0])):
+                        if col1 == col2:
+                            continue
 
                         submatrix = [[matrix[row1][col1], matrix[row1][col2]],
                                     [matrix[row2][col1], matrix[row2][col2]],
@@ -86,7 +107,7 @@ def generate_cnf(matrix, outfilename):
                                            [zero_labels[row2][col1], zero_labels[row2][col2]],
                                            [zero_labels[row3][col1], zero_labels[row3][col2]]]
                                             
-                        clause = get_clause(submatrix, submatrix_labels)
+                        clause = get_clause(submatrix, submatrix_labels, lookup)
 
                         if clause:
                             write_file.write(clause)
@@ -106,5 +127,7 @@ def read_matrix(filename):
 
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
+    start = time.time()
     generate_cnf(matrix, sys.argv[2])
-    print('Generated cnf formula')
+    end = time.time()
+    print(f'Generated cnf formula in {end - start} seconds')

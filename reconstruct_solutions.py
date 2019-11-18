@@ -2,14 +2,55 @@ import copy
 import sys
 from generate_formula import read_matrix
 
-def reconstruct_solutions(matrix, filename, write_file, num_samples):
-    solution_file = open(filename, 'r')
+# USAGE
+# $ python3 reconstruct_solutions.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME NUM_SAMPLES
+#
+# Writes max(NUM_SAMPLES, number of samples in SOLUTION_FILENAME) k-dollo phylogeny matrices
+# reconstructed from samples in SOLUTION_FILENAME to samples.txt.
+#
+# For each '1' in a solution, the corresponding zero in the input matrix specified in 
+# INPUT_MATRIX_FILENAME will be flipped to a 2 to indicate a mutation that was present in 
+# a sample but then lost due to a copy number abberation.
+#
+# For a INPUT_MATRIX_FILENAME whose contents look like this:
+# 10 # cells
+# 10 # mutations
+# 1 0 0 0 0 0 0 1 0 0
+# 0 0 0 0 0 1 0 0 0 0
+# 0 0 0 0 0 1 0 0 0 0
+# 0 0 0 0 0 1 0 0 0 0
+# 0 0 0 0 0 1 0 0 0 1
+# 0 0 0 0 0 1 0 0 0 0
+# 0 0 0 0 0 1 0 0 0 1
+# 0 0 0 0 0 1 1 0 0 0
+# 0 0 0 1 0 1 0 0 0 1
+# 0 0 0 0 0 1 1 0 0 0
+# 0 0 0 0 0 1 0 0 0 0
+#
+# One of the reconstructed solutions written to SOLUTION_FILENAME could look like this:
+#
+# 1 2 0 0 0 0 0 1 2 2 
+# 0 0 0 0 2 1 0 2 2 0 
+# 2 2 2 0 2 1 0 0 2 2 
+# 2 0 0 0 0 1 0 0 2 0 
+# 0 0 0 0 2 1 0 2 2 1 
+# 0 2 2 0 2 1 2 0 2 2 
+# 2 0 0 0 2 1 0 2 2 1 
+# 0 2 0 0 2 1 1 0 0 2 
+# 2 0 0 1 0 1 2 0 2 1 
+# 0 2 0 0 2 1 1 0 0 2 
+# 2 0 0 0 2 1 2 0 2 2
+#
+# Reconstructed matrices are separated by '======================'
+
+def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
+    solution_file = open(solution_filename, 'r')
     solution_lines = solution_file.readlines()
     solution_file.close()
 
     solutions = []
 
-    for x in range(1, num_samples*2, 2):
+    for x in range(1, max(len(solution_lines), num_samples*2), 2):
         solution = solution_lines[x]
         solution_matrix = copy.deepcopy(matrix)
 
