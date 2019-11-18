@@ -89,9 +89,15 @@ def generate_cnf(matrix, outfilename):
 
     for row1 in range(len(matrix)):
         for row2 in range(row1+1, len(matrix)):
+            if row1 == row2:
+                continue
             for row3 in range(row2+1, len(matrix)):
+                if row3 == row2 or row3 == row1:
+                    continue
                 for col1 in range(len(matrix[0])):
                     for col2 in range(col2+1, len(matrix[0])):
+                        if col1 == col2:
+                            continue
 
                         submatrix = [[matrix[row1][col1], matrix[row1][col2]],
                                     [matrix[row2][col1], matrix[row2][col2]],
