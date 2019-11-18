@@ -8,6 +8,8 @@ First, clone this repository with the ```-r``` flag in order to ensure submodule
 
 This tool uses QuickSampler to sample solutions to the 1-Dollo Phylogeny Problem. Follow the instructions to install dependencies for QuickSampler as found here: https://github.com/RafaelTupynamba/quicksampler.
 
+Then, run ```build-project.sh``` to build the project.
+
 After this, you should be good to go!
 
 ## Usage Instructions
