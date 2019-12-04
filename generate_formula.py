@@ -95,7 +95,7 @@ def generate_cnf(matrix, outfilename):
                 if row3 == row2 or row3 == row1:
                     continue
                 for col1 in range(len(matrix[0])):
-                    for col2 in range(col2+1, len(matrix[0])):
+                    for col2 in range(col1+1, len(matrix[0])):
                         if col1 == col2:
                             continue
 
@@ -118,11 +118,25 @@ def generate_cnf(matrix, outfilename):
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
     lines = matrix_file.readlines()[2:]
-    matrix = []
     
-    for line in lines:
-        matrix.append([int(x) for x in line.split()])
-    
+    return [[int(x) for x in line.split()] for line in lines]
+
+def read_and_preprocess_matrix(filename):
+    matrix_file = open(filename, 'r')
+
+    # filter out duplicate rows
+    lines = matrix_file.readlines()[2:]
+    lines = set([line.strip('\n') for line in lines])
+    matrix = [[int(x) for x in line.split()] for line in lines]
+
+    # filter out duplicate columns
+    columns = [[row[x] for row in matrix] for x in range(len(matrix[0]))]
+    columns = [' '.join(map(str,column)) for column in columns]
+    columns = list(set(columns))
+    columns = [column.split() for column in columns]
+
+    matrix = [[int(columns[x][y]) for x in range(len(columns))] for y in range(len(columns[0]))]
+
     return matrix
 
 if __name__ == '__main__':

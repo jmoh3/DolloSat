@@ -2,10 +2,11 @@ from generate_formula import get_zero_labels, generate_cnf, read_matrix
 import sys
 import time
 
+# USAGE:
 #
+# $ python3 brute_force_solver.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
 #
-#
-#
+# This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 
 def find_all_solutions(matrix, solution_filename):
     label_matrix = get_zero_labels(matrix)
