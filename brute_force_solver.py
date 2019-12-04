@@ -3,12 +3,11 @@ import sys
 import time
 
 # USAGE:
-#
 # $ python3 brute_force_solver.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
 #
 # This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 
-def find_all_solutions(matrix, solution_filename):
+def find_all_solutions(matrix, solution_filename, write=True):
     label_matrix = get_zero_labels(matrix)
     labels = []
 
@@ -23,7 +22,10 @@ def find_all_solutions(matrix, solution_filename):
     clauses = cnf_file.readlines()
     cnf_file.close()
 
-    solution_file = open(solution_filename, 'w')
+    solution_file = None
+    if write:
+        solution_file = open(solution_filename, 'w')
+    count = 0
 
     for i in gen_binary_strings(len(labels)):
         satisifes = True
@@ -36,7 +38,13 @@ def find_all_solutions(matrix, solution_filename):
 
         # if it does, add it to solutions
         if satisifes:
-            solution_file.write(i + '\n')
+            if write:
+                solution_file.write(i + '\n')
+            else:
+                count += 1
+    
+    if not write:
+        return count
     
 def check_clause(solution, clause):
     literals = clause.split()[:-1]
@@ -68,4 +76,4 @@ if __name__ == '__main__':
     start = time.time()
     find_all_solutions(matrix, sys.argv[2])
     end = time.time()
-    print(f'Generated all solutions in {end - start} seconds (lol)')
+    print(f'Generated all solutions in {end - start} seconds')

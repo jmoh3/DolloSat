@@ -13,33 +13,19 @@ from generate_formula import read_matrix
 # a sample but then lost due to a copy number abberation.
 #
 # For a INPUT_MATRIX_FILENAME whose contents look like this:
-# 10 # cells
-# 10 # mutations
-# 1 0 0 0 0 0 0 1 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 1
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 1
-# 0 0 0 0 0 1 1 0 0 0
-# 0 0 0 1 0 1 0 0 0 1
-# 0 0 0 0 0 1 1 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
+# 4 # cells
+# 4 # mutations
+# 0 0 1 0
+# 1 0 0 0
+# 1 0 0 0
+# 1 0 0 0
 #
 # One of the reconstructed solutions written to SOLUTION_FILENAME could look like this:
 #
-# 1 2 0 0 0 0 0 1 2 2 
-# 0 0 0 0 2 1 0 2 2 0 
-# 2 2 2 0 2 1 0 0 2 2 
-# 2 0 0 0 0 1 0 0 2 0 
-# 0 0 0 0 2 1 0 2 2 1 
-# 0 2 2 0 2 1 2 0 2 2 
-# 2 0 0 0 2 1 0 2 2 1 
-# 0 2 0 0 2 1 1 0 0 2 
-# 2 0 0 1 0 1 2 0 2 1 
-# 0 2 0 0 2 1 1 0 0 2 
-# 2 0 0 0 2 1 2 0 2 2
+# 0 0 1 0 
+# 1 0 2 0 
+# 1 0 0 0 
+# 1 2 0 0 
 #
 # Reconstructed matrices are separated by '======================'
 
@@ -50,8 +36,8 @@ def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
 
     solutions = []
 
-    for x in range(1, max(len(solution_lines), num_samples*2), 2):
-        solution = solution_lines[x]
+    for x in range(max(len(solution_lines), num_samples)):
+        solution = solution_lines[x][3:].strip('\n')
         solution_matrix = copy.deepcopy(matrix)
 
         solution_idx = 0
@@ -63,6 +49,7 @@ def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
                         solution_matrix[i][j] = 2
                     solution_idx += 1
 
+        assert(solution_idx == len(solution))
         solutions.append(solution_matrix)
     
     write_file = open(write_file, 'w')

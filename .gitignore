@@ -158,3 +158,7 @@ dmypy.json
 *.exe
 *.out
 *.app
+
+# Other stuff
+samples.txt
+tmp.cnf
