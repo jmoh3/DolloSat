@@ -2,7 +2,7 @@ import sys
 from generate_formula import read_matrix
 
 # USAGE:
-# python3 test.py MATRIX_FILENAME SOLUTION_FILENAME
+# $ python3 test.py MATRIX_FILENAME SOLUTION_FILENAME
 #
 # Checks for the prescence of forbidden submatrices in reconstructed samples
 
@@ -39,6 +39,7 @@ def verify_solution(matrix):
                         if submatrix in forbidden_submatrices:
                             print(f'Found forbidden submatrix: {submatrix}')
                             return False
+                            
     return True
 
 def verify_solutions(matrix_filename, solution_filename):
@@ -46,7 +47,8 @@ def verify_solutions(matrix_filename, solution_filename):
     solutions = read_matrices(solution_filename, len(matrix))
     
     for solution in solutions:
-        assert(verify_solution(solution))
+        verify_solution(solution)
+        # assert(verify_solution(solution))
 
 def read_matrices(matrix_filename, num_rows):
     lines = None
@@ -58,7 +60,7 @@ def read_matrices(matrix_filename, num_rows):
     seen = set()
 
     for i in range(0, len(lines), num_rows+1):
-        matrix_slice = lines[i:i+num_rows+1]
+        matrix_slice = lines[i:i+num_rows]
 
         matrix_str = str(matrix_slice)
         if matrix_str in seen:

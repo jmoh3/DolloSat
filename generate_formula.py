@@ -40,7 +40,7 @@ def get_clause(submatrix, submatrix_labels, lookup):
 
     for row in submatrix:
         for elem in row:
-            if(elem == 1):
+            if (elem == 1):
                 key += str(elem)
             else:
                 key += '0'
@@ -88,14 +88,14 @@ def generate_cnf(matrix, outfilename):
     zero_labels = get_zero_labels(matrix)
 
     for row1 in range(len(matrix)):
-        for row2 in range(row1+1, len(matrix)):
+        for row2 in range(len(matrix)):
             if row1 == row2:
                 continue
-            for row3 in range(row2+1, len(matrix)):
+            for row3 in range(len(matrix)):
                 if row3 == row2 or row3 == row1:
                     continue
                 for col1 in range(len(matrix[0])):
-                    for col2 in range(col1+1, len(matrix[0])):
+                    for col2 in range(len(matrix[0])):
                         if col1 == col2:
                             continue
 
@@ -112,7 +112,6 @@ def generate_cnf(matrix, outfilename):
                         if clause:
                             write_file.write(clause)
 
-    
     write_file.close()
 
 def read_matrix(filename):

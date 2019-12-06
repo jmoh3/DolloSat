@@ -13,44 +13,27 @@ from generate_formula import read_matrix
 # a sample but then lost due to a copy number abberation.
 #
 # For a INPUT_MATRIX_FILENAME whose contents look like this:
-# 10 # cells
-# 10 # mutations
-# 1 0 0 0 0 0 0 1 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 1
-# 0 0 0 0 0 1 0 0 0 0
-# 0 0 0 0 0 1 0 0 0 1
-# 0 0 0 0 0 1 1 0 0 0
-# 0 0 0 1 0 1 0 0 0 1
-# 0 0 0 0 0 1 1 0 0 0
-# 0 0 0 0 0 1 0 0 0 0
+# 4 # cells
+# 4 # mutations
+# 0 0 1 0
+# 1 0 0 0
+# 1 0 0 0
+# 1 0 0 0
 #
 # One of the reconstructed solutions written to SOLUTION_FILENAME could look like this:
 #
-# 1 2 0 0 0 0 0 1 2 2 
-# 0 0 0 0 2 1 0 2 2 0 
-# 2 2 2 0 2 1 0 0 2 2 
-# 2 0 0 0 0 1 0 0 2 0 
-# 0 0 0 0 2 1 0 2 2 1 
-# 0 2 2 0 2 1 2 0 2 2 
-# 2 0 0 0 2 1 0 2 2 1 
-# 0 2 0 0 2 1 1 0 0 2 
-# 2 0 0 1 0 1 2 0 2 1 
-# 0 2 0 0 2 1 1 0 0 2 
-# 2 0 0 0 2 1 2 0 2 2
+# 0 0 1 0 
+# 1 0 2 0 
+# 1 0 0 0 
+# 1 2 0 0 
 #
 # Reconstructed matrices are separated by '======================'
 
-def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
-    solution_file = open(solution_filename, 'r')
-    solution_lines = solution_file.readlines()
-    solution_file.close()
-
+def reconstruct_solutions(matrix, solution_filename, write_file):
+    solution_lines = get_binary_strings(solution_filename)
     solutions = []
 
-    for x in range(1, max(len(solution_lines), num_samples*2), 2):
+    for x in range(len(solution_lines)):
         solution = solution_lines[x]
         solution_matrix = copy.deepcopy(matrix)
 
@@ -63,6 +46,7 @@ def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
                         solution_matrix[i][j] = 2
                     solution_idx += 1
 
+        assert(solution_idx == len(solution))
         solutions.append(solution_matrix)
     
     write_file = open(write_file, 'w')
@@ -78,6 +62,31 @@ def reconstruct_solutions(matrix, solution_filename, write_file, num_samples):
 
     write_file.close()
 
+def get_binary_strings(valid_sample_filename):
+    valid = []
+
+    with open(valid_sample_filename, 'r') as f:
+        valid = f.readlines()
+
+    out = []
+
+    for line in valid:
+        split_line = line.split()
+        binary_str = ''
+        for arg in split_line:
+            if arg[0] == '0':
+                continue
+            if arg[0] == '-':
+                binary_str += '0'
+            else:
+                binary_str += '1'
+        if len(binary_str) > 0:
+            out.append(binary_str)
+    
+    return out
+
+# print(get_binary_strings('quicksampler/formula.cnf.samples.valid'))
+
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
-    reconstruct_solutions(matrix, sys.argv[2], 'samples.txt', int(sys.argv[3]))
+    reconstruct_solutions(matrix, sys.argv[2], 'samples.txt')
