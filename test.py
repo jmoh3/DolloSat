@@ -70,8 +70,7 @@ def read_matrices(matrix_filename, num_rows):
         matrix = [line.split() for line in matrix_slice]
         matrices.append(matrix)
 
-    print(f'Number solutions: {len(lines) // (num_rows+1)}')
-    print(f'Number unique: {len(matrices)}')
+    print(f'Number solutions: {len(matrices)}')
     return matrices
 
 if __name__ == "__main__":
