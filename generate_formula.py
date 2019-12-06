@@ -87,6 +87,8 @@ def generate_cnf(matrix, outfilename):
     num_cols = len(matrix[0])
     zero_labels = get_zero_labels(matrix)
 
+    clause_count = 0
+
     for row1 in range(len(matrix)):
         for row2 in range(len(matrix)):
             if row1 == row2:
@@ -111,8 +113,10 @@ def generate_cnf(matrix, outfilename):
 
                         if clause:
                             write_file.write(clause)
+                            clause_count += 1
 
     write_file.close()
+    return clause_count
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
@@ -138,9 +142,12 @@ def read_and_preprocess_matrix(filename):
 
     return matrix
 
+def return_zero():
+    return 0
+
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
     start = time.time()
-    generate_cnf(matrix, sys.argv[2])
+    print(generate_cnf(matrix, sys.argv[2]))
     end = time.time()
     print(f'Generated cnf formula in {end - start} seconds')

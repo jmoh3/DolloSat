@@ -3,10 +3,9 @@ import sys
 from generate_formula import read_matrix
 
 # USAGE
-# $ python3 reconstruct_solutions.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME NUM_SAMPLES
+# $ python3 reconstruct_solutions.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME 
 #
-# Writes max(NUM_SAMPLES, number of samples in SOLUTION_FILENAME) k-dollo phylogeny matrices
-# reconstructed from samples in SOLUTION_FILENAME to samples.txt.
+# Writes k-dollo phylogeny matrices reconstructed from samples in SOLUTION_FILENAME to samples.txt.
 #
 # For each '1' in a solution, the corresponding zero in the input matrix specified in 
 # INPUT_MATRIX_FILENAME will be flipped to a 2 to indicate a mutation that was present in 
@@ -35,6 +34,7 @@ def reconstruct_solutions(matrix, solution_filename, write_file):
 
     for x in range(len(solution_lines)):
         solution = solution_lines[x]
+        print(solution)
         solution_matrix = copy.deepcopy(matrix)
 
         solution_idx = 0
@@ -75,7 +75,7 @@ def get_binary_strings(valid_sample_filename):
         binary_str = ''
         for arg in split_line:
             if arg[0] == '0':
-                continue
+                break
             if arg[0] == '-':
                 binary_str += '0'
             else:
@@ -84,8 +84,6 @@ def get_binary_strings(valid_sample_filename):
             out.append(binary_str)
     
     return out
-
-# print(get_binary_strings('quicksampler/formula.cnf.samples.valid'))
 
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
