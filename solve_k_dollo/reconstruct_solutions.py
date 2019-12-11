@@ -21,10 +21,10 @@ from generate_formula import read_matrix
 #
 # One of the reconstructed solutions written to SOLUTION_FILENAME could look like this:
 #
-# 0 0 1 0 
-# 1 0 2 0 
-# 1 0 0 0 
-# 1 2 0 0 
+# 0 2 1 2 
+# 1 0 0 2 
+# 1 0 0 2 
+# 1 0 0 2 
 #
 # Reconstructed matrices are separated by '======================'
 
@@ -34,7 +34,6 @@ def reconstruct_solutions(matrix, solution_filename, write_file):
 
     for x in range(len(solution_lines)):
         solution = solution_lines[x]
-        print(solution)
         solution_matrix = copy.deepcopy(matrix)
 
         solution_idx = 0
