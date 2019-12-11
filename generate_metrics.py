@@ -1,3 +1,5 @@
+#!/bin/python
+
 from __future__ import print_function
 from generate_formula import read_matrix, generate_cnf
 from brute_force_solver import find_all_solutions
@@ -66,6 +68,10 @@ def quicksampler_generator(outfile, num_samples):
     sys.stdout.flush()
     os.system(in_cmd)
 
+    q_cmd = f'chmod +x ./quicksampler'
+    sys.stdout.flush()
+    os.system(q_cmd)
+    
     q_cmd = f'./quicksampler -n {num_samples} -t 7200.0 {outfile}'
 
     start = time.time()
