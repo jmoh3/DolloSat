@@ -4,13 +4,9 @@ A tool that samples solutions to the k-Dollo Phylogeny Problem for k = 1, a vari
 
 ## Requirements
 
-First, clone this repository with the ```-r``` flag in order to ensure submodules are properly cloned.
+This repository uses two SAT Solution samples: [QuickSampler](https://github.com/RafaelTupynamba/quicksampler) and [UniGen](https://bitbucket.org/kuldeepmeel/unigen/src/master/). QuickSampler also requires the z3 binary specified in the installation instructions.
 
-This tool uses QuickSampler to sample solutions to the 1-Dollo Phylogeny Problem. Follow the instructions to install dependencies for QuickSampler as found here: https://github.com/RafaelTupynamba/quicksampler.
-
-Then, run ```build-project.sh``` to build the project.
-
-After this, you should be good to go!
+All of these binaries should be provided, but if none of them work, please see the GitHub pages for further instructions.
 
 ## Usage Instructions
 
@@ -24,14 +20,22 @@ sh generate_samples.sh INPUT_MATRIX_FILENAME
 
 This will sample 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME and save NUM_SAMPLES of those samples to samples.txt.
 
-### Generating 1-dollo phylogenies for a given input matrix using UniGen
+### Generating CNF formulae
 
-In progress
+Run with:
 
-### Generating all 1-dollo phylogenies for a given input matrix
+```
+python3 generate_formula.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
+```
 
-In progress
+This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes the cnf formula to SOLUTION_FILENAME
 
-### Evaluating how well the solution space is sampled
+### Generating Metrics
 
-In progress
+Run with:
+
+```
+python3 generate_metrics.py --directory=DIRECTORY --quantity=NUMBER_OF_FILES --outfile=METRICS_OUTFILE --num_samples=NUMBER_OF_SAMPLES
+```
+
+This takes NUMBER_OF_FILES files from the DIRECTORY, and generates a cnf formula, then samples NUMBER_OF_SAMPLES each from UniGen and QuickSampler. All of the compiled data is written to METRICS_OUTFILE. As data is generated, the amount of total solutions is saved to `total_solutions.csv` in order to speed up the process on further runs.

@@ -1,6 +1,6 @@
 import os
 import sys
-from solve_k_dollo.generate_formula import read_matrix, generate_cnf
+from generate_formula import read_matrix, generate_cnf
 
 # USAGE:
 # python3 generate_formulas.py INPUT_DIRECTORY_NAME
