@@ -1,5 +1,6 @@
 import sys
 import time
+import os
 
 # USAGE
 # $ python3 generate_formula.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
@@ -77,17 +78,19 @@ def get_zero_labels(matrix):
                 labels[i][j] = zero_count
                 zero_count += 1
     
-    return labels
+    return labels, zero_count
 
-def generate_cnf(matrix, outfilename):
+def generate_cnf(matrix, outfilename):    
     lookup = get_lookup('forbidden-submatrix-enumerations.txt')
 
     write_file = open(outfilename, 'w')
     num_rows = len(matrix)
     num_cols = len(matrix[0])
-    zero_labels = get_zero_labels(matrix)
+    zero_labels, zero_count = get_zero_labels(matrix)
 
     clause_count = 0
+
+    lines = []
 
     for row1 in range(len(matrix)):
         for row2 in range(len(matrix)):
@@ -112,11 +115,17 @@ def generate_cnf(matrix, outfilename):
                         clause = get_clause(submatrix, submatrix_labels, lookup)
 
                         if clause:
-                            write_file.write(clause)
+                            lines.append(clause)
                             clause_count += 1
+    print('clause count')
+    print(clause_count)
+    print('zero count')
+    print(zero_count)
+
+    lines.insert(0, f'p cnf {clause_count} {zero_count}\n')
+    write_file.writelines(lines)
 
     write_file.close()
-    return clause_count
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
@@ -124,30 +133,9 @@ def read_matrix(filename):
     
     return [[int(x) for x in line.split()] for line in lines]
 
-def read_and_preprocess_matrix(filename):
-    matrix_file = open(filename, 'r')
-
-    # filter out duplicate rows
-    lines = matrix_file.readlines()[2:]
-    lines = set([line.strip('\n') for line in lines])
-    matrix = [[int(x) for x in line.split()] for line in lines]
-
-    # filter out duplicate columns
-    columns = [[row[x] for row in matrix] for x in range(len(matrix[0]))]
-    columns = [' '.join(map(str,column)) for column in columns]
-    columns = list(set(columns))
-    columns = [column.split() for column in columns]
-
-    matrix = [[int(columns[x][y]) for x in range(len(columns))] for y in range(len(columns[0]))]
-
-    return matrix
-
-def return_zero():
-    return 0
-
 if __name__ == '__main__':
     matrix = read_matrix(sys.argv[1])
     start = time.time()
-    print(generate_cnf(matrix, sys.argv[2]))
+    generate_cnf(matrix, sys.argv[2])
     end = time.time()
     print(f'Generated cnf formula in {end - start} seconds')

@@ -19,7 +19,7 @@ After this, you should be good to go!
 Run with:
 
 ```
-sh generate_samples.sh INPUT_MATRIX_FILENAME NUM_SAMPLES
+sh generate_samples.sh INPUT_MATRIX_FILENAME
 ```
 
 This will sample 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME and save NUM_SAMPLES of those samples to samples.txt.

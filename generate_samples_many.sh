@@ -1,7 +1,7 @@
 # run with sh generate_samples_many DIRECTORY_NAME
 # where DIRECTORY_NAME is the name of a directory under formulas/
 
-DIRECTORY = $0
+DIRECTORY=$1
 
 cd formulas/$DIRECTORY
 
