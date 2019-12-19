@@ -1,0 +1,11 @@
+file,num_variables,num_solutions
+data/5x5/m5_n5_s1.txt,20,1600
+data/5x5/m5_n5_s10.txt,17,242
+data/5x5/m5_n5_s100.txt,15,104
+data/5x5/m5_n5_s101.txt,20,1468
+data/5x5/m5_n5_s102.txt,17,170
+data/5x5/m5_n5_s103.txt,17,236
+data/5x5/m5_n5_s104.txt,20,1600
+data/5x5/m5_n5_s105.txt,17,788
+data/5x5/m5_n5_s106.txt,15,168
+data/5x5/m5_n5_s107.txt,17,350

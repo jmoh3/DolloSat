@@ -8,8 +8,10 @@ import sys
 import time
 import os 
 import argparse 
-import subprocess
 import pandas as pd
+
+total_solutions_path = 'total_solutions.csv'
+FORMULAS_DIRECTORY = 'data/formulas'
 
 def get_files(num_files, directory):
     files = []
@@ -23,7 +25,7 @@ def get_files(num_files, directory):
 
     return files
 
-def get_info(infile, directory, num_samples):
+def get_info(infile, directory, num_samples, total_solutions_df):
     print(infile)
 
     split_filename = infile.split('/')[2].split('_')
@@ -36,28 +38,52 @@ def get_info(infile, directory, num_samples):
         matrix = read_matrix(infile)
 
         cnf_file = f'data/formulas/{short_filename}.cnf'
-        samples_outfile = f'{cnf_file}.samples'
-        unigen_outfile = f'data/formulas/{short_filename}.unigen'
+        samples_outfile = cnf_file + '.samples'
+        unigen_outfile = cnf_file + '.unigen'
 
+        print('Generating CNF Formula')
         start = time.time()
         num_clauses = generate_cnf(matrix, cnf_file)
         end = time.time()
+        print('CNF Formula Generated!')
 
         elapsed_generate_phi = end - start
 
         num_variables = get_number_of_variables(cnf_file)
 
+        print('Generating Samples with Quicksampler')
         qsampler_time = quicksampler_generator(cnf_file, num_samples)
+        print('Quicksampler files generated')
 
+        print('Validating Quicksampler samples')
         qsampler_valid_samples = num_valid_solutions(cnf_file)
+        print('Quicksampler samples validated')
 
-        unigen_time = unigensampler_generator(infile, unigen_outfile, num_samples)
+        print('Generating samples with Unigen')
+        unigen_time = unigensampler_generator(cnf_file, unigen_outfile, num_samples)
+        print('Unigen samples generated')
 
+        print('Converting unigen samples to quicksampler format')
         convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
+        
+        print('Validating unigen samples')
+        unigen_valid_samples = num_valid_solutions(cnf_file)
+        print('Unigen samples validated')
 
-        ugen_valid_samples = num_valid_solutions(cnf_file)
+        total_num_solutions = -1
 
-        retstr = f'{short_filename}.txt,{rows},{columns},{num_variables},{num_clauses},{elapsed_generate_phi},{qsampler_time},{qsampler_valid_samples},{unigen_time},{ugen_valid_samples}'
+        try:
+            total_num_solutions = total_solutions_df[infile]['num_solutions']
+        except:
+            print('Generating all solutions')
+            total_num_solutions = find_all_solutions(matrix, None, False)
+            total_solutions_df[infile] = {'num_variables': num_variables, 'num_solutions': total_num_solutions}
+            print('All solutions generated')
+
+        percent_qsampler_correct = qsampler_valid_samples / total_num_solutions
+        percent_unigen_correct = unigen_valid_samples / total_num_solutions
+
+        retstr = f'{short_filename}.txt,{rows},{columns},{num_variables},{num_clauses},{elapsed_generate_phi},{qsampler_time},{qsampler_valid_samples},{unigen_time},{unigen_valid_samples},{total_num_solutions},{percent_qsampler_correct},{percent_unigen_correct}'
 
         return retstr
     else:
@@ -81,7 +107,7 @@ def get_number_of_variables(cnf_file):
         return 0
 
 def unigensampler_generator(infile, outfile, num_samples):
-    unigen_cmd = f'./sampelrs/unigen --samples={num_samples} {infile} {outfile} > /dev/null 2>&1'
+    unigen_cmd = f'./samplers/unigen --samples={num_samples} {infile} {outfile} > /dev/null 2>&1'
 
     start = time.time()
 
@@ -92,22 +118,22 @@ def unigensampler_generator(infile, outfile, num_samples):
     return end - start
 
 def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
-    ugen_file = open(unigen_outfile, 'r')
+    unigen_file = open(unigen_outfile, 'r')
     samples_file = open(samples_outfile, 'w')
 
-    for ugen_sample in ugen_file.readlines():
-        ugen_sample = ugen_sample.strip()
+    for unigen_sample in unigen_file.readlines():
+        unigen_sample = unigen_sample.strip()
 
-        if len(ugen_sample) == 0:
+        if len(unigen_sample) == 0:
             break
 
-        ugen_sample = ugen_sample[1:].split(' ')
+        unigen_sample = unigen_sample[1:].split(' ')
 
-        num_times_sampled = ugen_sample[-1].split(':')[1]
+        num_times_sampled = unigen_sample[-1].split(':')[1]
 
         qsampler_binary = ''
 
-        for variable in ugen_sample:
+        for variable in unigen_sample:
             if variable[0] != '0':
                 qsampler_binary += '0' if variable[0] == '-' else '1'
 
@@ -115,7 +141,7 @@ def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
 
         samples_file.write(qsample + '\n')
 
-    ugen_file.close()
+    unigen_file.close()
     samples_file.close()
 
 def quicksampler_generator(cnf_file, num_samples):    
@@ -148,16 +174,45 @@ def num_valid_solutions(cnf_file):
         return -1
 
 def generate_info(files, directory, outfile, num_samples):
-    metrics = ['filename', 'num_cells', 'num_characters', 'num_variables', 'num_clauses', 'phi_generation_time', 'qsampler_time', 'qsampler_valid_samples', 'unigen_time', 'unigen_valid_samples']
+    metrics = ['filename', 'num_cells', 'num_characters', 'num_variables', 'num_clauses', 'phi_generation_time', 'qsampler_time', 'qsampler_valid_samples', 'unigen_time', 'unigen_valid_samples', 'total_num_solution', 'percent_qsampler_correct', 'percent_unigen_correct']
+
+    try:
+        total_solutions_df = pd.read_csv(total_solutions_path, index_col='file')
+        total_solutions_df = total_solutions_df.to_dict('index')
+    except:
+        total_solutions_df = {}
 
     with open(outfile, 'w') as ofile:
         ofile.write(','.join(metrics) + '\n')
 
         for file in files:
-            line = get_info(file, directory, num_samples)
+            line = get_info(file, directory, num_samples, total_solutions_df)
             ofile.write(line + '\n')
 
     ofile.close()
+
+    with open(total_solutions_path, 'w') as tsofile:
+        tsofile.write('file,num_variables,num_solutions\n')
+
+        for item in total_solutions_df:
+            num_variables = total_solutions_df[item]['num_variables']
+            num_solutions = total_solutions_df[item]['num_solutions']
+
+            tsofile.write(f'{item},{num_variables},{num_solutions}\n')
+
+    tsofile.close()
+
+def clear_files(directory):
+    os.system('rm tmp.cnf')
+
+    if not os.path.exists(directory):
+        return
+
+    rm_files_cmd = f'rm {directory}/*'
+
+    os.system(rm_files_cmd)
+    os.removedirs(directory)
+
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate metrics for given directories')
@@ -196,7 +251,8 @@ if __name__=='__main__':
 
     files = get_files(num_files, directory)
 
-    if not os.path.exists('data/formulas'):
-        os.makedirs('data/formulas')
+    if not os.path.exists(FORMULAS_DIRECTORY):
+        os.makedirs(FORMULAS_DIRECTORY)
 
     generate_info(files, directory, out_file, num_samples)
+    clear_files(FORMULAS_DIRECTORY)

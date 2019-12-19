@@ -117,10 +117,8 @@ def generate_cnf(matrix, outfilename):
                         if clause:
                             lines.append(clause)
                             clause_count += 1
-    print('clause count')
-    print(clause_count)
-    print('zero count')
-    print(zero_count)
+
+    # print(f'clause count: {clause_count}, zero count: {zero_count}')
 
     lines.insert(0, f'p cnf {clause_count} {zero_count}\n')
     write_file.writelines(lines)

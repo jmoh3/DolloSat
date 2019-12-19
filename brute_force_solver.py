@@ -7,7 +7,7 @@ import time
 # This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 
 def find_all_solutions(matrix, solution_filename, write=True):
-    label_matrix = get_zero_labels(matrix)
+    label_matrix, count = get_zero_labels(matrix)
     labels = []
 
     for i in range(len(label_matrix)):
@@ -31,7 +31,7 @@ def find_all_solutions(matrix, solution_filename, write=True):
         # check whether i satisfies the satisfiability problem by checking each of the clauses
         for clause in clauses:
             # if one clause is false, the solution does not work
-            if not check_clause(i, clause):
+            if clause[0] != 'p' and not check_clause(i, clause):
                 satisifes = False
                 break
 
