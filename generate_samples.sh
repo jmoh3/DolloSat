@@ -1,6 +1,6 @@
 INPUT_FILENAME=$1
 
-python3 generate_formula.py $INPUT_FILENAME quicksampler/formula.cnf
+python3 solve_k_dollo/generate_formula.py $INPUT_FILENAME quicksampler/formula.cnf
 
 cd quicksampler
 
