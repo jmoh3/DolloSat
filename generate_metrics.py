@@ -45,7 +45,6 @@ def get_info(infile, directory, num_samples, total_solutions_df):
         start = time.time()
         num_clauses = generate_cnf(matrix, cnf_file)
         end = time.time()
-        print('CNF Formula Generated!')
 
         elapsed_generate_phi = end - start
 
@@ -53,22 +52,18 @@ def get_info(infile, directory, num_samples, total_solutions_df):
 
         print('Generating Samples with Quicksampler')
         qsampler_time = quicksampler_generator(cnf_file, num_samples)
-        print('Quicksampler files generated')
 
         print('Validating Quicksampler samples')
         qsampler_valid_samples = num_valid_solutions(cnf_file)
-        print('Quicksampler samples validated')
 
         print('Generating samples with Unigen')
         unigen_time = unigensampler_generator(cnf_file, unigen_outfile, num_samples)
-        print('Unigen samples generated')
 
         print('Converting unigen samples to quicksampler format')
         convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
         
         print('Validating unigen samples')
         unigen_valid_samples = num_valid_solutions(cnf_file)
-        print('Unigen samples validated')
 
         total_num_solutions = -1
 
@@ -78,7 +73,6 @@ def get_info(infile, directory, num_samples, total_solutions_df):
             print('Generating all solutions')
             total_num_solutions = find_all_solutions(matrix, None, False)
             total_solutions_df[infile] = {'num_variables': num_variables, 'num_solutions': total_num_solutions}
-            print('All solutions generated')
 
         percent_qsampler_correct = qsampler_valid_samples / total_num_solutions
         percent_unigen_correct = unigen_valid_samples / total_num_solutions
