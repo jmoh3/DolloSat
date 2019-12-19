@@ -189,6 +189,8 @@ def generate_info(files, directory, outfile, num_samples):
             line = get_info(file, directory, num_samples, total_solutions_df)
             ofile.write(line + '\n')
 
+            remove_files(FORMULAS_DIRECTORY)
+
     ofile.close()
 
     with open(total_solutions_path, 'w') as tsofile:
@@ -208,10 +210,15 @@ def clear_files(directory):
     if not os.path.exists(directory):
         return
 
+    os.removedirs(directory)
+
+def remove_files(directory):
+    if not os.path.exists(directory):
+        return
+
     rm_files_cmd = f'rm {directory}/*'
 
     os.system(rm_files_cmd)
-    os.removedirs(directory)
 
 
 if __name__=='__main__':
