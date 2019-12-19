@@ -2,6 +2,22 @@ import os
 import sys
 from solve_k_dollo.generate_formula import read_matrix, generate_cnf
 
+# USAGE:
+# python3 generate_formulas.py INPUT_DIRECTORY_NAME
+#
+# Make sure your INPUT_DIRECTORY_NAME contains ONLY input matrices in the following
+# file format:
+
+# 5 # cells
+# 5 # mutations
+# 0 1 0 0 0
+# 0 0 1 0 1
+# 0 0 0 0 0
+# 0 0 0 0 0
+# 1 0 0 1 0
+
+# And no other files/directories
+
 if __name__ == '__main__':
     dir = sys.argv[1]
     input_files = os.listdir(dir)
