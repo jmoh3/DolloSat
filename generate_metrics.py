@@ -9,6 +9,7 @@ import time
 import os 
 import argparse 
 import subprocess
+import pandas as pd
 
 def get_files(num_files, directory):
     files = []
@@ -22,79 +23,135 @@ def get_files(num_files, directory):
 
     return files
 
-def get_info(filename, directory, num_samples):
-    print(filename)
+def get_info(infile, directory, num_samples):
+    print(infile)
 
-    split_filename = filename.split('/')[2].split('_')
-    short_filename = filename.split('/')[2].split('.')[0]
-    
-    print(f'split_filename: {split_filename}')
-    print(f'short_filename: {short_filename}')
+    split_filename = infile.split('/')[2].split('_')
+    short_filename = infile.split('/')[2].split('.')[0]
 
     rows = split_filename[0][1:]
     columns = split_filename[1][1:]
     
     if int(rows) < 100 and int(columns) < 100:
+        matrix = read_matrix(infile)
+
+        cnf_file = f'data/formulas/{short_filename}.cnf'
+        samples_outfile = f'{cnf_file}.samples'
+        unigen_outfile = f'data/formulas/{short_filename}.unigen'
+
         start = time.time()
-        matrix = read_matrix(filename)
-        num_clauses = generate_cnf(matrix, f'data/formulas/{short_filename}.cnf')
+        num_clauses = generate_cnf(matrix, cnf_file)
         end = time.time()
 
-        elapsed_generate_cnf = end - start
+        elapsed_generate_phi = end - start
 
-        outfile = f'data/formulas/{short_filename}.cnf'
+        num_variables = get_number_of_variables(cnf_file)
 
-        qsampler_time = quicksampler_generator(outfile, num_samples)
-        # qsampler_time = 0
+        qsampler_time = quicksampler_generator(cnf_file, num_samples)
 
-        retstr = f'{short_filename}.txt,{rows},{columns},{elapsed_generate_cnf},{qsampler_time}'
+        qsampler_valid_samples = num_valid_solutions(cnf_file)
 
-        print(retstr)
+        unigen_time = unigensampler_generator(infile, unigen_outfile, num_samples)
+
+        convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
+
+        ugen_valid_samples = num_valid_solutions(cnf_file)
+
+        retstr = f'{short_filename}.txt,{rows},{columns},{num_variables},{num_clauses},{elapsed_generate_phi},{qsampler_time},{qsampler_valid_samples},{unigen_time},{ugen_valid_samples}'
 
         return retstr
-        # matrix = read_matrix(filename)
-
-        # solutions = find_all_solutions(matrix, None, False)
-
-        # print(f'{short_filename}.txt,{rows},{columns},{elapsed},{num_clauses}')
-
-        # return f'{short_filename}.txt,{rows},{columns},{elapsed},{num_clauses}'
     else:
         return None
 
-def quicksampler_generator(outfile, num_samples):
-    # in_cmd = 'cd quicksampler/'
+def get_number_of_variables(cnf_file):
+    try:
+        infile = open(cnf_file, 'r')
 
-    # sys.stdout.flush()
-    # os.system(in_cmd)
+        firstline = infile.readline()
 
-    # _cmd = f'chmod +x ./quicksampler'
-    # sys.stdout.flush()
-    # os.system(q_cmd)
-    
-    q_cmd = f'./samplers/quicksampler -n {num_samples} -t 7200.0 {outfile} > /dev/null 2>&1'
+        if firstline[0] != 'p':
+            return 0
+        
+        metainfo = firstline.split(' ')
+
+        return int(metainfo[-1])
+
+        infile.close()
+    except:
+        return 0
+
+def unigensampler_generator(infile, outfile, num_samples):
+    unigen_cmd = f'./sampelrs/unigen --samples={num_samples} {infile} {outfile} > /dev/null 2>&1'
 
     start = time.time()
 
-    # sys.stdout.flush()
+    os.system(unigen_cmd)
+
+    end = time.time()
+
+    return end - start
+
+def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
+    ugen_file = open(unigen_outfile, 'r')
+    samples_file = open(samples_outfile, 'w')
+
+    for ugen_sample in ugen_file.readlines():
+        ugen_sample = ugen_sample.strip()
+
+        if len(ugen_sample) == 0:
+            break
+
+        ugen_sample = ugen_sample[1:].split(' ')
+
+        num_times_sampled = ugen_sample[-1].split(':')[1]
+
+        qsampler_binary = ''
+
+        for variable in ugen_sample:
+            if variable[0] != '0':
+                qsampler_binary += '0' if variable[0] == '-' else '1'
+
+        qsample = f'{num_times_sampled}: {qsampler_binary}'
+
+        samples_file.write(qsample + '\n')
+
+    ugen_file.close()
+    samples_file.close()
+
+def quicksampler_generator(cnf_file, num_samples):    
+    q_cmd = f'./samplers/quicksampler -n {num_samples} -t 7200.0 {cnf_file} > /dev/null 2>&1'
+
+    start = time.time()
+
     os.system(q_cmd)
     
     end = time.time()
 
-    z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {outfile} > /dev/null 2>&1'
+    return end - start
+
+def num_valid_solutions(cnf_file):
+    z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_file} > /dev/null 2>&1'
 
     os.system(z3_cmd)
 
-    # out_cmd = 'cd ..'
+    valid_samples_file = f'{cnf_file}.samples.valid'
 
-    # sys.stdout.flush()
-    # os.system(out_cmd)
+    try:
+        num_valid = 0
 
-    return end - start
+        with open(valid_samples_file, 'r') as s_file:
+            num_valid = len(s_file.readlines())
+            s_file.close()
+
+        return num_valid
+    except:
+        return -1
 
 def generate_info(files, directory, outfile, num_samples):
+    metrics = ['filename', 'num_cells', 'num_characters', 'num_variables', 'num_clauses', 'phi_generation_time', 'qsampler_time', 'qsampler_valid_samples', 'unigen_time', 'unigen_valid_samples']
+
     with open(outfile, 'w') as ofile:
-        ofile.write('filename,num_rows,num_columns,cnf_generation_time,num_clauses\n')
+        ofile.write(','.join(metrics) + '\n')
 
         for file in files:
             line = get_info(file, directory, num_samples)
@@ -138,5 +195,8 @@ if __name__=='__main__':
     num_samples = abs(args.num_samples)
 
     files = get_files(num_files, directory)
+
+    if not os.path.exists('data/formulas'):
+        os.makedirs('data/formulas')
 
     generate_info(files, directory, out_file, num_samples)

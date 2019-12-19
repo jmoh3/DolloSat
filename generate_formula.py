@@ -78,7 +78,7 @@ def get_zero_labels(matrix):
                 labels[i][j] = zero_count
                 zero_count += 1
     
-    return labels, zero_count
+    return labels, zero_count-1
 
 def generate_cnf(matrix, outfilename):    
     lookup = get_lookup('./forbidden-submatrix-enumerations.txt')
@@ -126,6 +126,8 @@ def generate_cnf(matrix, outfilename):
     write_file.writelines(lines)
 
     write_file.close()
+
+    return clause_count
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
