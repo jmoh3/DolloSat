@@ -37,12 +37,12 @@ def get_info(filename, directory, num_samples):
     if int(rows) < 100 and int(columns) < 100:
         start = time.time()
         matrix = read_matrix(filename)
-        num_clauses = generate_cnf(matrix, f'data/formulas/{short_filename}.samples.cnf')
+        num_clauses = generate_cnf(matrix, f'data/formulas/{short_filename}.cnf')
         end = time.time()
 
         elapsed_generate_cnf = end - start
 
-        outfile = f'data/formulas/{short_filename}.samples.cnf'
+        outfile = f'data/formulas/{short_filename}.cnf'
 
         qsampler_time = quicksampler_generator(outfile, num_samples)
         # qsampler_time = 0
@@ -63,28 +63,32 @@ def get_info(filename, directory, num_samples):
         return None
 
 def quicksampler_generator(outfile, num_samples):
-    in_cmd = 'cd quicksampler/'
+    # in_cmd = 'cd quicksampler/'
 
-    sys.stdout.flush()
-    os.system(in_cmd)
+    # sys.stdout.flush()
+    # os.system(in_cmd)
 
-    q_cmd = f'chmod +x ./quicksampler'
-    sys.stdout.flush()
-    os.system(q_cmd)
+    # _cmd = f'chmod +x ./quicksampler'
+    # sys.stdout.flush()
+    # os.system(q_cmd)
     
-    q_cmd = f'./quicksampler -n {num_samples} -t 7200.0 {outfile}'
+    q_cmd = f'./samplers/quicksampler -n {num_samples} -t 7200.0 {outfile} > /dev/null 2>&1'
 
     start = time.time()
 
-    sys.stdout.flush()
+    # sys.stdout.flush()
     os.system(q_cmd)
     
     end = time.time()
 
-    out_cmd = 'cd ..'
+    z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {outfile} > /dev/null 2>&1'
 
-    sys.stdout.flush()
-    os.system(out_cmd)
+    os.system(z3_cmd)
+
+    # out_cmd = 'cd ..'
+
+    # sys.stdout.flush()
+    # os.system(out_cmd)
 
     return end - start
 
@@ -94,7 +98,7 @@ def generate_info(files, directory, outfile, num_samples):
 
         for file in files:
             line = get_info(file, directory, num_samples)
-            ofile.write(file + '\n')
+            ofile.write(line + '\n')
 
     ofile.close()
 
@@ -122,7 +126,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--num_samples',
         type=int,
-        default=1000000,
+        default=10000,
         help='number of samples to generate'
     )
 
