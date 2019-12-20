@@ -3,7 +3,7 @@ import argparse
 from generate_formula import read_matrix
 
 # USAGE:
-# $ python3 test.py --matrixfilename=MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+# $ python3 check_solutions.py --matrixfilename=MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
 #
 # Checks for the prescence of forbidden submatrices in reconstructed samples
 
