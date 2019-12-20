@@ -1,8 +1,9 @@
 import sys
+import argparse
 from generate_formula import read_matrix
 
 # USAGE:
-# $ python3 test.py MATRIX_FILENAME SOLUTION_FILENAME
+# $ python3 test.py --matrixfilename=MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
 #
 # Checks for the prescence of forbidden submatrices in reconstructed samples
 
@@ -74,4 +75,22 @@ def read_matrices(matrix_filename, num_rows):
     return matrices
 
 if __name__ == "__main__":
-    verify_solutions(sys.argv[1], sys.argv[2])
+
+    parser = argparse.ArgumentParser(description='Generate samples for given directories')
+
+    parser.add_argument(
+        '--matrixfilename',
+        type=str,
+        default='data/example.txt',
+        help='the input file containing the matrix to generate samples for'
+    )
+    parser.add_argument(
+        '--solutionfilename',
+        type=str,
+        default='formula.cnf',
+        help='outfile to write formula to'
+    )
+
+    args = parser.parse_args()
+
+    verify_solutions(args.matrixfilename, args.solutionfilename)
