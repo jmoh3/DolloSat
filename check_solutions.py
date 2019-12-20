@@ -49,7 +49,9 @@ def verify_solutions(matrix_filename, solution_filename):
     
     for solution in solutions:
         verify_solution(solution)
-        # assert(verify_solution(solution))
+        assert(verify_solution(solution))
+    
+    print('No invalid solutions found.')
 
 def read_matrices(matrix_filename, num_rows):
     lines = None
@@ -71,7 +73,6 @@ def read_matrices(matrix_filename, num_rows):
         matrix = [line.split() for line in matrix_slice]
         matrices.append(matrix)
 
-    print(f'Number solutions: {len(matrices)}')
     return matrices
 
 if __name__ == "__main__":
@@ -87,7 +88,6 @@ if __name__ == "__main__":
     parser.add_argument(
         '--solutionfilename',
         type=str,
-        default='formula.cnf',
         help='outfile to write formula to'
     )
 
