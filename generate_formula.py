@@ -1,9 +1,10 @@
 import sys
 import time
 import os
+import argparse
 
 # USAGE
-# $ python3 generate_formula.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
+# $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTION_FILENAME
 # 
 # Generates a boolean formula in CNF format from the matrix in INPUT_MATRIX_FILENAME
 # and writes it to SOLUTION_FILENAME.
@@ -134,8 +135,26 @@ def read_matrix(filename):
     return [[int(x) for x in line.split()] for line in lines]
 
 if __name__ == '__main__':
-    matrix = read_matrix(sys.argv[1])
+
+    parser = argparse.ArgumentParser(description='Generate samples for given directories')
+
+    parser.add_argument(
+        '--filename',
+        type=str,
+        default='data/example.txt',
+        help='the input file containing the matrix to generate samples for'
+    )
+    parser.add_argument(
+        '--outfile',
+        type=str,
+        default='formula.cnf',
+        help='outfile to write formula to'
+    )
+
+    args = parser.parse_args()
+
+    matrix = read_matrix(args.filename)
     start = time.time()
-    generate_cnf(matrix, sys.argv[2])
+    generate_cnf(matrix, args.outfile)
     end = time.time()
     print(f'Generated cnf formula in {end - start} seconds')

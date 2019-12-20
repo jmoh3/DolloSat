@@ -69,14 +69,14 @@ if __name__=='__main__':
     parser.add_argument(
         '--filename',
         type=str,
-        default='example.txt',
+        default='data/example.txt',
         help='the input file containing the matrix to generate samples for'
     )
     parser.add_argument(
         '--outfile',
         type=str,
         default='solutions.txt',
-        help='outfile to write metrics to'
+        help='outfile to write solutions to'
     )
     parser.add_argument(
         '--num_samples',
