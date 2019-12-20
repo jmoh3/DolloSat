@@ -53,7 +53,16 @@ def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
 
     unigen_file.close()
     samples_file.close()
-    
+
+def clean_up(shortened_filename):
+    remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
+    remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
+    remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
+
+    os.system(remove_formula)
+    os.system(remove_samples)
+    os.system(remove_valid)
+
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
@@ -101,9 +110,11 @@ if __name__=='__main__':
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, os_name)
+        valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
+        reconstruct_solutions(matrix, valid_solutions, args.outfile)
+        clean_up(shortened_filename)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
         else:
             print('Unfinished')
-            # unigensampler_generator()
