@@ -2,6 +2,8 @@
 
 A tool that samples solutions to the k-Dollo Phylogeny Problem for k = 1, a variant of the Two State Perfect Phylogeny Problem in which we are trying to infer a character-based phylogenetic tree T where each character is gained once and can be lost at most once.
 
+![](figures/pipeline_figure.png)
+
 ## Requirements
 
 This repository uses two SAT Solution samples: [QuickSampler](https://github.com/RafaelTupynamba/quicksampler) and [UniGen](https://bitbucket.org/kuldeepmeel/unigen/src/master/). QuickSampler also requires the z3 binary specified in the installation instructions.
@@ -15,17 +17,19 @@ All of these binaries should be provided, but if none of them work, please see t
 Run with:
 
 ```
-sh generate_samples.sh INPUT_MATRIX_FILENAME
+python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
 ```
 
-This will sample 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME and save NUM_SAMPLES of those samples to samples.txt.
+This will sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing and save the reconstructed 1-dollo matrices to SOLUTIONS_OUTFILE.
+
+SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 
 ### Generating CNF formulae
 
 Run with:
 
 ```
-python3 generate_formula.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
+python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTION_FILENAME
 ```
 
 This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes the cnf formula to SOLUTION_FILENAME

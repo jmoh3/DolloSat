@@ -1,0 +1,1 @@
+filename,num_cells,num_characters,num_variables,num_clauses,phi_generation_time,qsampler_time,qsampler_valid_samples,unigen_time,unigen_valid_samples,total_num_solution,percent_qsampler_correct,percent_unigen_correct
