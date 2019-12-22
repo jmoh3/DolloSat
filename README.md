@@ -34,6 +34,16 @@ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTION_
 
 This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes the cnf formula to SOLUTION_FILENAME
 
+### Generating all 1-Dollo phylogenies
+
+Run with:
+
+```
+python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+```
+
+This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes all 1-Dollo phylogenies to SOLUTION_FILENAME. The solutions written to SOLUTION_FILENAME will be in compressed format, where each line represents a satisfying assignment to the boolean formula generated for the input matrix. Each character in the line corresponds to a 0 in the input matrix, which can either stay a 0 (character is 0) or be flipped to a 1.
+
 ### Generating Metrics
 
 Run with:
