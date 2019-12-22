@@ -49,7 +49,7 @@ This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes all 1-Dollo
 Run with:
 
 ```
-python3 generate_metrics.py --directory=DIRECTORY --quantity=NUMBER_OF_FILES --outfile=METRICS_OUTFILE --num_samples=NUMBER_OF_SAMPLES
+python3 generate_metrics.py --directory=DIRECTORY --quantity=NUMBER_OF_FILES --outfile=METRICS_OUTFILE --samples=NUMBER_OF_SAMPLES
 ```
 
 This takes NUMBER_OF_FILES files from the DIRECTORY, and generates a cnf formula, then samples NUMBER_OF_SAMPLES each from UniGen and QuickSampler. All of the compiled data is written to METRICS_OUTFILE. As data is generated, the amount of total solutions is saved to `total_solutions.csv` in order to speed up the process on further runs.
