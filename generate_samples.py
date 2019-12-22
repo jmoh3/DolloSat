@@ -1,6 +1,10 @@
 #!/bin/python
 
-from __future__ import print_function
+# USAGE
+# $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
+# 
+# Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
+
 from generate_formula import read_matrix, generate_cnf
 from reconstruct_solutions import reconstruct_solutions
 
