@@ -1,27 +1,14 @@
 #!/bin/python
 
-from generate_formula import read_matrix, generate_cnf
-from brute_force_solver import find_all_solutions
-
-import sys
-import time
 import os 
 import argparse 
-import pandas as pd
+
+from generate_formula import read_matrix, generate_cnf
+from brute_force_solver import find_all_solutions
+from file_scripts import get_directory_files, remove_directory, remove_directory_files
+from sampler_scripts import unigensampler_generator, quicksampler_generator,convert_unigen_to_quicksample, num_valid_solutions, get_sample_distribution
 
 FORMULAS_DIRECTORY = 'data/formulas'
-
-def get_files(num_files, directory):
-    files = []
-
-    for file in os.listdir(directory):
-        filename = os.fsencode(file)
-        if filename.endswith(b'.txt'):
-            files.append(f'{directory}/{filename.decode("utf-8")}')
-            if num_files > 0 and len(files) == num_files:
-                break
-
-    return files
 
 def get_info(infile, directory, num_samples):
     print(infile)
@@ -84,142 +71,15 @@ def get_info(infile, directory, num_samples):
     else:
         return None
 
-def get_sample_distribution(valid_file):
-    sample_dist = {}
-    
-    vfile = open(valid_file, 'r')
-
-    for unigen_sample in vfile.readlines():
-        unigen_sample = unigen_sample.strip()
-
-        if len(unigen_sample) == 0:
-            break
-
-        unigen_sample = unigen_sample.split(' ')
-
-        num_times_sampled = unigen_sample[-1].split(':')[1]
-
-        sample_binary = ''
-
-        for variable in unigen_sample:
-            if variable[0] != '0':
-                sample_binary += '0' if variable[0] == '-' else '1'
-
-        sample_dist[sample_binary] = str(num_times_sampled)
-
-    vfile.close()
-    return sample_dist
-
-
-def get_number_of_variables(cnf_file):
-    try:
-        infile = open(cnf_file, 'r')
-
-        firstline = infile.readline()
-
-        if firstline[0] != 'p':
-            return 0
-        
-        metainfo = firstline.split(' ')
-
-        return int(metainfo[-1])
-
-        infile.close()
-    except:
-        return 0
-
-def unigensampler_generator(infile, outfile, num_samples):
-    unigen_cmd = f'./samplers/unigen --samples={num_samples} {infile} {outfile} > /dev/null 2>&1'
-
-    start = time.time()
-
-    os.system(unigen_cmd)
-
-    end = time.time()
-
-    return end - start
-
-def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
-    unigen_file = open(unigen_outfile, 'r')
-    samples_file = open(samples_outfile, 'w')
-
-    for unigen_sample in unigen_file.readlines():
-        unigen_sample = unigen_sample.strip()
-
-        if len(unigen_sample) == 0:
-            break
-
-        unigen_sample = unigen_sample[1:].split(' ')
-
-        num_times_sampled = unigen_sample[-1].split(':')[1]
-
-        qsampler_binary = ''
-
-        for variable in unigen_sample:
-            if variable[0] != '0':
-                qsampler_binary += '0' if variable[0] == '-' else '1'
-
-        qsample = f'{num_times_sampled}: {qsampler_binary}'
-
-        samples_file.write(qsample + '\n')
-
-    unigen_file.close()
-    samples_file.close()
-
-def quicksampler_generator(cnf_file, num_samples):    
-    q_cmd = f'./samplers/quicksampler -n {num_samples} -t 7200.0 {cnf_file} > /dev/null 2>&1'
-
-    start = time.time()
-
-    os.system(q_cmd)
-    
-    end = time.time()
-
-    return end - start
-
-def num_valid_solutions(cnf_file):
-    z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_file} > /dev/null 2>&1'
-
-    os.system(z3_cmd)
-
-    valid_samples_file = f'{cnf_file}.samples.valid'
-
-    try:
-        num_valid = 0
-
-        with open(valid_samples_file, 'r') as s_file:
-            num_valid = len(s_file.readlines())
-            s_file.close()
-
-        return num_valid
-    except:
-        return -1
-
 def generate_info(files, directory, outfile, num_samples):
     with open(outfile, 'w') as ofile:
         for file in files:
             line = get_info(file, directory, num_samples).strip()
             ofile.write(line + '\n')
 
-            remove_files(FORMULAS_DIRECTORY)
+            remove_directory_files(FORMULAS_DIRECTORY)
 
     ofile.close()
-
-def clear_files(directory):
-    os.system('rm tmp.cnf')
-
-    if not os.path.exists(directory):
-        return
-
-    os.removedirs(directory)
-
-def remove_files(directory):
-    if not os.path.exists(directory):
-        return
-
-    rm_files_cmd = f'rm {directory}/*'
-
-    os.system(rm_files_cmd)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate metrics for given directories')
@@ -243,7 +103,7 @@ if __name__=='__main__':
         help='outfile to write metrics to'
     )
     parser.add_argument(
-        '--num_samples',
+        '--samples',
         type=int,
         default=10000,
         help='number of samples to generate'
@@ -254,12 +114,12 @@ if __name__=='__main__':
     num_files = abs(args.quantity)
     directory = os.fsencode(args.directory).decode('utf-8')
     out_file = args.outfile
-    num_samples = abs(args.num_samples)
+    num_samples = abs(args.samples)
 
-    files = get_files(num_files, directory)
+    files = get_directory_files(num_files, directory)
 
     if not os.path.exists(FORMULAS_DIRECTORY):
         os.makedirs(FORMULAS_DIRECTORY)
 
     generate_info(files, directory, out_file, num_samples)
-    clear_files(FORMULAS_DIRECTORY)
+    remove_directory(FORMULAS_DIRECTORY)
