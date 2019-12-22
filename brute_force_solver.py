@@ -1,9 +1,12 @@
 from generate_formula import get_zero_labels, generate_cnf, read_matrix
 import sys
 import time
+import argparse
+import os
 
 # USAGE:
-# $ python3 brute_force_solver.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME
+# $ python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+#
 # This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 
 def find_all_solutions(matrix, solution_filename, write=True):
@@ -20,6 +23,8 @@ def find_all_solutions(matrix, solution_filename, write=True):
     cnf_file = open('tmp.cnf', 'r')
     clauses = cnf_file.readlines()
     cnf_file.close()
+    
+    os.system('rm tmp.cnf')
 
     solution_file = None
     if write:
@@ -39,11 +44,9 @@ def find_all_solutions(matrix, solution_filename, write=True):
         if satisifes:
             if write:
                 solution_file.write(i + '\n')
-            else:
-                count += 1
+            count += 1
     
-    if not write:
-        return count
+    return count
     
 def check_clause(solution, clause):
     literals = clause.split()[:-1]
@@ -71,8 +74,25 @@ def gen_binary_strings(n):
         yield binary_str
 
 if __name__ == '__main__':
-    matrix = read_matrix(sys.argv[1])
+    parser = argparse.ArgumentParser(description='Generate samples for given directories')
+
+    parser.add_argument(
+        '--matrixfilename',
+        type=str,
+        default='data/example.txt',
+        help='the input file containing the matrix to generate samples for'
+    )
+    parser.add_argument(
+        '--solutionfilename',
+        default='all_solutions.txt',
+        type=str,
+        help='outfile to write solutions to'
+    )
+
+    args = parser.parse_args()
+
+    matrix = read_matrix(args.matrixfilename)
     start = time.time()
-    find_all_solutions(matrix, sys.argv[2])
+    num_solutions = find_all_solutions(matrix, args.solutionfilename)
     end = time.time()
-    print(f'Generated all solutions in {end - start} seconds')
+    print(f'Generated {num_solutions} solutions in {end - start} seconds')

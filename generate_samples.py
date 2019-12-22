@@ -1,6 +1,10 @@
 #!/bin/python
 
-from __future__ import print_function
+# USAGE
+# $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
+# 
+# Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
+
 from generate_formula import read_matrix, generate_cnf
 from reconstruct_solutions import reconstruct_solutions
 
@@ -15,13 +19,12 @@ def unigensampler_generator(infile, outfile, num_samples):
 
     os.system(unigen_cmd)
 
-def quicksampler_generator(cnf_file, num_samples, osname):
-    print(osname)
-    q_cmd = f'./samplers/quicksampler -n {num_samples} -t 7200.0 {cnf_file}'
+def quicksampler_generator(cnf_file, num_samples, timeout, osname):
+    q_cmd = f'./samplers/quicksampler -n {num_samples} -t {timeout} {cnf_file}'
     z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_file}'
 
     if osname == 'macOS':
-        q_cmd = f'./samplers/macOS/quicksampler -n {num_samples} -t 7200.0 {cnf_file}'
+        q_cmd = f'./samplers/macOS/quicksampler -n {num_samples} -t {timeout} {cnf_file}'
         z3_cmd = f'./samplers/macOS/z3 sat.quicksampler_check=true {cnf_file}'
 
     os.system(q_cmd)
@@ -54,7 +57,7 @@ def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
     unigen_file.close()
     samples_file.close()
 
-def clean_up(shortened_filename):
+def clean_up(shortened_filename, unigen):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
     remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
     remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
@@ -63,6 +66,10 @@ def clean_up(shortened_filename):
     os.system(remove_samples)
     os.system(remove_valid)
 
+    if unigen:
+        remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
+        os.system(remove_unigen_file)
+
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
@@ -70,13 +77,19 @@ if __name__=='__main__':
         '--filename',
         type=str,
         default='data/example.txt',
-        help='the input file containing the matrix to generate samples for'
+        help='The input file containing the matrix to generate samples for'
     )
     parser.add_argument(
         '--outfile',
         type=str,
         default='solutions.txt',
-        help='outfile to write solutions to'
+        help='Outfile to write solutions to'
+    )
+    parser.add_argument(
+        '--timeout',
+        type=float,
+        default=7200.0,
+        help='Timeout for samplers (seconds), default is 7200'
     )
     parser.add_argument(
         '--num_samples',
@@ -109,12 +122,23 @@ if __name__=='__main__':
     clause_count = generate_cnf(matrix, cnf_filename)
 
     if args.sampler == 1:
-        quicksampler_generator(cnf_filename, args.num_samples, os_name)
+        quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(matrix, valid_solutions, args.outfile)
-        clean_up(shortened_filename)
+        clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
         else:
-            print('Unfinished')
+            unigen_outfile = cnf_filename + '.unigen'
+            samples_outfile = cnf_filename + '.samples'
+
+            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples)
+            convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
+
+            z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_filename} > /dev/null 2>&1'
+            os.system(z3_cmd)
+
+            valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
+            reconstruct_solutions(matrix, valid_solutions, args.outfile)
+            clean_up(shortened_filename, True)

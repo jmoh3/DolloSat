@@ -88,7 +88,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--solutionfilename',
         type=str,
-        help='outfile to write formula to'
+        help='file to get solutions from'
     )
 
     args = parser.parse_args()
