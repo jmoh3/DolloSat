@@ -214,7 +214,6 @@ def remove_files(directory):
 
     os.system(rm_files_cmd)
 
-
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate metrics for given directories')
 
