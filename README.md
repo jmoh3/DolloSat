@@ -17,7 +17,7 @@ All of these binaries should be provided, but if none of them work, please see t
 Run with:
 
 ```
-python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
+python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
 ```
 
 This will sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing and save the reconstructed 1-dollo matrices to SOLUTIONS_OUTFILE.
