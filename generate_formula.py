@@ -1,11 +1,12 @@
 import sys
 import os
+import time
 import argparse
 from itertools import permutations 
 
 # USAGE
-# $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --num_rows=CLUSTER_ROWS
-#   --num_columns=CLUSTER_COLUMNS --outfile=FORMULA_FILENAME
+# $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=FORMULA_FILENAME
+#  --num_rows=CLUSTER_ROWS --num_columns=CLUSTER_COLUMNS
 # 
 # Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
 # to a smaller 1 dollo matrix with CLUSTER_ROWS rows and CLUSTER_COLUMNS and writes it to
@@ -71,6 +72,27 @@ def create_variable_matrices(matrix, s, t):
     
     return variables
 
+def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
+    split_cnf = raw_clause.split()[:-1]
+    clause_cnf = ''
+    for argument in split_cnf:
+        if argument[0] == '-':
+            label = argument[1]
+            use_is_two, location = variable_mapping[label][0], variable_mapping[label][1]
+            if use_is_two:
+                clause_cnf += f'-{is_two_sub[location[0]][location[1]]} '
+            else:
+                clause_cnf += f'-{is_one_sub[location[0]][location[1]]} '
+        else:
+            label = argument[0]
+            use_is_two, location = variable_mapping[label][0], variable_mapping[label][1]
+            if use_is_two:
+                clause_cnf += f'{is_two_sub[location[0]][location[1]]} '
+            else:
+                clause_cnf += f'{is_one_sub[location[0]][location[1]]} '
+    clause_cnf += '0\n'
+    return clause_cnf
+
 def get_clauses_no_forbidden(is_one, is_two):
     s = len(is_one)
     t = len(is_one[0])
@@ -78,17 +100,36 @@ def get_clauses_no_forbidden(is_one, is_two):
     row_permutations = permutations([i for i in range(s)], 3)
     column_permutations = permutations([i for i in range(t)], 2)
 
+    clauses = []
+
     for rows in row_permutations:
         for columns in column_permutations:
-            submatrix = [[matrix[row1][col1], matrix[row1][col2]],
-                        [matrix[row2][col1], matrix[row2][col2]],
-                        [matrix[row3][col1], matrix[row3][col2]]]
+            row1, row2, row3 = rows[0], rows[1], rows[2]
+            col1, col2 = columns[0], columns[1]
 
-            submatrix_labels = [[zero_labels[row1][col1], zero_labels[row1][col2]],
-                                [zero_labels[row2][col1], zero_labels[row2][col2]],
-                                [zero_labels[row3][col1], zero_labels[row3][col2]]]
-                                            
-            clause = get_clause(submatrix, submatrix_labels, lookup)
+            is_one_sub = [[is_one[row1][col1], is_one[row1][col2]],
+                            [is_one[row2][col1], is_one[row2][col2]],
+                            [is_one[row3][col1], is_one[row3][col2]]]
+
+            is_two_sub = [[is_two[row1][col1], is_two[row1][col2]],
+                            [is_two[row2][col1], is_two[row2][col2]],
+                            [is_two[row3][col1], is_two[row3][col2]]]
+
+            for possible_submatrix in lookup.keys():
+                clause_raw = lookup[possible_submatrix]
+                clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
+                clauses.append(clause)
+    
+    return clauses
+
+def get_clauses_mapping():
+    
+
+def get_cnf(filename, s, t):
+    matrix = read_matrix(filename)
+    variables = create_variable_matrices(matrix, s, t)
+    forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
+    # print(forbidden_clauses)
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
@@ -112,11 +153,28 @@ if __name__ == '__main__':
         default='formula.cnf',
         help='outfile to write formula to'
     )
+    parser.add_argument(
+        '--num_rows',
+        type=int,
+        default=5,
+        help='number of rows in clustered matrix'
+    )
+    parser.add_argument(
+        '--num_columns',
+        type=int,
+        default=5,
+        help='number of columns in clustered matrix'
+    )
 
     args = parser.parse_args()
 
-    matrix = read_matrix(args.filename)
+    filename = args.filename
+    outfile = args.outfile
+    s = args.num_rows
+    t = args.num_columns
+
     start = time.time()
-    generate_cnf(matrix, args.outfile)
+    get_cnf(filename, s, t)
     end = time.time()
+
     print(f'Generated cnf formula in {end - start} seconds')
