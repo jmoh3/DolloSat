@@ -122,13 +122,72 @@ def get_clauses_no_forbidden(is_one, is_two):
     
     return clauses
 
-def get_clauses_mapping():
-    
+def get_formatted_clause(true_vars, false_vars):
+    clause = ''
+    for var in true_vars:
+        clause += f'{var} '
+    for var in false_vars:
+        clause += f'-{var} '
+    clause += '0\n'
+    return clause
+
+def get_clauses_mapping(variables):
+    cell_to_cluster = variables['cell_to_cluster']
+    mutation_to_cluster = variables['mutation_to_cluster']
+    false_positives = variables['false_positives']
+    false_negatives = variables['false_negatives']
+    is_one = variables['is_one']
+    is_two = variables['is_two']
+
+    m = len(cell_to_cluster)
+    n = len(mutation_to_cluster)
+    s = len(is_one)
+    t = len(is_one[0])
+
+    clauses = []
+
+    for cell_num in range(m):
+        for mutation_num in range(n):
+            for cell_cluster in range(s):
+                for mutation_cluster in range(t):
+                    cell_cluster_var = cell_to_cluster[cell_num][cell_cluster]
+                    mutation_cluster_var = mutation_to_cluster[mutation_num][mutation_cluster]
+
+                    is_one_var = is_one[cell_cluster][mutation_cluster]
+                    is_two_var = is_two[cell_cluster][mutation_cluster]
+
+                    false_pos_var = false_positives[cell_num][mutation_num]
+                    false_neg_var = false_negatives[cell_num][mutation_num]
+
+                    if false_positives[cell_num][mutation_num] != 0:
+                        # entry is originally a 1
+                        # 1 -> 0 => false positive
+                        clauses.append(get_formatted_clause([false_pos_var, is_one_var, is_two_var],
+                                                            [cell_cluster_var, mutation_cluster_var]))
+                        # 1 -> 1 => not false positive
+                        clauses.append(get_formatted_clause([is_one_var],
+                                                            [false_pos_var, cell_cluster_var, mutation_cluster_var]))
+                        # 1 -> 2 => false positive
+                        clauses.append(get_formatted_clause([is_two_var, false_pos_var],
+                                                            [cell_cluster_var, mutation_cluster_var]))
+                    else:
+                        # entry is originally a 0
+                        # 0 -> 0 => not false negative
+                        clauses.append(get_formatted_clause([is_one_var, is_two_var],
+                                                            [cell_cluster_var, mutation_cluster_var, false_neg_var]))
+                        # 0 -> 1 => false negative
+                        clauses.append(get_formatted_clause([false_neg_var, is_one_var],
+                                                            [cell_cluster_var, mutation_cluster_var]))
+                        # 0 -> 2 => not false negative
+                        clauses.append(get_formatted_clause([is_two_var],
+                                                            [cell_cluster_var, mutation_cluster_var, false_neg_var]))
+    return clauses
 
 def get_cnf(filename, s, t):
     matrix = read_matrix(filename)
     variables = create_variable_matrices(matrix, s, t)
     forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
+    
     # print(forbidden_clauses)
 
 def read_matrix(filename):
