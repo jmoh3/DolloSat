@@ -5,7 +5,7 @@
 # 
 # Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
 
-from generate_formula import read_matrix, generate_cnf
+from generate_formula import read_matrix, get_cnf
 from reconstruct_solutions import reconstruct_solutions
 
 import sys
@@ -103,6 +103,18 @@ if __name__=='__main__':
         default=1,
         help='1 to use Quicksampler, 2 to use Unigen.'
     )
+    parser.add_argument(
+        '--s',
+        type=int,
+        default=1,
+        help='Number of cell clusters to use.'
+    )
+    parser.add_argument(
+        '--t',
+        type=int,
+        default=1,
+        help='Number of mutation clusters to use.'
+    )
 
     os_name = ''
 
@@ -118,13 +130,12 @@ if __name__=='__main__':
     shortened_filename = args.filename.split('.')[0]
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
 
-    matrix = read_matrix(args.filename)
-    clause_count = generate_cnf(matrix, cnf_filename)
+    variables = get_cnf(args.filename, cnf_filename)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(matrix, valid_solutions, args.outfile)
+        reconstruct_solutions(valid_solutions, args.outfile, variables)
         clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
@@ -140,5 +151,5 @@ if __name__=='__main__':
             os.system(z3_cmd)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(matrix, valid_solutions, args.outfile)
+            reconstruct_solutions(valid_solutions, args.outfile, variables)
             clean_up(shortened_filename, True)

@@ -207,7 +207,27 @@ def get_clauses_not_one_and_two(is_one, is_two):
             clauses.append(f'-{is_one[i][j]} -{is_two[i][j]} 0\n')
     return clauses
 
-def get_cnf(read_filename, write_filename, s, t):
+def get_at_least_one_cluster(cluster_matrix):
+    clauses = []
+    for i in range(len(cluster_matrix)):
+        clause = ''
+        for j in range(len(cluster_matrix[0])):
+            clause += f'{cluster_matrix[i][j]} '
+        clause += '0\n'
+        clauses.append(clause)
+    return clauses
+
+def each_cluster_has_at_least_one(cluster_matrix):
+    clauses = []
+    for j in range(len(cluster_matrix[0])):
+        clause = ''
+        for i in range(len(cluster_matrix)):
+            clause += f'{cluster_matrix[i][j]} '
+        clause += '0\n'
+        clauses.append(clause)
+    return clauses
+
+def get_cnf(read_filename, write_filename, s=5, t=5):
     matrix = read_matrix(read_filename)
     variables = create_variable_matrices(matrix, s, t)
     
@@ -216,6 +236,10 @@ def get_cnf(read_filename, write_filename, s, t):
     cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
     mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
     not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
+    cell_map_to_one = get_at_least_one_cluster(variables['cell_to_cluster'])
+    mutation_map_to_one = get_at_least_one_cluster(variables['mutation_to_cluster'])
+    at_least_one_cell_per_cluster = each_cluster_has_at_least_one(variables['cell_to_cluster'])
+    at_least_one_mutation_per_cluster = each_cluster_has_at_least_one(variables['mutation_to_cluster'])
 
     with open(write_filename, 'w') as f:
         f.writelines(forbidden_clauses)
@@ -223,6 +247,12 @@ def get_cnf(read_filename, write_filename, s, t):
         f.writelines(cell_mapping_clauses)
         f.writelines(mutation_mapping_clauses)
         f.writelines(not_one_and_two_clauses)
+        f.writelines(cell_map_to_one)
+        f.writelines(mutation_map_to_one)
+        f.writelines(at_least_one_cell_per_cluster)
+        f.writelines(at_least_one_mutation_per_cluster)
+    
+    return variables
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
@@ -231,7 +261,6 @@ def read_matrix(filename):
     return [[int(x) for x in line.split()] for line in lines]
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
     parser.add_argument(

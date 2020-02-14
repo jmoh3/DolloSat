@@ -28,40 +28,84 @@ from generate_formula import read_matrix
 #
 # Reconstructed matrices are separated by '======================'
 
-def reconstruct_solutions(matrix, solution_filename, write_file):
-    solution_lines = get_binary_strings(solution_filename)
-    solutions = []
+def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
+    solutions = get_binary_vector(solution_filename)
 
-    for x in range(len(solution_lines)):
-        solution = solution_lines[x]
-        solution_matrix = copy.deepcopy(matrix)
+    m = len(variables['false_positives'])
+    n = len(variables['false_positives'][0])
+    s = len(variables['is_one'])
+    t = len(variables['is_one'][0])
 
-        solution_idx = 0
+    f = open(write_file, 'w')
 
-        for i in range(len(solution_matrix)):
-            for j in range(len(solution_matrix[i])):
-                if solution_matrix[i][j] == 0:
-                    if solution[solution_idx] == '1':
-                        solution_matrix[i][j] = 2
-                    solution_idx += 1
+    solution_matrices = []
 
-        assert(solution_idx == len(solution))
-        solutions.append(solution_matrix)
-    
-    write_file = open(write_file, 'w')
-    
     for solution in solutions:
-        for row in solution:
-            row_str = ''
-            for elem in row:
-                row_str += str(elem) + ' '
-            row_str += '\n'
-            write_file.write(row_str)
-        write_file.write('======================\n')
+        clustered_matrix = [[0 for i in range(t)] for j in range(s)]
+        for i in range(s):
+            line = ''
+            for j in range(t):
+                is_one_varname = variables['is_one'][i][j] - 1
+                is_two_varname = variables['is_two'][i][j] - 1
 
-    write_file.close()
+                is_one_val = solution[is_one_varname] == 1
+                is_two_val = solution[is_two_varname] == 1
 
-def get_binary_strings(valid_sample_filename):
+                if is_one_val:
+                    clustered_matrix[i][j] = 1
+                    line += '1 '
+                elif is_two_val:
+                    clustered_matrix[i][j] = 0
+                    line += '2 '
+                else:
+                    line += '0 '
+            line += '\n'
+            f.write(line)
+        
+        num_false_positives = 0
+        num_false_negatives = 0
+
+        for i in range(m):
+            for j in range(n):
+                if variables['false_positives'][i][j] != 0:
+                    false_pos_var = variables['false_positives'][i][j] - 1
+                    if solution[false_pos_var] == 1:
+                        num_false_positives += 1
+                if variables['false_negatives'][i][j] != 0:
+                    false_neg_var = variables['false_negatives'][i][j] - 1
+                    if solution[false_neg_var] == 1:
+                        num_false_negatives += 1
+        
+        f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
+
+        if debug:
+            cell_mappings = []
+            for i in range(m):
+                found = False
+                cluster_num = -1
+                for j in range(s):
+                    cell_to_cluster_var = variables['cell_to_cluster'][i][j] - 1
+                    cell_to_cluster = solution[cell_to_cluster_var]
+                    if cell_to_cluster:
+                        cluster_num = j
+                cell_mappings.append(f'cell {i} mapped to row {cluster_num}\n')
+            
+            mutation_mappings = []
+            for i in range(n):
+                cluster_num = -1
+                for j in range(t):
+                    mutation_to_cluster_var = variables['mutation_to_cluster'][i][j] - 1
+                    mutation_to_cluster = solution[mutation_to_cluster_var]
+                    if mutation_to_cluster:
+                        cluster_num = j
+                mutation_mappings.append(f'mutation {i} mapped to row {cluster_num}\n')
+            f.writelines(cell_mappings)
+            f.writelines(mutation_mappings)
+        f.write('======================\n')
+        solution_matrices.append(clustered_matrix)
+
+
+def get_binary_vector(valid_sample_filename):
     valid = []
 
     with open(valid_sample_filename, 'r') as f:
@@ -72,15 +116,16 @@ def get_binary_strings(valid_sample_filename):
     for line in valid:
         split_line = line.split()
         binary_str = ''
+        line_vec = []
         for arg in split_line:
             if arg[0] == '0':
                 break
             if arg[0] == '-':
-                binary_str += '0'
+                line_vec.append(0)
             else:
-                binary_str += '1'
-        if len(binary_str) > 0:
-            out.append(binary_str)
+                line_vec.append(1)
+        if len(line_vec) > 0:
+            out.append(line_vec)
     
     return out
 
