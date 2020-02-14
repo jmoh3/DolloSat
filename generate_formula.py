@@ -185,11 +185,37 @@ def get_clauses_mapping(variables):
                                                             [cell_cluster_var, mutation_cluster_var, false_neg_var]))
     return clauses
 
+def get_clauses_surjective(cluster_mapping):
+    rows = len(cluster_mapping)
+    columns = len(cluster_mapping[0])
+
+    clauses = []
+
+    for i in range(rows):
+        for p in range(columns):
+            for k in range(columns):
+                if p == k:
+                    continue
+                clauses.append(f'-{cluster_mapping[i][p]} -{cluster_mapping[i][k]} 0\n')
+    
+    return clauses
+
+def get_clauses_not_one_and_two(is_one, is_two):
+    clauses = []
+    for i in range(len(is_one)):
+        for j in range(len(is_one[0])):
+            clauses.append(f'-{is_one[i][j]} -{is_two[i][j]} 0\n')
+    return clauses
+
 def get_cnf(filename, s, t):
     matrix = read_matrix(filename)
     variables = create_variable_matrices(matrix, s, t)
+    
     forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
     mapping_clauses = get_clauses_mapping(variables)
+    cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
+    mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
+    not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
