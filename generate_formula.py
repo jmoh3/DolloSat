@@ -207,8 +207,8 @@ def get_clauses_not_one_and_two(is_one, is_two):
             clauses.append(f'-{is_one[i][j]} -{is_two[i][j]} 0\n')
     return clauses
 
-def get_cnf(filename, s, t):
-    matrix = read_matrix(filename)
+def get_cnf(read_filename, write_filename, s, t):
+    matrix = read_matrix(read_filename)
     variables = create_variable_matrices(matrix, s, t)
     
     forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
@@ -216,6 +216,13 @@ def get_cnf(filename, s, t):
     cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
     mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
     not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
+
+    with open(write_filename, 'w') as f:
+        f.writelines(forbidden_clauses)
+        f.writelines(mapping_clauses)
+        f.writelines(cell_mapping_clauses)
+        f.writelines(mutation_mapping_clauses)
+        f.writelines(not_one_and_two_clauses)
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
@@ -260,7 +267,7 @@ if __name__ == '__main__':
     t = args.num_columns
 
     start = time.time()
-    get_cnf(filename, s, t)
+    get_cnf(filename, outfile, s, t)
     end = time.time()
 
     print(f'Generated cnf formula in {end - start} seconds')
