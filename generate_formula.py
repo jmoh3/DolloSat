@@ -61,6 +61,8 @@ def create_variable_matrices(matrix, s, t):
             offset += 1
     
     is_one = [[s*i+j+offset for j in range(t)] for i in range(s)]
+    offset += s*t
+
     is_two = [[s*i+j+offset for j in range(t)] for i in range(s)]
 
     variables = {'cell_to_cluster': cell_to_cluster,
@@ -187,8 +189,7 @@ def get_cnf(filename, s, t):
     matrix = read_matrix(filename)
     variables = create_variable_matrices(matrix, s, t)
     forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
-    
-    # print(forbidden_clauses)
+    mapping_clauses = get_clauses_mapping(variables)
 
 def read_matrix(filename):
     matrix_file = open(filename, 'r')
