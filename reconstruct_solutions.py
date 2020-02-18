@@ -28,7 +28,7 @@ from generate_formula import read_matrix
 #
 # Reconstructed matrices are separated by '======================'
 
-def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
+def reconstruct_solutions(solution_filename, write_file, variables, debug=False):
     solutions = get_binary_vector(solution_filename)
 
     m = len(variables['false_positives'])
@@ -63,24 +63,23 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
                     line += '0 '
             line += '\n'
             f.write(line)
-        
-        num_false_positives = 0
-        num_false_negatives = 0
-
-        for i in range(m):
-            for j in range(n):
-                if variables['false_positives'][i][j] != 0:
-                    false_pos_var = variables['false_positives'][i][j] - 1
-                    if solution[false_pos_var] == 1:
-                        num_false_positives += 1
-                if variables['false_negatives'][i][j] != 0:
-                    false_neg_var = variables['false_negatives'][i][j] - 1
-                    if solution[false_neg_var] == 1:
-                        num_false_negatives += 1
-        
-        f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
 
         if debug:
+            num_false_positives = 0
+            num_false_negatives = 0
+
+            for i in range(m):
+                for j in range(n):
+                    if variables['false_positives'][i][j] != 0:
+                        false_pos_var = variables['false_positives'][i][j] - 1
+                        if solution[false_pos_var] == 1:
+                            num_false_positives += 1
+                    if variables['false_negatives'][i][j] != 0:
+                        false_neg_var = variables['false_negatives'][i][j] - 1
+                        if solution[false_neg_var] == 1:
+                            num_false_negatives += 1
+            
+            f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             cell_mappings = []
             for i in range(m):
                 found = False

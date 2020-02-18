@@ -1,24 +1,22 @@
-from generate_formula import get_zero_labels, generate_cnf, read_matrix
+from generate_formula import get_cnf, read_matrix, create_variable_matrices
 import sys
 import time
 import argparse
 import os
+import progressbar
 
 # USAGE:
 # $ python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+# --s=NUM_CELL_CLUSTERS --t=NUM_MUTATION_CLUSTERS
 #
 # This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 
-def find_all_solutions(matrix, solution_filename, write=True):
-    label_matrix, count = get_zero_labels(matrix)
-    labels = []
-
-    for i in range(len(label_matrix)):
-        for j in range(len(label_matrix[i])):
-            if label_matrix[i][j] != 0:
-                labels.append((i, j))
+def find_all_solutions(matrix_filename, solution_filename, s=5, t=5, write=True):
+    matrix = read_matrix(matrix_filename)
+    variables = create_variable_matrices(matrix, s, t)
+    num_vars = variables['is_two'][s-1][t-1]
     
-    generate_cnf(matrix, 'tmp.cnf')
+    get_cnf(matrix_filename, 'tmp.cnf',s,t)
 
     cnf_file = open('tmp.cnf', 'r')
     clauses = cnf_file.readlines()
@@ -31,20 +29,24 @@ def find_all_solutions(matrix, solution_filename, write=True):
         solution_file = open(solution_filename, 'w')
     count = 0
 
-    for i in gen_binary_strings(len(labels)):
-        satisifes = True
-        # check whether i satisfies the satisfiability problem by checking each of the clauses
-        for clause in clauses:
-            # if one clause is false, the solution does not work
-            if clause[0] != 'p' and not check_clause(i, clause):
-                satisifes = False
-                break
+    with progressbar.ProgressBar(max_value=2**num_vars) as bar:
+        idx = 0
+        for i in gen_binary_strings(num_vars):
+            satisifes = True
+            # check whether i satisfies the satisfiability problem by checking each of the clauses
+            for clause in clauses:
+                # if one clause is false, the solution does not work
+                if clause[0] != 'p' and not check_clause(i, clause):
+                    satisifes = False
+                    break
 
-        # if it does, add it to solutions
-        if satisifes:
-            if write:
-                solution_file.write(i + '\n')
-            count += 1
+            # if it does, add it to solutions
+            if satisifes:
+                if write:
+                    solution_file.write(i + '\n')
+                count += 1
+            idx += 1
+            bar.update(idx)
     
     return count
     
@@ -88,11 +90,22 @@ if __name__ == '__main__':
         type=str,
         help='outfile to write solutions to'
     )
+    parser.add_argument(
+        '--s',
+        default=5,
+        type=int,
+        help='number of cell clusters'
+    )
+    parser.add_argument(
+        '--t',
+        default=5,
+        type=int,
+        help='number of mutation clusters'
+    )
 
     args = parser.parse_args()
 
-    matrix = read_matrix(args.matrixfilename)
     start = time.time()
-    num_solutions = find_all_solutions(matrix, args.solutionfilename)
+    num_solutions = find_all_solutions(args.matrixfilename, args.solutionfilename, args.s, args.t)
     end = time.time()
     print(f'Generated {num_solutions} solutions in {end - start} seconds')
