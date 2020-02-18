@@ -51,7 +51,7 @@ def verify_solutions(matrix_filename, solution_filename):
         verify_solution(solution)
         # assert(verify_solution(solution))
     
-    print('No invalid solutions found.')
+    # print('No invalid solutions found.')
 
 def read_matrices(matrix_filename, num_rows):
     lines = None
