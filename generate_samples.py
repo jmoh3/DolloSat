@@ -14,8 +14,8 @@ import os
 import argparse
 import platform
 
-def unigensampler_generator(infile, outfile, num_samples):
-    unigen_cmd = f'./samplers/unigen --samples={num_samples} {infile} {outfile}'
+def unigensampler_generator(infile, outfile, num_samples, timeout):
+    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} {infile} {outfile}'
 
     os.system(unigen_cmd)
 
@@ -144,7 +144,7 @@ if __name__=='__main__':
             unigen_outfile = cnf_filename + '.unigen'
             samples_outfile = cnf_filename + '.samples'
 
-            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples)
+            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
             z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_filename} > /dev/null 2>&1'
