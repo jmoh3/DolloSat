@@ -41,6 +41,8 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
     solution_matrices = []
 
     for solution in solutions:
+        if len(solution) == 0:
+            continue
         clustered_matrix = [[0 for i in range(t)] for j in range(s)]
         for i in range(s):
             line = ''
@@ -50,7 +52,7 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
 
                 is_one_val = solution[is_one_varname] == 1
                 is_two_val = solution[is_two_varname] == 1
-
+                
                 if is_one_val:
                     clustered_matrix[i][j] = 1
                     line += '1 '
@@ -114,16 +116,16 @@ def get_binary_vector(valid_sample_filename):
     out = []
 
     for line in valid:
-        split_line = line.split()
+        split_line = line.split(' ')
         binary_str = ''
         line_vec = []
         for arg in split_line:
-            if arg[0] == '0':
-                break
             if arg[0] == '-':
                 line_vec.append(0)
-            else:
+            elif arg[0] != '0':
                 line_vec.append(1)
+            else:
+                break
         if len(line_vec) > 0:
             out.append(line_vec)
     

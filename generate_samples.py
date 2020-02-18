@@ -131,7 +131,7 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t)
     write_vars(variables_filename, variables)
 
     if args.sampler == 1:
