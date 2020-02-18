@@ -5,7 +5,7 @@
 # 
 # Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
 
-from generate_formula import read_matrix, get_cnf
+from generate_formula import read_matrix, get_cnf, write_vars
 from reconstruct_solutions import reconstruct_solutions
 
 import sys
@@ -129,14 +129,16 @@ if __name__=='__main__':
 
     shortened_filename = args.filename.split('.')[0]
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
+    variables_filename = f'{shortened_filename}.variables'
 
     variables = get_cnf(args.filename, cnf_filename)
+    write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(valid_solutions, args.outfile, variables)
-        clean_up(shortened_filename, False)
+        # clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
@@ -152,4 +154,4 @@ if __name__=='__main__':
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
             reconstruct_solutions(valid_solutions, args.outfile, variables)
-            clean_up(shortened_filename, True)
+            # clean_up(shortened_filename, True)

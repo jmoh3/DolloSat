@@ -71,8 +71,19 @@ def create_variable_matrices(matrix, s, t):
                 'false_negatives': false_negatives,
                 'is_one': is_one,
                 'is_two': is_two}
-    
+        
     return variables
+
+def write_vars(var_filename, variables):
+    lines = []
+    for key in variables.keys():
+        lines.append(f'{key}\n')
+        for row in variables[key]:
+            lines.append(' '.join([str(elem) for elem in row]))
+            lines.append('\n')
+        lines.append('=========================\n')
+    with open(var_filename, 'w') as f:
+        f.writelines(lines)
 
 def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
     split_cnf = raw_clause.split()[:-1]
@@ -164,25 +175,19 @@ def get_clauses_mapping(variables):
                     if false_positives[cell_num][mutation_num] != 0:
                         # entry is originally a 1
                         # 1 -> 0 => false positive
-                        clauses.append(get_formatted_clause([false_pos_var, is_one_var, is_two_var],
-                                                            [cell_cluster_var, mutation_cluster_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} {false_pos_var} 0\n")
                         # 1 -> 1 => not false positive
-                        clauses.append(get_formatted_clause([is_one_var],
-                                                            [false_pos_var, cell_cluster_var, mutation_cluster_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} -{false_pos_var} 0\n")
                         # 1 -> 2 => false positive
-                        clauses.append(get_formatted_clause([is_two_var, false_pos_var],
-                                                            [cell_cluster_var, mutation_cluster_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} {false_pos_var} 0\n")
                     else:
                         # entry is originally a 0
                         # 0 -> 0 => not false negative
-                        clauses.append(get_formatted_clause([is_one_var, is_two_var],
-                                                            [cell_cluster_var, mutation_cluster_var, false_neg_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} -{false_neg_var} 0\n")
                         # 0 -> 1 => false negative
-                        clauses.append(get_formatted_clause([false_neg_var, is_one_var],
-                                                            [cell_cluster_var, mutation_cluster_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} {false_neg_var} 0\n")
                         # 0 -> 2 => not false negative
-                        clauses.append(get_formatted_clause([is_two_var],
-                                                            [cell_cluster_var, mutation_cluster_var, false_neg_var]))
+                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} -{false_neg_var} 0\n")
     return clauses
 
 def get_clauses_surjective(cluster_mapping):
@@ -227,6 +232,22 @@ def each_cluster_has_at_least_one(cluster_matrix):
         clauses.append(clause)
     return clauses
 
+def constrain_fp(false_vars):
+    flatten = []
+
+    for row in false_vars:
+        for elem in row:
+            if elem != 0:
+                flatten.append(elem)
+    clauses = []
+    for i in range(len(flatten)):
+        var1 = flatten[i]
+        for j in range(i+1, len(flatten)):
+            var2 = flatten[j]
+            if var1 != var2 and var2 != 0:
+                clauses.append(f'-{var1} -{var2} 0\n')
+    return clauses
+
 def get_cnf(read_filename, write_filename, s=5, t=5):
     matrix = read_matrix(read_filename)
     variables = create_variable_matrices(matrix, s, t)
@@ -240,6 +261,15 @@ def get_cnf(read_filename, write_filename, s=5, t=5):
     mutation_map_to_one = get_at_least_one_cluster(variables['mutation_to_cluster'])
     at_least_one_cell_per_cluster = each_cluster_has_at_least_one(variables['cell_to_cluster'])
     at_least_one_mutation_per_cluster = each_cluster_has_at_least_one(variables['mutation_to_cluster'])
+    one_fp = constrain_fp(variables['false_positives'])
+    one_fn = constrain_fp(variables['false_negatives'])
+
+    # enforce_clustering = []
+    # for i in range(3):
+    #     enforce_clustering.append(f"{variables['cell_to_cluster'][i][i]} 0\n")
+    
+    # for i in range(2):
+    #     enforce_clustering.append(f"{variables['mutation_to_cluster'][i][i]} 0\n")
 
     with open(write_filename, 'w') as f:
         f.writelines(forbidden_clauses)
@@ -251,7 +281,10 @@ def get_cnf(read_filename, write_filename, s=5, t=5):
         f.writelines(mutation_map_to_one)
         f.writelines(at_least_one_cell_per_cluster)
         f.writelines(at_least_one_mutation_per_cluster)
-    
+        # f.writelines(enforce_clustering)
+        f.writelines(one_fp)
+        f.writelines(one_fn)
+
     return variables
 
 def read_matrix(filename):
