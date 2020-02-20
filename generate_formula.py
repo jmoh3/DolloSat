@@ -18,7 +18,7 @@ to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTER
 FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s=5, t=5):
+def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -43,7 +43,19 @@ def get_cnf(read_filename, write_filename, s=5, t=5):
     one_fp = constrain_fp(variables['false_positives'])
     one_fn = constrain_fp(variables['false_negatives'])
 
+    first_line = ''
+    if unigen:
+        num_clauses = len(forbidden_clauses) + len(mapping_clauses) + len(cell_mapping_clauses)
+        num_clauses += len(mutation_mapping_clauses) + len(not_one_and_two_clauses) + len(cell_map_to_one) + len(mutation_map_to_one)
+        num_clauses += len(at_least_one_cell_per_cluster) + len(at_least_one_mutation_per_cluster) + len(one_fp) + len(one_fn)
+        
+        num_vars = variables['is_two'][s-1][t-1]
+
+        first_line = f'p cnf {num_vars} {num_clauses}\n'
+
     with open(write_filename, 'w') as f:
+        if unigen:
+            f.write(first_line)
         f.writelines(forbidden_clauses)
         f.writelines(mapping_clauses)
         f.writelines(cell_mapping_clauses)
