@@ -34,7 +34,6 @@ def verify_solution(matrix):
                     for col2 in range(len(matrix[0])):
                         if col1 == col2:
                             continue
-
                         submatrix = f'{matrix[row1][col1]} {matrix[row1][col2]} {matrix[row2][col1]} {matrix[row2][col2]} {matrix[row3][col1]} {matrix[row3][col2]}'
 
                         if submatrix in forbidden_submatrices:
@@ -43,15 +42,14 @@ def verify_solution(matrix):
                             
     return True
 
-def verify_solutions(matrix_filename, solution_filename):
-    matrix = read_matrix(matrix_filename)
-    solutions = read_matrices(solution_filename, len(matrix))
+def verify_solutions(solution_filename, s):
+    solutions = read_matrices(solution_filename, s)
     
     for solution in solutions:
         verify_solution(solution)
-        # assert(verify_solution(solution))
+        assert(verify_solution(solution))
     
-    # print('No invalid solutions found.')
+    print('No invalid solutions found.')
 
 def read_matrices(matrix_filename, num_rows):
     lines = None
@@ -76,21 +74,20 @@ def read_matrices(matrix_filename, num_rows):
     return matrices
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
-    parser.add_argument(
-        '--matrixfilename',
-        type=str,
-        default='data/example.txt',
-        help='the input file containing the matrix to generate samples for'
-    )
     parser.add_argument(
         '--solutionfilename',
         type=str,
         help='file to get solutions from'
     )
+    parser.add_argument(
+        '--s',
+        type=int,
+        default=5,
+        help='Number of rows in the clustered matrix'
+    )
 
     args = parser.parse_args()
 
-    verify_solutions(args.matrixfilename, args.solutionfilename)
+    verify_solutions(args.solutionfilename, args.s)
