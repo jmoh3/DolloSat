@@ -264,13 +264,6 @@ def get_cnf(read_filename, write_filename, s=5, t=5):
     one_fp = constrain_fp(variables['false_positives'])
     one_fn = constrain_fp(variables['false_negatives'])
 
-    enforce_clustering = []
-    for i in range(3):
-        enforce_clustering.append(f"{variables['cell_to_cluster'][i][i]} 0\n")
-    
-    for i in range(2):
-        enforce_clustering.append(f"{variables['mutation_to_cluster'][i][i]} 0\n")
-
     with open(write_filename, 'w') as f:
         f.writelines(forbidden_clauses)
         f.writelines(mapping_clauses)
@@ -281,7 +274,6 @@ def get_cnf(read_filename, write_filename, s=5, t=5):
         f.writelines(mutation_map_to_one)
         f.writelines(at_least_one_cell_per_cluster)
         f.writelines(at_least_one_mutation_per_cluster)
-        f.writelines(enforce_clustering)
         f.writelines(one_fp)
         f.writelines(one_fn)
 

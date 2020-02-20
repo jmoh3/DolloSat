@@ -115,6 +115,13 @@ if __name__=='__main__':
         default=1,
         help='Number of mutation clusters to use.'
     )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Debug mode'
+    )
+
+    parser.set_defaults(debug=False)
 
     os_name = ''
 
@@ -137,7 +144,7 @@ if __name__=='__main__':
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(valid_solutions, args.outfile, variables)
+        reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
         # clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':

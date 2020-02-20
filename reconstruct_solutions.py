@@ -28,7 +28,7 @@ from generate_formula import read_matrix
 #
 # Reconstructed matrices are separated by '======================'
 
-def reconstruct_solutions(solution_filename, write_file, variables, debug=False):
+def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
     solutions = get_binary_vector(solution_filename)
 
     m = len(variables['false_positives'])
