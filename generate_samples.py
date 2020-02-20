@@ -1,11 +1,22 @@
 #!/bin/python
 
-# USAGE
-# $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
-# 
-# Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
+"""
+USAGE
+$ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=SOLUTIONS_OUTFILE
+                            --timeout=TIMEOUT
+                            --num_samples=NUMBER_OF_SAMPLES
+                            --sampler=SAMPLER_TYPE
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
+                            --debug
 
-from generate_formula import read_matrix, get_cnf, write_vars
+Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to
+SOLUTIONS_OUTFILE.
+"""
+
+from generate_formula import read_matrix, get_cnf
+from get_vars import write_vars
 from reconstruct_solutions import reconstruct_solutions
 
 import sys
@@ -61,10 +72,12 @@ def clean_up(shortened_filename, unigen):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
     remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
     remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
+    remove_vars = f'rm {shortened_filename}.variables'
 
     os.system(remove_formula)
     os.system(remove_samples)
     os.system(remove_valid)
+    os.system(remove_vars)
 
     if unigen:
         remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
@@ -145,7 +158,7 @@ if __name__=='__main__':
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
-        # clean_up(shortened_filename, False)
+        clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
@@ -161,4 +174,4 @@ if __name__=='__main__':
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
             reconstruct_solutions(valid_solutions, args.outfile, variables)
-            # clean_up(shortened_filename, True)
+            clean_up(shortened_filename, True)

@@ -2,33 +2,19 @@ import copy
 import sys
 from generate_formula import read_matrix
 
-# USAGE
-# $ python3 reconstruct_solutions.py SOLUTION_FILENAME 
-#
-# Writes k-dollo phylogeny matrices reconstructed from samples in SOLUTION_FILENAME to samples.txt.
-#
-# For each '1' in a solution, the corresponding zero in the input matrix specified in 
-# INPUT_MATRIX_FILENAME will be flipped to a 2 to indicate a mutation that was present in 
-# a sample but then lost due to a copy number abberation.
-#
-# For a INPUT_MATRIX_FILENAME whose contents look like this:
-# 4 # cells
-# 4 # mutations
-# 0 0 1 0
-# 1 0 0 0
-# 1 0 0 0
-# 1 0 0 0
-#
-# One of the reconstructed solutions written to SOLUTION_FILENAME could look like this:
-#
-# 0 2 1 2 
-# 1 0 0 2 
-# 1 0 0 2 
-# 1 0 0 2 
-#
-# Reconstructed matrices are separated by '======================'
 
 def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
+    """
+    Writes k-dollo phylogeny matrices reconstructed from samples in solution_filename to write_file.
+
+    Reconstructed matrices are separated by '======================'
+
+    solution_filename - file containing satisfying variable assignments
+    write_file - file to write reconstructed solutions to
+    variables - dictionary of variable matrices
+    debug - if set to True, will write information about false positives/negatives and clustering to
+    write_file, if set to False, only matrices will be written
+    """
     solutions = get_binary_vector(solution_filename)
 
     m = len(variables['false_positives'])
@@ -107,6 +93,11 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
 
 
 def get_binary_vector(valid_sample_filename):
+    """
+    Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
+
+    valid_sample_filename - file that contains satisfying variable assignments
+    """
     valid = []
 
     with open(valid_sample_filename, 'r') as f:
@@ -129,6 +120,3 @@ def get_binary_vector(valid_sample_filename):
             out.append(line_vec)
     
     return out
-
-if __name__ == '__main__':
-    reconstruct_solutions(sys.argv[1], 'samples.txt')
