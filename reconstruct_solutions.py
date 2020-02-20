@@ -3,7 +3,7 @@ import sys
 from generate_formula import read_matrix
 
 # USAGE
-# $ python3 reconstruct_solutions.py INPUT_MATRIX_FILENAME SOLUTION_FILENAME 
+# $ python3 reconstruct_solutions.py SOLUTION_FILENAME 
 #
 # Writes k-dollo phylogeny matrices reconstructed from samples in SOLUTION_FILENAME to samples.txt.
 #
@@ -99,7 +99,7 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=False)
                     mutation_to_cluster = solution[mutation_to_cluster_var]
                     if mutation_to_cluster:
                         cluster_num = j
-                mutation_mappings.append(f'mutation {i} mapped to row {cluster_num}\n')
+                mutation_mappings.append(f'mutation {i} mapped to column {cluster_num}\n')
             f.writelines(cell_mappings)
             f.writelines(mutation_mappings)
         f.write('======================\n')
@@ -131,5 +131,4 @@ def get_binary_vector(valid_sample_filename):
     return out
 
 if __name__ == '__main__':
-    matrix = read_matrix(sys.argv[1])
-    reconstruct_solutions(matrix, sys.argv[2], 'samples.txt')
+    reconstruct_solutions(sys.argv[1], 'samples.txt')

@@ -6,10 +6,10 @@ from itertools import permutations
 
 # USAGE
 # $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=FORMULA_FILENAME
-#  --num_rows=CLUSTER_ROWS --num_columns=CLUSTER_COLUMNS
+#  --s=NUM_CELL_CLUSTERS --t=NUM_MUTATION_CLUSTERS
 # 
 # Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
-# to a smaller 1 dollo matrix with CLUSTER_ROWS rows and CLUSTER_COLUMNS and writes it to
+# to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS and writes it to
 # FORMULA_FILENAME.
 
 def get_lookup(lookup_filename):
@@ -110,8 +110,8 @@ def get_clauses_no_forbidden(is_one, is_two):
     s = len(is_one)
     t = len(is_one[0])
 
-    row_permutations = permutations([i for i in range(s)], 3)
-    column_permutations = permutations([i for i in range(t)], 2)
+    row_permutations = list(permutations(range(s), 3))
+    column_permutations = list(permutations([i for i in range(t)], 2))
 
     clauses = []
 
@@ -132,7 +132,7 @@ def get_clauses_no_forbidden(is_one, is_two):
                 clause_raw = lookup[possible_submatrix]
                 clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
                 clauses.append(clause)
-    
+
     return clauses
 
 def get_formatted_clause(true_vars, false_vars):
@@ -309,13 +309,13 @@ if __name__ == '__main__':
         help='outfile to write formula to'
     )
     parser.add_argument(
-        '--num_rows',
+        '--s',
         type=int,
         default=5,
         help='number of rows in clustered matrix'
     )
     parser.add_argument(
-        '--num_columns',
+        '--t',
         type=int,
         default=5,
         help='number of columns in clustered matrix'
@@ -325,11 +325,13 @@ if __name__ == '__main__':
 
     filename = args.filename
     outfile = args.outfile
-    s = args.num_rows
-    t = args.num_columns
+    s = args.s
+    t = args.t
 
     start = time.time()
-    get_cnf(filename, outfile, s, t)
+    variables = get_cnf(filename, outfile, s, t)
     end = time.time()
+
+    write_vars("formula.vars", variables)
 
     print(f'Generated cnf formula in {end - start} seconds')
