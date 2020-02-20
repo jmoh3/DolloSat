@@ -160,7 +160,7 @@ if __name__=='__main__':
         reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
         clean_up(shortened_filename, False)
     else:
-        if os_name != 'macOS':
+        if os_name == 'macOS':
             print('Unigen not compatible with OS X')
         else:
             unigen_outfile = cnf_filename + '.unigen'
