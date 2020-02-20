@@ -8,8 +8,10 @@ import argparse
 
 """
 USAGE
-$ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=FORMULA_FILENAME
- --s=NUM_CELL_CLUSTERS --t=NUM_MUTATION_CLUSTERS
+$ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=FORMULA_FILENAME
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
 
 Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
 to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS and writes it to

@@ -5,11 +5,15 @@ import argparse
 import os
 import progressbar
 
-# USAGE:
-# $ python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
-# --s=NUM_CELL_CLUSTERS --t=NUM_MUTATION_CLUSTERS
-#
-# This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
+"""
+USAGE:
+$ python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME
+                                --solutionfilename=SOLUTION_FILENAME
+                                --s=NUM_CELL_CLUSTERS
+                                --t=NUM_MUTATION_CLUSTERS
+
+This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
+"""
 
 def find_all_solutions(matrix_filename, solution_filename, s=5, t=5, write=True):
     matrix = read_matrix(matrix_filename)

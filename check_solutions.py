@@ -2,10 +2,12 @@ import sys
 import argparse
 from generate_formula import read_matrix
 
-# USAGE:
-# $ python3 check_solutions.py --matrixfilename=MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
-#
-# Checks for the prescence of forbidden submatrices in reconstructed samples
+"""
+USAGE:
+$ python3 check_solutions.py --matrixfilename=MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+
+Checks for the prescence of forbidden submatrices in reconstructed samples
+"""
 
 forbidden_submatrices = { '1 0 0 1 1 1', '1 0 0 1 1 2',
                           '1 0 0 2 1 1', '1 0 0 2 1 2',
@@ -23,6 +25,11 @@ forbidden_submatrices = { '1 0 0 1 1 1', '1 0 0 1 1 2',
                           }
 
 def verify_solution(matrix):
+    """
+    Returns True if no forbidden submatrices are present in matrix, False o/w.
+
+    matrix - matrix to verify
+    """
     for row1 in range(len(matrix)):
         for row2 in range(len(matrix)):
             if row1 == row2:
@@ -43,6 +50,12 @@ def verify_solution(matrix):
     return True
 
 def verify_solutions(solution_filename, s):
+    """
+    Verifies file of solution matrices.
+
+    solution_filename - file that contains solution matrices
+    s - number of rows in each solution
+    """
     solutions = read_matrices(solution_filename, s)
     
     for solution in solutions:
@@ -52,6 +65,12 @@ def verify_solutions(solution_filename, s):
     print('No invalid solutions found.')
 
 def read_matrices(matrix_filename, num_rows):
+    """
+    Returns parsed list of matrices from matrix_filename.
+
+    matrix_filename - file that contains matrices
+    num_rows - number of rows in each matrix
+    """
     lines = None
 
     with open(matrix_filename, 'r') as f:
