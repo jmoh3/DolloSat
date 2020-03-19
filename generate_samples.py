@@ -1,11 +1,22 @@
 #!/bin/python
 
-# USAGE
-# $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
-# 
-# Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to SOLUTIONS_OUTFILE.
+"""
+USAGE
+$ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=SOLUTIONS_OUTFILE
+                            --timeout=TIMEOUT
+                            --num_samples=NUMBER_OF_SAMPLES
+                            --sampler=SAMPLER_TYPE
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
+                            --debug
 
-from generate_formula import read_matrix, generate_cnf
+Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to
+SOLUTIONS_OUTFILE.
+"""
+
+from generate_formula import read_matrix, get_cnf
+from get_vars import write_vars
 from reconstruct_solutions import reconstruct_solutions
 
 import sys
@@ -14,8 +25,8 @@ import os
 import argparse
 import platform
 
-def unigensampler_generator(infile, outfile, num_samples):
-    unigen_cmd = f'./samplers/unigen --samples={num_samples} {infile} {outfile}'
+def unigensampler_generator(infile, outfile, num_samples, timeout):
+    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} {infile} {outfile}'
 
     os.system(unigen_cmd)
 
@@ -61,10 +72,12 @@ def clean_up(shortened_filename, unigen):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
     remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
     remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
+    remove_vars = f'rm {shortened_filename}.variables'
 
     os.system(remove_formula)
     os.system(remove_samples)
     os.system(remove_valid)
+    os.system(remove_vars)
 
     if unigen:
         remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
@@ -103,6 +116,25 @@ if __name__=='__main__':
         default=1,
         help='1 to use Quicksampler, 2 to use Unigen.'
     )
+    parser.add_argument(
+        '--s',
+        type=int,
+        default=1,
+        help='Number of cell clusters to use.'
+    )
+    parser.add_argument(
+        '--t',
+        type=int,
+        default=1,
+        help='Number of mutation clusters to use.'
+    )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Debug mode'
+    )
+
+    parser.set_defaults(debug=False)
 
     os_name = ''
 
@@ -117,14 +149,15 @@ if __name__=='__main__':
 
     shortened_filename = args.filename.split('.')[0]
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
+    variables_filename = f'{shortened_filename}.variables'
 
-    matrix = read_matrix(args.filename)
-    clause_count = generate_cnf(matrix, cnf_filename)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t)
+    write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(matrix, valid_solutions, args.outfile)
+        reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
         clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
@@ -133,12 +166,12 @@ if __name__=='__main__':
             unigen_outfile = cnf_filename + '.unigen'
             samples_outfile = cnf_filename + '.samples'
 
-            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples)
+            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
             z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_filename} > /dev/null 2>&1'
             os.system(z3_cmd)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(matrix, valid_solutions, args.outfile)
+            reconstruct_solutions(valid_solutions, args.outfile, variables)
             clean_up(shortened_filename, True)

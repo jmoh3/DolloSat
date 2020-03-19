@@ -1,141 +1,97 @@
+from get_clauses import *
+from get_vars import create_variable_matrices, write_vars
+
 import sys
-import time
 import os
+import time
 import argparse
 
-# USAGE
-# $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTION_FILENAME
-# 
-# Generates a boolean formula in CNF format from the matrix in INPUT_MATRIX_FILENAME
-# and writes it to SOLUTION_FILENAME.
-#
-# The boolean formula corresponds the flipping of 0's in a binary matrix to 2's
-# in such a way that produces a 1-dollo phylogeny.
-#
-# Each clause in the formula corresponds to a given submatrix of the input matrix,
-# where a certain flipping of 0's within the submatrix could produce a forbidden
-# matrix. The clause evaluates to true if the flipping configuration does NOT produce
-# a forbidden submatrix, false if it does.
+"""
+USAGE
+$ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=FORMULA_FILENAME
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
 
-def get_lookup(lookup_filename):
-    lookup_file = open(lookup_filename, 'r')
-    lookup = {}
-    lines = lookup_file.readlines()
-    lookup_file.close()
+Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
+to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS and writes it to
+FORMULA_FILENAME.
+"""
 
-    for idx in range(0, len(lines), 2):
-        lookup[lines[idx].strip()] = lines[idx+1]
+def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True):
+    """
+    Writes a cnf formula for matrix specified in read_filename to write_filename using s
+    rows and t columns for clustered matrix.
 
-    return lookup
-
-def get_clause(submatrix, submatrix_labels, lookup):
-    labels_dictionary = {
-        "a":[0,0],
-        "b":[0,1],
-        "c":[1,0],
-        "d":[1,1],
-        "e":[2,0],
-        "f":[2,1],
-    }
+    read_filename - file containing input matrix
+    write_filename - file to write formula to
+    s - number of rows in clustered matrix/cell clusters
+    t - number of columns in clustered matrix/mutation clusters
+    """
+    matrix = read_matrix(read_filename)
+    variables = create_variable_matrices(matrix, s, t)
     
-    key = ''
+    forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
+    mapping_clauses = get_clauses_mapping(variables)
+    cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
+    mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
+    not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
+    cell_map_to_one = get_at_least_one_cluster(variables['cell_to_cluster'])
+    mutation_map_to_one = get_at_least_one_cluster(variables['mutation_to_cluster'])
+    at_least_one_cell_per_cluster = each_cluster_has_at_least_one(variables['cell_to_cluster'])
+    at_least_one_mutation_per_cluster = each_cluster_has_at_least_one(variables['mutation_to_cluster'])
+    one_fp = constrain_fp(variables['false_positives'])
+    one_fn = constrain_fp(variables['false_negatives'])
 
-    for row in submatrix:
-        for elem in row:
-            if (elem == 1):
-                key += str(elem)
-            else:
-                key += '0'
-    
-    clause_raw = ""
+    first_line = ''
+    if unigen:
+        num_clauses = len(forbidden_clauses) + len(mapping_clauses) + len(cell_mapping_clauses)
+        num_clauses += len(mutation_mapping_clauses) + len(not_one_and_two_clauses) + len(cell_map_to_one) + len(mutation_map_to_one)
+        num_clauses += len(at_least_one_cell_per_cluster) + len(at_least_one_mutation_per_cluster) + len(one_fp) + len(one_fn)
+        
+        num_vars = variables['is_two'][s-1][t-1]
 
-    if key in lookup:
-        clause_raw = lookup[key]
-    else:
-        return None
-    
-    split_cnf = clause_raw.split()[:-1]
-    clause_cnf = ""
-    for argument in split_cnf:
-        if(argument[0] == '-'):
-            clause_cnf += '-'
-            indicies_matrix = labels_dictionary[argument[1]]
-            clause_cnf += str(submatrix_labels[indicies_matrix[0]][indicies_matrix[1]])
-        else:
-            indicies_matrix = labels_dictionary[argument[0]]
-            clause_cnf += str(submatrix_labels[indicies_matrix[0]][indicies_matrix[1]])
-        clause_cnf += " "
-    clause_cnf += "0\n"
+        first_line = f'p cnf {num_vars} {num_clauses}\n'
 
-    return clause_cnf
+    with open(write_filename, 'w') as f:
+        if unigen:
+            f.write(first_line)
+        f.writelines(forbidden_clauses)
+        f.writelines(mapping_clauses)
+        f.writelines(cell_mapping_clauses)
+        f.writelines(mutation_mapping_clauses)
+        f.writelines(not_one_and_two_clauses)
+        f.writelines(cell_map_to_one)
+        f.writelines(mutation_map_to_one)
+        f.writelines(at_least_one_cell_per_cluster)
+        f.writelines(at_least_one_mutation_per_cluster)
+        f.writelines(one_fp)
+        f.writelines(one_fn)
 
-def get_zero_labels(matrix):
-    labels = [[0 for x in range(len(matrix[0]))] for y in range(len(matrix))]
-    zero_count = 1
-
-    for i in range(len(matrix)):
-        for j in range(len(matrix[i])):
-            if matrix[i][j] == 0:
-                labels[i][j] = zero_count
-                zero_count += 1
-    
-    return labels, zero_count-1
-
-def generate_cnf(matrix, outfilename):    
-    lookup = get_lookup('./forbidden-submatrix-enumerations.txt')
-
-    write_file = open(outfilename, 'w')
-    num_rows = len(matrix)
-    num_cols = len(matrix[0])
-    zero_labels, zero_count = get_zero_labels(matrix)
-
-    clause_count = 0
-
-    lines = []
-
-    for row1 in range(len(matrix)):
-        for row2 in range(len(matrix)):
-            if row1 == row2:
-                continue
-            for row3 in range(len(matrix)):
-                if row3 == row2 or row3 == row1:
-                    continue
-                for col1 in range(len(matrix[0])):
-                    for col2 in range(len(matrix[0])):
-                        if col1 == col2:
-                            continue
-
-                        submatrix = [[matrix[row1][col1], matrix[row1][col2]],
-                                    [matrix[row2][col1], matrix[row2][col2]],
-                                    [matrix[row3][col1], matrix[row3][col2]]]
-
-                        submatrix_labels = [[zero_labels[row1][col1], zero_labels[row1][col2]],
-                                           [zero_labels[row2][col1], zero_labels[row2][col2]],
-                                           [zero_labels[row3][col1], zero_labels[row3][col2]]]
-                                            
-                        clause = get_clause(submatrix, submatrix_labels, lookup)
-
-                        if clause:
-                            lines.append(clause)
-                            clause_count += 1
-
-    # print(f'clause count: {clause_count}, zero count: {zero_count}')
-
-    lines.insert(0, f'p cnf {clause_count} {zero_count}\n')
-    write_file.writelines(lines)
-
-    write_file.close()
-
-    return clause_count
+    return variables
 
 def read_matrix(filename):
+    """
+    Returns matrix parsed from given file.
+    First two lines of matrix file must specify number of cells and mutations of input.
+
+    For example:
+    5 # cells
+    5 # mutations
+    0 1 0 0 0
+    0 0 1 0 1
+    0 0 0 0 0
+    0 0 0 0 0
+    1 0 0 1 0
+
+    filename - file that contains input matrix
+    """
     matrix_file = open(filename, 'r')
     lines = matrix_file.readlines()[2:]
     
     return [[int(x) for x in line.split()] for line in lines]
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
     parser.add_argument(
@@ -150,11 +106,30 @@ if __name__ == '__main__':
         default='formula.cnf',
         help='outfile to write formula to'
     )
+    parser.add_argument(
+        '--s',
+        type=int,
+        default=5,
+        help='number of rows in clustered matrix'
+    )
+    parser.add_argument(
+        '--t',
+        type=int,
+        default=5,
+        help='number of columns in clustered matrix'
+    )
 
     args = parser.parse_args()
 
-    matrix = read_matrix(args.filename)
+    filename = args.filename
+    outfile = args.outfile
+    s = args.s
+    t = args.t
+
     start = time.time()
-    generate_cnf(matrix, args.outfile)
+    variables = get_cnf(filename, outfile, s, t)
     end = time.time()
+
+    write_vars("formula.vars", variables)
+
     print(f'Generated cnf formula in {end - start} seconds')

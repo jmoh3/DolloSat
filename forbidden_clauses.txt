@@ -1,0 +1,50 @@
+100111
+-a b h c i -d -e -f 0
+100112
+-a b h c i -d -e -l 0
+100211
+-a b h c i -j -e -f 0
+100212
+-a b h c i -j -e -l 0
+100121
+-a b h c i -d -k -f 0
+100122
+-a b h c i -d -k -l 0
+100221
+-a b h c i -j -k -f 0
+100222
+-a b h c i -j -k -l 0
+200111
+-g b h c i -d -e -f 0
+200112
+-g b h c i -d -e -l 0
+200211
+-g b h c i -j -e -f 0
+200212
+-g b h c i -j -e -l 0
+200121
+-g b h c i -d -k -f 0
+200122
+-g b h c i -d -k -l 0
+200221
+-g b h c i -j -k -f 0
+200222
+-g b h c i -j -k -l 0
+110212
+-a -b c i -j -e -l 0
+110222
+-a -b c i -j -k -l 0
+210212
+-g -b c i -j -e -l 0
+210222
+-g -b c i -j -k -l 0
+201121
+-g b h -c -d -k -f 0
+201122
+-g b h -c -d -k -l 0
+201221
+-g b h -c -j -k -f 0
+201222
+-g b h -c -j -k -l 0
+211222
+-g -b -c -j -k -l 0
