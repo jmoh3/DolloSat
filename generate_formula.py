@@ -79,8 +79,11 @@ def parse_allowed_losses(filename, num_mutations):
         return set([i for i in range(num_mutations)])
     with open(filename, 'r') as f:
         lines = f.readlines()
-        allowed = lines[0].split(',')
-        return set([int(i) for i in allowed])
+        if len(lines) > 0:
+            allowed = lines[0].split(',')
+            return set([int(i) for i in allowed])
+        else:
+            return set()
 
 def read_matrix(filename):
     """
