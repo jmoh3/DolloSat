@@ -9,6 +9,7 @@ $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
                             --sampler=SAMPLER_TYPE
                             --s=NUM_CELL_CLUSTERS
                             --t=NUM_MUTATION_CLUSTERS
+                            --allowed_losses=LOSSES_FILENAME
                             --debug
 
 Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to

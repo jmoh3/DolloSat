@@ -17,10 +17,18 @@ All of these binaries should be provided, but if none of them work, please see t
 Run with:
 
 ```
-python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTIONS_OUTFILE --timeout=TIMEOUT --num_samples=NUMBER_OF_SAMPLES --sampler=SAMPLER_TYPE
+python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=SOLUTIONS_OUTFILE
+                            --timeout=TIMEOUT
+                            --num_samples=NUMBER_OF_SAMPLES
+                            --sampler=SAMPLER_TYPE
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
+                            --allowed_losses=LOSSES_FILENAME
+                            --debug
 ```
 
-This will sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing and save the reconstructed 1-dollo matrices to SOLUTIONS_OUTFILE.
+This will sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing, where only mutations specified in LOSSES_FILENAME. The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
 
 SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 
@@ -29,22 +37,30 @@ SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen 
 Run with:
 
 ```
-python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME --outfile=SOLUTION_FILENAME
+python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
+                            --outfile=FORMULA_FILENAME
+                            --s=NUM_CELL_CLUSTERS
+                            --t=NUM_MUTATION_CLUSTERS
+                            --allowed_losses=LOSSES_FILENAME
+                            --sampler=SAMPLER_TYPE
 ```
 
-This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes the cnf formula to SOLUTION_FILENAME
+Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS where only losses specified in LOSSES_FILENAME are allowed. The formula is in the format required by SAMPLER_TYPE and is written to FORMULA_FILENAME.
 
 ### Generating all 1-Dollo phylogenies
 
 Run with:
 
 ```
-python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME --solutionfilename=SOLUTION_FILENAME
+python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME
+                                --solutionfilename=SOLUTION_FILENAME
+                                --s=NUM_CELL_CLUSTERS
+                                --t=NUM_MUTATION_CLUSTERS
 ```
 
 This takes in a matrix specified in INPUT_MATRIX_FILENAME and writes all 1-Dollo phylogenies to SOLUTION_FILENAME. The solutions written to SOLUTION_FILENAME will be in compressed format, where each line represents a satisfying assignment to the boolean formula generated for the input matrix. Each character in the line corresponds to a 0 in the input matrix, which can either stay a 0 (character is 0) or be flipped to a 1.
 
-### Generating Metrics
+### Generating Metrics - under construction
 
 Run with:
 
