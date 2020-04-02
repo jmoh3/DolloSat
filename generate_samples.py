@@ -45,25 +45,10 @@ def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
     unigen_file = open(unigen_outfile, 'r')
     samples_file = open(samples_outfile, 'w')
 
-    for unigen_sample in unigen_file.readlines():
-        unigen_sample = unigen_sample.strip()
+    unigen_lines = unigen_file.readlines()
 
-        if len(unigen_sample) == 0:
-            break
-
-        unigen_sample = unigen_sample[1:].split(' ')
-
-        num_times_sampled = unigen_sample[-1].split(':')[1]
-
-        qsampler_binary = ''
-
-        for variable in unigen_sample:
-            if variable[0] != '0':
-                qsampler_binary += '0' if variable[0] == '-' else '1'
-
-        qsample = f'{num_times_sampled}: {qsampler_binary}'
-
-        samples_file.write(qsample + '\n')
+    for unigen_sample in unigen_lines:
+        samples_file.write(f'{unigen_sample.strip()[1:]}\n')
 
     unigen_file.close()
     samples_file.close()
@@ -171,13 +156,10 @@ if __name__=='__main__':
             print('Unigen not compatible with OS X')
         else:
             unigen_outfile = cnf_filename + '.unigen'
-            samples_outfile = cnf_filename + '.samples'
+            samples_outfile = cnf_filename + '.samples.valid'
 
             unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
-
-            z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_filename} > /dev/null 2>&1'
-            os.system(z3_cmd)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
             reconstruct_solutions(valid_solutions, args.outfile, variables)

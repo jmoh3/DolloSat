@@ -15,12 +15,14 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
     debug - if set to True, will write information about false positives/negatives and clustering to
     write_file, if set to False, only matrices will be written
     """
-    solutions = get_binary_vector(solution_filename)
 
     m = len(variables['false_positives'])
     n = len(variables['false_positives'][0])
     s = len(variables['is_one'])
     t = len(variables['is_one'][0])
+
+    num_vars = variables['is_two'][s-1][t-1]
+    solutions = get_binary_vectors(solution_filename, num_vars)
 
     f = open(write_file, 'w')
 
@@ -92,7 +94,7 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
         solution_matrices.append(clustered_matrix)
 
 
-def get_binary_vector(valid_sample_filename):
+def get_binary_vectors(valid_sample_filename, num_vars):
     """
     Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
 
@@ -107,6 +109,8 @@ def get_binary_vector(valid_sample_filename):
 
     for line in valid:
         split_line = line.split(' ')
+        if len(split_line)-1 != num_vars:
+            continue
         binary_str = ''
         line_vec = []
         for arg in split_line:
