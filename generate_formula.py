@@ -12,13 +12,14 @@ $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
                             --outfile=FORMULA_FILENAME
                             --s=NUM_CELL_CLUSTERS
                             --t=NUM_MUTATION_CLUSTERS
+                            --allowed_losses=LOSSES_FILENAME
 
 Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
-to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS and writes it to
-FORMULA_FILENAME.
+to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS where only losses
+specified  in LOSSES_FILENAME are allowed, and writes it to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True):
+def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -30,9 +31,10 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True):
     """
     matrix = read_matrix(read_filename)
     variables = create_variable_matrices(matrix, s, t)
+    allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
     
     forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
-    mapping_clauses = get_clauses_mapping(variables)
+    mapping_clauses = get_clauses_mapping(variables, allowed_losses)
     cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
     mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
     not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
@@ -69,6 +71,14 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True):
         f.writelines(one_fn)
 
     return variables
+
+def parse_allowed_losses(filename, num_mutations):
+    if not filename:
+        return set([i for i in range(num_mutations)])
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+        allowed = lines[0].split(',')
+        return set([int(i) for i in allowed])
 
 def read_matrix(filename):
     """

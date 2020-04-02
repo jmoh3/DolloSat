@@ -99,7 +99,7 @@ def get_clauses_no_forbidden(is_one, is_two):
 
     return clauses
 
-def get_clauses_mapping(variables):
+def get_clauses_mapping(variables, allowed_losses):
     """
     Returns a list of clauses that enforce mapping between input matrix B and clustered matrix
     A relates correctly to false positives and false negatives
@@ -139,16 +139,24 @@ def get_clauses_mapping(variables):
                         clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} {false_pos_var} 0\n")
                         # 1 -> 1 => not false positive
                         clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} -{false_pos_var} 0\n")
-                        # 1 -> 2 => false positive
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} {false_pos_var} 0\n")
+                        if mutation_num in allowed_losses:
+                            # 1 -> 2 => false positive
+                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} {false_pos_var} 0\n")
+                        else:
+                            # prohibit is_two when mapping this mutation to this mutation cluster
+                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} 0\n")
                     else:
                         # entry is originally a 0
                         # 0 -> 0 => not false negative
                         clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} -{false_neg_var} 0\n")
                         # 0 -> 1 => false negative
                         clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} {false_neg_var} 0\n")
-                        # 0 -> 2 => not false negative
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} -{false_neg_var} 0\n")
+                        if mutation_num in allowed_losses:
+                            # 0 -> 2 => not false negative
+                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} -{false_neg_var} 0\n")
+                        else:
+                            # prohibit is_two when mapping this mutation to this mutation cluster
+                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} 0\n")
     return clauses
 
 def get_clauses_surjective(cluster_mapping):

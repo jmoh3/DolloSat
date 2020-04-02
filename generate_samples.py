@@ -129,6 +129,12 @@ if __name__=='__main__':
         help='Number of mutation clusters to use.'
     )
     parser.add_argument(
+        '--allowed_losses',
+        type=str,
+        default=None,
+        help='Filename containing allowed mutation losses, listed on one line, separated by commas.'
+    )
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='Debug mode'
@@ -151,14 +157,15 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses)
     write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
-        clean_up(shortened_filename, False)
+        if not args.debug:
+            clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
@@ -174,4 +181,5 @@ if __name__=='__main__':
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
             reconstruct_solutions(valid_solutions, args.outfile, variables)
-            clean_up(shortened_filename, True)
+            if not args.debug:
+                clean_up(shortened_filename, True)
