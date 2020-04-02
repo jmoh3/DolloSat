@@ -167,4 +167,5 @@ dmypy.json
 # Other stuff
 samples.txt
 tmp.cnf
+solutions.txt
 formulas/

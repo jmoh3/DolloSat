@@ -1,779 +1,3360 @@
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
+1 1 
+1 2 
+0 1 
+0 false negatives, 0 false positives
 cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-1 0 0 0 0 
-2 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 0
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-1 0 2 0 1 
-1 2 2 0 2 
-1 1 2 0 2 
-0 0 0 0 0 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 0
-cell 1 mapped to row 4
-cell 2 mapped to row 1
-cell 3 mapped to row 2
-cell 4 mapped to row 3
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-1 0 2 0 1 
-1 1 2 0 2 
-1 0 2 0 2 
-0 0 0 0 0 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 0
 cell 1 mapped to row 1
-cell 2 mapped to row 2
-cell 3 mapped to row 4
-cell 4 mapped to row 3
-cell 5 mapped to row 2
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-0 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 4
 cell 2 mapped to row 0
-cell 3 mapped to row 2
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
 ======================
-1 0 2 0 1 
-1 2 2 0 2 
-1 1 2 0 2 
-0 0 0 0 0 
-1 0 1 2 0 
+0 1 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 2 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 1 
 1 false negatives, 1 false positives
-cell 0 mapped to row 0
-cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 3
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
 ======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 0 
-1 0 1 0 0 
+1 2 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+2 1 
+1 0 
+0 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+1 0 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 1
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 2 
+1 1 
+0 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+1 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+2 1 
+1 1 
+1 0 
+0 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+1 0 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 2
+cell 1 mapped to row 0
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+1 2 
+0 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 1 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+0 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 1 
 1 false negatives, 1 false positives
 cell 0 mapped to row 1
 cell 1 mapped to row 2
-cell 2 mapped to row 3
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-0 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
 cell 2 mapped to row 0
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
 ======================
-1 0 0 0 0 
-2 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 0
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 0
-cell 3 mapped to row 4
-cell 4 mapped to row 1
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-1 0 0 0 1 
-1 2 2 0 2 
-1 1 2 0 2 
-0 0 0 0 0 
-1 0 1 2 2 
-1 false negatives, 1 false positives
-cell 0 mapped to row 0
-cell 1 mapped to row 4
-cell 2 mapped to row 1
-cell 3 mapped to row 2
-cell 4 mapped to row 3
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 4
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 4
-cell 2 mapped to row 0
-cell 3 mapped to row 2
-cell 4 mapped to row 1
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-2 0 0 0 0 
-1 1 2 0 2 
-1 0 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 1
-cell 2 mapped to row 2
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 2
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 4
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-1 0 0 0 1 
-1 2 2 0 2 
-1 1 2 0 2 
-0 0 0 0 0 
-1 0 1 2 2 
-1 false negatives, 1 false positives
-cell 0 mapped to row 0
-cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 3
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 4
-cell 3 mapped to row 1
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-1 0 0 0 1 
-1 1 2 0 2 
-1 0 2 0 2 
-0 0 0 0 0 
-1 0 1 2 2 
-1 false negatives, 1 false positives
-cell 0 mapped to row 0
-cell 1 mapped to row 1
-cell 2 mapped to row 2
-cell 3 mapped to row 4
-cell 4 mapped to row 3
-cell 5 mapped to row 2
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 4
-cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 3
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 0
-cell 3 mapped to row 4
-cell 4 mapped to row 1
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 0 
-1 0 1 0 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 3
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 1
-cell 3 mapped to row 1
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 0 
-1 0 1 0 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 4
-cell 2 mapped to row 3
-cell 3 mapped to row 2
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-1 0 1 0 0 
-1 1 2 0 2 
-1 0 2 0 2 
-1 0 2 0 1 
-0 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 1
-cell 2 mapped to row 2
-cell 3 mapped to row 0
-cell 4 mapped to row 4
-cell 5 mapped to row 2
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 1 2 0 2 
-1 0 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 4
-cell 1 mapped to row 1
-cell 2 mapped to row 2
-cell 3 mapped to row 3
-cell 4 mapped to row 0
-cell 5 mapped to row 2
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-0 false negatives, 1 false positives
-cell 0 mapped to row 4
-cell 1 mapped to row 2
-cell 2 mapped to row 0
-cell 3 mapped to row 3
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 0 
-1 0 1 0 0 
+1 2 
+0 1 
+1 1 
 1 false negatives, 1 false positives
 cell 0 mapped to row 1
-cell 1 mapped to row 4
-cell 2 mapped to row 3
-cell 3 mapped to row 2
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-1 1 0 0 0 
-1 0 2 0 2 
-2 0 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 0
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 2
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
-======================
-1 0 0 0 0 
-2 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 4
-cell 2 mapped to row 1
-cell 3 mapped to row 2
-cell 4 mapped to row 0
-cell 5 mapped to row 0
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 4
 cell 1 mapped to row 2
 cell 2 mapped to row 0
-cell 3 mapped to row 3
-cell 4 mapped to row 1
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
 ======================
-1 0 0 0 0 
-2 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
+1 1 
+0 1 
+0 1 
 1 false negatives, 1 false positives
-cell 0 mapped to row 4
+cell 0 mapped to row 1
 cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 3
-cell 4 mapped to row 0
-cell 5 mapped to row 0
-mutation 0 mapped to column 3
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
 ======================
-1 1 0 0 0 
-1 0 2 0 2 
-2 0 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 4
-cell 1 mapped to row 0
-cell 2 mapped to row 1
-cell 3 mapped to row 3
-cell 4 mapped to row 2
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 2
-mutation 3 mapped to column 1
-mutation 4 mapped to column 4
-mutation 5 mapped to column 1
-======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 4
-cell 3 mapped to row 1
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-1 0 1 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-0 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 2
-cell 1 mapped to row 3
-cell 2 mapped to row 1
-cell 3 mapped to row 0
-cell 4 mapped to row 4
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
-mutation 1 mapped to column 0
-mutation 2 mapped to column 1
-mutation 3 mapped to column 4
-mutation 4 mapped to column 2
-mutation 5 mapped to column 4
-======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
+1 1 
+1 1 
+1 0 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
 cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
 ======================
-1 0 1 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-0 0 0 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
+1 1 
+1 1 
+1 2 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
 cell 1 mapped to row 2
-cell 2 mapped to row 1
-cell 3 mapped to row 0
-cell 4 mapped to row 4
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
 ======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
+0 1 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 0 
+1 0 
 0 false negatives, 1 false positives
-cell 0 mapped to row 3
+cell 0 mapped to row 1
 cell 1 mapped to row 2
 cell 2 mapped to row 0
-cell 3 mapped to row 4
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
 ======================
-2 0 0 0 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 1 2 0 
-1 false negatives, 1 false positives
-cell 0 mapped to row 3
-cell 1 mapped to row 4
-cell 2 mapped to row 1
-cell 3 mapped to row 2
-cell 4 mapped to row 0
-cell 5 mapped to row 1
-mutation 0 mapped to column 3
+1 1 
+0 0 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 2
-mutation 4 mapped to column 1
-mutation 5 mapped to column 2
 ======================
-2 0 0 1 0 
-1 2 2 0 2 
-1 1 2 0 2 
-1 0 2 0 1 
-1 0 0 2 0 
+1 1 
+0 0 
+1 1 
 1 false negatives, 1 false positives
-cell 0 mapped to row 3
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+2 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+2 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 2
+cell 2 mapped to row 0
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 2 
+0 1 
+1 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 1 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+0 1 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+0 1 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+2 1 
+1 0 
+1 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 0 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 1
+cell 1 mapped to row 0
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+1 2 
+0 false negatives, 0 false positives
+cell 0 mapped to row 0
 cell 1 mapped to row 2
 cell 2 mapped to row 1
-cell 3 mapped to row 1
-cell 4 mapped to row 0
-cell 5 mapped to row 4
-mutation 0 mapped to column 3
+mutation 0 mapped to column 1
 mutation 1 mapped to column 0
-mutation 2 mapped to column 4
-mutation 3 mapped to column 1
-mutation 4 mapped to column 2
-mutation 5 mapped to column 1
+======================
+0 1 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+1 0 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+1 2 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 1 
+0 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 1 
+2 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+0 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+2 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 0 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+0 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+1 1 
+2 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 2
+cell 2 mapped to row 1
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+1 2 
+1 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 0 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 0 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 2 
+1 2 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 2 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+1 1 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 0 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+1 2 
+1 2 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 1 
+0 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 2 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+0 2 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 2 
+1 2 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 1
+mutation 1 mapped to column 0
+======================
+1 0 
+2 1 
+1 1 
+0 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+0 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+1 0 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+0 1 
+0 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 1 
+2 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+0 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+2 0 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 0 
+1 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+1 1 
+1 false negatives, 0 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+1 0 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+0 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 1 
+2 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+0 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+1 1 
+2 0 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+0 1 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+2 1 
+1 1 
+0 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 0 
+1 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+0 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+0 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
+======================
+2 1 
+2 1 
+1 1 
+1 false negatives, 1 false positives
+cell 0 mapped to row 0
+cell 1 mapped to row 1
+cell 2 mapped to row 2
+mutation 0 mapped to column 0
+mutation 1 mapped to column 1
 ======================

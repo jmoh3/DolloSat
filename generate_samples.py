@@ -9,6 +9,7 @@ $ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
                             --sampler=SAMPLER_TYPE
                             --s=NUM_CELL_CLUSTERS
                             --t=NUM_MUTATION_CLUSTERS
+                            --allowed_losses=LOSSES_FILENAME
                             --debug
 
 Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to
@@ -45,25 +46,10 @@ def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
     unigen_file = open(unigen_outfile, 'r')
     samples_file = open(samples_outfile, 'w')
 
-    for unigen_sample in unigen_file.readlines():
-        unigen_sample = unigen_sample.strip()
+    unigen_lines = unigen_file.readlines()
 
-        if len(unigen_sample) == 0:
-            break
-
-        unigen_sample = unigen_sample[1:].split(' ')
-
-        num_times_sampled = unigen_sample[-1].split(':')[1]
-
-        qsampler_binary = ''
-
-        for variable in unigen_sample:
-            if variable[0] != '0':
-                qsampler_binary += '0' if variable[0] == '-' else '1'
-
-        qsample = f'{num_times_sampled}: {qsampler_binary}'
-
-        samples_file.write(qsample + '\n')
+    for unigen_sample in unigen_lines:
+        samples_file.write(f'{unigen_sample.strip()[1:]}\n')
 
     unigen_file.close()
     samples_file.close()
@@ -129,6 +115,12 @@ if __name__=='__main__':
         help='Number of mutation clusters to use.'
     )
     parser.add_argument(
+        '--allowed_losses',
+        type=str,
+        default=None,
+        help='Filename containing allowed mutation losses, listed on one line, separated by commas.'
+    )
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='Debug mode'
@@ -151,27 +143,26 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses)
     write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
-        clean_up(shortened_filename, False)
+        if not args.debug:
+            clean_up(shortened_filename, False)
     else:
         if os_name == 'macOS':
             print('Unigen not compatible with OS X')
         else:
             unigen_outfile = cnf_filename + '.unigen'
-            samples_outfile = cnf_filename + '.samples'
+            samples_outfile = cnf_filename + '.samples.valid'
 
             unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
-            z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_filename} > /dev/null 2>&1'
-            os.system(z3_cmd)
-
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
             reconstruct_solutions(valid_solutions, args.outfile, variables)
-            clean_up(shortened_filename, True)
+            if not args.debug:
+                clean_up(shortened_filename, True)
