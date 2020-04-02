@@ -61,13 +61,14 @@ def clean_up(shortened_filename, unigen):
     remove_vars = f'rm {shortened_filename}.variables'
 
     os.system(remove_formula)
-    os.system(remove_samples)
     os.system(remove_valid)
     os.system(remove_vars)
 
     if unigen:
         remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
         os.system(remove_unigen_file)
+    else:
+        os.system(remove_samples)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
@@ -163,6 +164,6 @@ if __name__=='__main__':
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(valid_solutions, args.outfile, variables)
+            reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
             if not args.debug:
                 clean_up(shortened_filename, True)
