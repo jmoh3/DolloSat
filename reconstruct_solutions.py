@@ -3,7 +3,7 @@ import sys
 from generate_formula import read_matrix
 
 
-def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
+def reconstruct_solutions(matrix_filename, solution_filename, write_file, variables, debug=True):
     """
     Writes k-dollo phylogeny matrices reconstructed from samples in solution_filename to write_file.
 
@@ -16,13 +16,16 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
     write_file, if set to False, only matrices will be written
     """
 
+    matrix = read_matrix(matrix_filename)
+
     m = len(variables['false_positives'])
     n = len(variables['false_positives'][0])
-    s = len(variables['is_one'])
-    t = len(variables['is_one'][0])
 
-    num_vars = variables['is_two'][s-1][t-1]
+    num_vars = variables['col_is_duplicate'][n-1]
     solutions = get_binary_vectors(solution_filename, num_vars)
+
+    col_is_duplicate = variables['col_is_duplicate']
+    row_is_duplicate = variables['row_is_duplicate']
 
     f = open(write_file, 'w')
 
@@ -31,67 +34,51 @@ def reconstruct_solutions(solution_filename, write_file, variables, debug=True):
     for solution in solutions:
         if len(solution) == 0:
             continue
-        clustered_matrix = [[0 for i in range(t)] for j in range(s)]
-        for i in range(s):
+        # resulting_matrix = matrix.copy()
+        num_false_positives = 0
+        num_false_negatives = 0
+        for i in range(m):
+            # if col_is_duplicate[i]:
+            #     continue
             line = ''
-            for j in range(t):
-                is_one_varname = variables['is_one'][i][j] - 1
-                is_two_varname = variables['is_two'][i][j] - 1
+            for j in range(n):
+                # if row_is_duplicate[j]:
+                #     continue
+                is_one_val = 0
+                is_two_val = 0
 
-                is_one_val = solution[is_one_varname] == 1
-                is_two_val = solution[is_two_varname] == 1
+                if matrix[i][j] == 0:
+                    false_neg_varname = variables['false_negatives'][i][j] - 1
+                    is_two_varname = variables['is_two'][i][j] - 1
+
+                    is_one_val = solution[false_neg_varname] == 1
+                    num_false_negatives += is_one_val
+                    is_two_val = solution[is_two_varname] == 1
+
+                if matrix[i][j] == 1:
+                    false_pos_varname = variables['false_positives'][i][j] - 1
+                    is_two_varname = variables['is_two'][i][j] - 1
+
+                    is_one_val = solution[false_pos_varname] == 0
+                    num_false_positives += solution[false_pos_varname]
+                    is_two_val = solution[is_two_varname] == 1
                 
                 if is_one_val:
-                    clustered_matrix[i][j] = 1
+                    # resulting_matrix[i][j] = 1
                     line += '1 '
                 elif is_two_val:
-                    clustered_matrix[i][j] = 0
+                    # resulting_matrix[i][j] = 0
                     line += '2 '
                 else:
                     line += '0 '
             line += '\n'
             f.write(line)
 
-        if debug:
-            num_false_positives = 0
-            num_false_negatives = 0
-
-            for i in range(m):
-                for j in range(n):
-                    if variables['false_positives'][i][j] != 0:
-                        false_pos_var = variables['false_positives'][i][j] - 1
-                        if solution[false_pos_var] == 1:
-                            num_false_positives += 1
-                    if variables['false_negatives'][i][j] != 0:
-                        false_neg_var = variables['false_negatives'][i][j] - 1
-                        if solution[false_neg_var] == 1:
-                            num_false_negatives += 1
-            
+        if debug:    
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
-            cell_mappings = []
-            for i in range(m):
-                found = False
-                cluster_num = -1
-                for j in range(s):
-                    cell_to_cluster_var = variables['cell_to_cluster'][i][j] - 1
-                    cell_to_cluster = solution[cell_to_cluster_var]
-                    if cell_to_cluster:
-                        cluster_num = j
-                cell_mappings.append(f'cell {i} mapped to row {cluster_num}\n')
             
-            mutation_mappings = []
-            for i in range(n):
-                cluster_num = -1
-                for j in range(t):
-                    mutation_to_cluster_var = variables['mutation_to_cluster'][i][j] - 1
-                    mutation_to_cluster = solution[mutation_to_cluster_var]
-                    if mutation_to_cluster:
-                        cluster_num = j
-                mutation_mappings.append(f'mutation {i} mapped to column {cluster_num}\n')
-            f.writelines(cell_mappings)
-            f.writelines(mutation_mappings)
         f.write('======================\n')
-        solution_matrices.append(clustered_matrix)
+        # solution_matrices.append(resulting_matrix)
 
 
 def get_binary_vectors(valid_sample_filename, num_vars):

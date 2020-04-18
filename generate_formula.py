@@ -64,12 +64,16 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
     row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)
 
+    one_row_duplicate = constrain_fp(row_is_duplicate, False)
+    one_col_duplicate = constrain_fp(col_is_duplicate, False)
+
     first_line = ''
     if unigen:
         num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
         num_clauses += len(one_fp) + len(one_fn)
         num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
         num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
+        num_clauses += len(one_row_duplicate) + len(one_col_duplicate)
         
         num_vars = col_is_duplicate[num_cols-1]
 
@@ -89,6 +93,9 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
         f.writelines(col_pairs_equal_clauses)
         f.writelines(row_pairs_equal_clauses)
+
+        f.writelines(one_row_duplicate)
+        f.writelines(one_col_duplicate)
 
     return variables
 

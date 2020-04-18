@@ -150,7 +150,7 @@ if __name__=='__main__':
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
+        reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
         if not args.debug:
             clean_up(shortened_filename, False)
     else:
@@ -164,6 +164,6 @@ if __name__=='__main__':
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
+            reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
             if not args.debug:
                 clean_up(shortened_filename, True)
