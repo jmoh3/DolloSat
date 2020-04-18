@@ -159,9 +159,14 @@ def constrain_fp(false_vars):
 
 def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
     clauses = []
+
+    num_rows = len(row_is_duplicate)
     num_columns = len(pair_in_col_equal[0][0])
 
-    for row in range(len(row_is_duplicate)):
+    print(num_rows)
+    print(num_columns)
+
+    for row in range(num_rows):
         for smaller_row in range(row):
             clause = ''
             for col in range(num_columns):

@@ -52,7 +52,7 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     is_one = generate_is_one(matrix, false_positives, false_negatives, is_two)
     
     # get clauses
-    forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two)
+    forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
     not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
 
     one_fp = constrain_fp(false_positives)

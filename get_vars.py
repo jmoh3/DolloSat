@@ -1,4 +1,4 @@
-def create_variable_matrices(matrix):
+def create_variable_matrices(matrix, s, t):
     """
     Returns dictionary where keys are the names of the variable matrices,
     and values are matrices containing labels for boolean variables in formula.
@@ -33,11 +33,11 @@ def create_variable_matrices(matrix):
                 pair_in_row_equal[i][k][l] = offset
                 offset += 1
 
-    pair_in_col_equal = [[[0 for k in range(m)] for j in range(n)] for i in range(n)]
+    pair_in_col_equal = [[[0 for k in range(n)] for j in range(m)] for i in range(m)]
 
-    for i in range(n):
-        for j in range(i+1,n):
-            for k in range(m):
+    for i in range(m):
+        for j in range(i+1,m):
+            for k in range(n):
                 pair_in_col_equal[i][j][k] = offset
                 offset += 1
 
