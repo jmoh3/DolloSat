@@ -67,6 +67,9 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     one_row_duplicate = constrain_fp(row_is_duplicate, False)
     one_col_duplicate = constrain_fp(col_is_duplicate, False)
 
+    at_least_one_row_dup = at_least_one(row_is_duplicate)
+    at_least_one_col_dup = at_least_one(col_is_duplicate)
+
     first_line = ''
     if unigen:
         num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
@@ -74,6 +77,7 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
         num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
         num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
         num_clauses += len(one_row_duplicate) + len(one_col_duplicate)
+        num_clauses += len(at_least_one_row_dup) + len(at_least_one_col_dup)
         
         num_vars = col_is_duplicate[num_cols-1]
 
@@ -96,6 +100,9 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
         f.writelines(one_row_duplicate)
         f.writelines(one_col_duplicate)
+
+        f.writelines(at_least_one_row_dup)
+        f.writelines(at_least_one_col_dup)
 
     return variables
 

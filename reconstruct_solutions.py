@@ -74,10 +74,13 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
             line += '\n'
             f.write(line)
 
+            write_vars_debug("solution_vars", variables, solution)
+
         if debug:    
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             
         f.write('======================\n')
+        break
         # solution_matrices.append(resulting_matrix)
 
 
@@ -111,3 +114,45 @@ def get_binary_vectors(valid_sample_filename, num_vars):
             out.append(line_vec)
     
     return out
+
+def write_vars_debug(var_filename, variables, solution):
+    """
+    Writes variables to given file for debugging purposes.
+
+    var_filename - file to write variables to
+    variables - dictionary of variable matrices
+    """
+    lines = []
+    for key in variables.keys():
+        lines.append(f'{key}\n')
+        if key == 'pair_in_row_equal':
+            for i, row in enumerate(variables[key]):
+                lines.append(f'row {i}\n')
+                for j, col1 in enumerate(row):
+                    for k, col2 in enumerate(col1):
+                        if k > j:
+                            lines.append(f'B[{i}][{j}] == B[{i}][{k}] = {solution[col2-1]}\n')
+        elif key == 'pair_in_col_equal':
+            for k in range(len(variables[key][0][0])):
+                lines.append(f'col {k}\n')
+                for i in range(len(variables[key][0])):
+                    for j in range(i+1,len(variables[key][0])):
+                        if j > i:
+                            lines.append(f'B[{i}][{k}] == B[{j}][{k}] = {solution[variables[key][i][j][k]-1]}\n')
+        elif key == 'row_is_duplicate' or key == 'col_is_duplicate':
+            lines.append(' '.join([str(solution[elem-1]) for elem in variables[key]]))
+            lines.append('\n')
+        else:
+            for row in variables[key]:
+                line = ''
+                for elem in row:
+                    if elem != 0:
+                        line += f'{solution[elem-1]} '
+                    else: 
+                        line += f'x '
+                lines.append(line)
+                lines.append('\n')
+        
+        lines.append('=========================\n')
+    with open(var_filename, 'w') as f:
+        f.writelines(lines)

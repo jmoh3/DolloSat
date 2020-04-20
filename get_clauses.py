@@ -42,12 +42,18 @@ def generate_is_one(matrix, false_pos, false_neg, is_two):
         curr_row = []
         for j in range(n):
             if matrix[i][j] == 1:
-                curr_row.append(false_pos[i][j])
+                curr_row.append(f'-{false_pos[i][j]}')
             else:
-                curr_row.append(false_neg[i][j])
+                curr_row.append(str(false_neg[i][j]))
         is_one.append(curr_row)
     
     return is_one
+
+def negate(literal):
+    if literal[0] == '-':
+        return literal[1:]
+    else:
+        return f'-{literal}'
 
 def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
     """
@@ -68,7 +74,7 @@ def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
             if use_is_two:
                 clause_cnf += f'-{is_two_sub[location[0]][location[1]]} '
             else:
-                clause_cnf += f'-{is_one_sub[location[0]][location[1]]} '
+                clause_cnf += f'{negate(is_one_sub[location[0]][location[1]])} '
         else:
             label = argument[0]
             use_is_two, location = variable_mapping[label][0], variable_mapping[label][1]
@@ -131,7 +137,7 @@ def get_clauses_not_one_and_two(is_one, is_two):
     clauses = []
     for i in range(len(is_one)):
         for j in range(len(is_one[0])):
-            clauses.append(f'-{is_one[i][j]} -{is_two[i][j]} 0\n')
+            clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
     return clauses
 
 def constrain_fp(false_vars, need_to_flatten=True):
@@ -178,6 +184,9 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
             clause_if += f'{row_is_duplicate[row]} 0\n'
             clauses.append(clause_if)
     
+    # first row cannot be a duplicate
+    clauses.append(f'-{row_is_duplicate[0]} 0\n')
+    
     return clauses
 
 def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
@@ -198,6 +207,9 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
             clause_if += f'{col_is_duplicate[col]} 0\n'
             clauses.append(clause_if)
     
+    # first col cannot be a duplicate
+    clauses.append(f'-{col_is_duplicate[0]} 0\n')
+
     return clauses
 
 def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
@@ -211,13 +223,13 @@ def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
             for row2 in range(row1 + 1, num_rows):
                 ## BOTH ENTRIES ARE 1
                 # B[row1][col] == 1 and B[row2][col] == 1 => pair_in_col_equal[row1][row2][col]
-                clauses.append(f'-{is_one[row1][col]} -{is_one[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
+                clauses.append(f'{negate(is_one[row1][col])} {negate(is_one[row2][col])} {pair_in_col_equal[row1][row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] == 1 => B[row2][col] == 1
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_one[row1][col]} {is_one[row2][col]} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row1][col])} {is_one[row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row2][col] == 1 => B[row1][col] == 1
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_one[row2][col]} {is_one[row1][col]} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row2][col])} {is_one[row1][col]} 0\n')
 
                 ## BOTH ENTRIES ARE 2
                 # B[row1][col] == 2 and B[row2][col] == 2 => pair_in_col_equal[row1][row2][col]
@@ -238,12 +250,12 @@ def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] != 1 and B[row1][col] != 2 => B[row2][col] != 1 and B[row2][col] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} -{is_one[row2][col]} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} {negate(is_one[row2][col])} 0\n')
                 clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} -{is_two[row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row2][col] != 1 and B[row2][col] != 2 => B[row1][col] != 1 and B[row1][col] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} -{is_one[row1][col]} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} {negate(is_one[row1][col])} 0\n')
                 clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} -{is_two[row1][col]} 0\n')
 
     return clauses
@@ -259,13 +271,13 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
             for col2 in range(col1 + 1, num_cols):
                 # BOTH ENTRIES ARE 1
                 # B[row][col1] == 1 and B[row][col2] == 1 => pair_in_row_equal[row][col1][col2]
-                clauses.append(f'-{is_one[row][col1]} -{is_one[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
+                clauses.append(f'{negate(is_one[row][col1])} {negate(is_one[row][col2])} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] == 1 => B[row][col2] == 1
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_one[row][col1]} {is_one[row][col2]} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col1])} {is_one[row][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col2] == 1 => B[row][col1] == 1
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_one[row][col2]} {is_one[row][col1]} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 2
                 # B[row1][col] == 2 and B[row2][col] == 2
@@ -286,11 +298,14 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] != 1 and B[row][col1] != 2 => B[row][col2] != 1 and B[row][col2] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} -{is_one[row][col2]} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} {negate(is_one[row][col2])} 0\n')
                 clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} -{is_two[row][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col2] != 1 and B[row][col2] != 2 => B[row][col1] != 1 and B[row][col1] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_one[row][col1]} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} {negate(is_one[row][col1])} 0\n')
                 clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
     return clauses
+
+def at_least_one(vars):
+    return [' '.join([str(var) for var in vars]) + ' 0\n']
