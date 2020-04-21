@@ -77,11 +77,45 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
         num_vars = col_is_duplicate[num_cols-1] + extra_vars
 
+        independent_lines = []
+
+        c_ind = 'c ind '
+        num_ind = 0
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 0:
+                    elem = false_negatives[i][j]
+                else:
+                    elem = false_positives[i][j]
+                c_ind += f'{elem} '
+                num_ind += 1
+                if num_ind == 10:
+                    c_ind += '0\n'
+                    independent_lines.append(c_ind)
+                    c_ind = 'c ind '
+                    num_ind = 0
+
+        for row in is_two:
+            for elem in row:
+                c_ind += f'{elem} '
+                num_ind += 1
+                if num_ind == 10:
+                    c_ind += '0\n'
+                    independent_lines.append(c_ind)
+                    c_ind = 'c ind '
+                    num_ind = 0
+        
+        if num_ind != 0:
+            c_ind += '0\n'
+            independent_lines.append(c_ind)
+
         first_line = f'p cnf {num_vars} {num_clauses}\n'
 
     with open(write_filename, 'w') as f:
         if unigen:
             f.write(first_line)
+            f.writelines(independent_lines)
         f.writelines(forbidden_clauses)
         f.writelines(not_one_and_two_clauses)
 
