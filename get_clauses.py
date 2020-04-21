@@ -309,3 +309,5 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
 
 def at_least_one(vars):
     return [' '.join([str(var) for var in vars]) + ' 0\n']
+
+# def encode_constraints():

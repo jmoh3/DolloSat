@@ -26,7 +26,6 @@ int main(int argc, char **argv)
   ofstream write_file;
   write_file.open(filename);
 
-
   for (int i = 1; i < argc-1; i+=3) {
     int32_t start_var = atoi(argv[i]);
     int32_t num_vars = atoi(argv[i+1]);
@@ -40,6 +39,7 @@ int main(int argc, char **argv)
 
     vector<vector<int32_t>> formula;
     first_fresh_variable = pb2cnf.encodeAtMostK(literals, k, formula, first_fresh_variable) + 1;
+    first_fresh_variable = pb2cnf.encodeAtLeastK(literals, k, formula, first_fresh_variable) + 1;
 
     for (auto clause : formula)
     {
@@ -47,7 +47,6 @@ int main(int argc, char **argv)
         write_file << lit << " ";
       write_file << "0\n";
     }
-
     num_clauses += formula.size();
   }
   

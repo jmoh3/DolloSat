@@ -18,9 +18,13 @@ def create_variable_matrices(matrix, s, t):
         for j in range(n):
             if matrix[i][j] == 1:
                 false_positives[i][j] = offset
+                offset += 1
+    
+    for i in range(m):
+        for j in range(n):
             if matrix[i][j] == 0:
                 false_negatives[i][j] = offset
-            offset += 1
+                offset += 1
     
     is_two = [[n*i+j+offset for j in range(n)] for i in range(m)]
     offset += m*n
