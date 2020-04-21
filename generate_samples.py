@@ -157,7 +157,8 @@ if __name__=='__main__':
     variables_filename = f'{shortened_filename}.variables'
 
     variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
-    write_vars(variables_filename, variables)
+    if args.debug:
+        write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
