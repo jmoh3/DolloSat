@@ -6,9 +6,9 @@ A tool that samples solutions to the k-Dollo Phylogeny Problem for k = 1, a vari
 
 ## Requirements
 
-This repository uses two SAT Solution samples: [QuickSampler](https://github.com/RafaelTupynamba/quicksampler) and [UniGen](https://bitbucket.org/kuldeepmeel/unigen/src/master/). QuickSampler also requires the z3 binary specified in the installation instructions.
+This repository uses two SAT Solution samples: [QuickSampler](https://github.com/RafaelTupynamba/quicksampler) and [UniGen](https://bitbucket.org/kuldeepmeel/unigen/src/master/). QuickSampler also requires the z3 binary specified in the installation instructions. It also uses [pblib](http://tools.computational-logic.org/content/pblib.php), a a toolkit for encoding Pseudo-Boolean constraints into CNF.
 
-All of these binaries should be provided, but if none of them work, please see the GitHub pages for further instructions.
+All of these binaries should be provided, but if some don't work, please see the links for further instructions.
 
 ## Usage Instructions
 
