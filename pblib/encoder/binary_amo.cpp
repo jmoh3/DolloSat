@@ -1,4 +1,5 @@
 #include "binary_amo.h"
+#include <math.h>
 
 using namespace std;
 

@@ -1,0 +1,1 @@
+g++  -O3 -std=c++11 -O3 -DNDEBUG  -rdynamic CMakeFiles/fuzzer.dir/fuzzer.cpp.o CMakeFiles/fuzzer.dir/BasicPBSolver/SATSolverClauseDatabase.cpp.o  -o fuzzer  -L/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat -Wl,-rpath,/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat -lminisat -lz libpblib.a -lpthread 

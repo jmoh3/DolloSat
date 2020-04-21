@@ -1,4 +1,5 @@
 #include "k-product.h"
+#include <math.h>
 
 using namespace std;
 

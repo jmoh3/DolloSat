@@ -1,4 +1,6 @@
 #include "bimander_amo_encoding.h"
+#include <math.h>
+
 using namespace PBLib;
 using namespace std;
 

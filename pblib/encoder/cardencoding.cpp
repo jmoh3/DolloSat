@@ -1,5 +1,6 @@
 #include "cardencoding.h"
 #include "sorting_merging.h"
+#include <math.h>
 
 using namespace PBLib;
 using namespace std;
