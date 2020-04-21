@@ -34,7 +34,6 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
     for solution in solutions:
         if len(solution) == 0:
             continue
-        # resulting_matrix = matrix.copy()
         num_false_positives = 0
         num_false_negatives = 0
         for i in range(m):
@@ -64,10 +63,8 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
                     is_two_val = solution[is_two_varname] == 1
                 
                 if is_one_val:
-                    # resulting_matrix[i][j] = 1
                     line += '1 '
                 elif is_two_val:
-                    # resulting_matrix[i][j] = 0
                     line += '2 '
                 else:
                     line += '0 '
@@ -80,8 +77,6 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             
         f.write('======================\n')
-        # break
-        # solution_matrices.append(resulting_matrix)
 
 
 def get_binary_vectors(valid_sample_filename, num_vars):
@@ -99,7 +94,7 @@ def get_binary_vectors(valid_sample_filename, num_vars):
 
     for line in valid:
         split_line = line.split(' ')
-        if len(split_line)-1 != num_vars:
+        if len(split_line)-1 <= 0:
             continue
         binary_str = ''
         line_vec = []

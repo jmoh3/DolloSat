@@ -17,18 +17,16 @@ All of these binaries should be provided, but if none of them work, please see t
 Run with:
 
 ```
-python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
-                            --outfile=SOLUTIONS_OUTFILE
-                            --timeout=TIMEOUT
-                            --num_samples=NUMBER_OF_SAMPLES
-                            --sampler=SAMPLER_TYPE
-                            --s=NUM_CELL_CLUSTERS
-                            --t=NUM_MUTATION_CLUSTERS
-                            --allowed_losses=LOSSES_FILENAME
-                            --debug
+python3 generate_samples.py [-h] [--filename FILENAME] [--outfile OUTFILE]
+                           [--timeout TIMEOUT] [--num_samples NUM_SAMPLES]
+                           [--sampler SAMPLER] [--s S] [--t T] [--fn FALSE_NEGATIVES]
+                           [--fp FALSE_POSITIVES] [--allowed_losses ALLOWED_LOSSES]
+                           [--debug]
 ```
 
-This will sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing, where only mutations specified in LOSSES_FILENAME. The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
+This will attempt to sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing, where only mutations specified in LOSSES_FILENAME can be lost. The solutions will contain exactly FALSE_NEGATIVES false negatives and exactly FALSE_POSITIVES false positives.
+
+The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
 
 SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 
@@ -37,17 +35,16 @@ SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen 
 Run with:
 
 ```
-python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
-                            --outfile=FORMULA_FILENAME
-                            --s=NUM_CELL_CLUSTERS
-                            --t=NUM_MUTATION_CLUSTERS
-                            --allowed_losses=LOSSES_FILENAME
-                            --sampler=SAMPLER_TYPE
+python3 generate_formula.py [-h] [--filename FILENAME] [--outfile OUTFILE]
+                           [--s S] [--t T] [--fn FN] [--fp FP]
+                           [--sampler SAMPLER]
+                           [--allowed_losses ALLOWED_LOSSES]
 ```
 
-Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS where only losses specified in LOSSES_FILENAME are allowed. The formula is in the format required by SAMPLER_TYPE and is written to FORMULA_FILENAME.
+Generates a boolean formula whose solutions describe 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME where only mutations specified in LOSSES_FILENAME can be lost. Valid assignments to this formula will contain exactly FALSE_NEGATIVES false negatives and exactly FALSE_POSITIVES false positives.
 
-### Generating all 1-Dollo phylogenies
+
+### Generating all 1-Dollo phylogenies - under construction
 
 Run with:
 
