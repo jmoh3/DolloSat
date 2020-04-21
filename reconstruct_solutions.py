@@ -38,12 +38,12 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
         num_false_positives = 0
         num_false_negatives = 0
         for i in range(m):
-            # if col_is_duplicate[i]:
-            #     continue
+            if solution[row_is_duplicate[i]-1] == 1:
+                continue
             line = ''
             for j in range(n):
-                # if row_is_duplicate[j]:
-                #     continue
+                if solution[col_is_duplicate[j]-1] == 1:
+                    continue
                 is_one_val = 0
                 is_two_val = 0
 
@@ -74,13 +74,13 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
             line += '\n'
             f.write(line)
 
-            write_vars_debug("solution_vars", variables, solution)
+            # write_vars_debug("solution_vars", variables, solution)
 
         if debug:    
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             
         f.write('======================\n')
-        break
+        # break
         # solution_matrices.append(resulting_matrix)
 
 
