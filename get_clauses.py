@@ -1,4 +1,5 @@
 from itertools import permutations 
+import os 
 
 def get_lookup(lookup_filename):
     """
@@ -310,4 +311,46 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
 def at_least_one(vars):
     return [' '.join([str(var) for var in vars]) + ' 0\n']
 
-# def encode_constraints():
+def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
+                        false_pos_constraint, false_neg_constraint,
+                        row_dup_constraint, col_dup_constraint):
+    command = './pbencoder '
+
+    false_pos_start = 0
+    num_false_pos = 0
+
+    for row in false_pos:
+        for elem in row:
+            if elem != 0:
+                if false_pos_start == 0:
+                    false_pos_start = elem
+                num_false_pos += 1
+    
+    command += f'{false_pos_start} {num_false_pos} {false_pos_constraint} '
+
+    false_neg_start = false_pos_start + num_false_pos
+    num_false_neg = len(false_pos) * len(false_pos[0]) - num_false_pos
+
+    command += f'{false_neg_start} {num_false_neg} {false_neg_constraint} '
+
+    row_dup_start = row_duplicates[0]
+    num_row_dup_vars = len(row_duplicates)
+
+    command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
+
+    col_dup_start = col_duplicates[0]
+    num_col_dup_vars = len(row_duplicates)
+
+    command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
+    command += 'tmp_constraint_clauses.cnf'
+
+    os.system(command)
+
+    with open('tmp_constraint_clauses.cnf', 'r') as fp:
+        lines = fp.readlines()
+
+    num_vars = int(lines[len(lines)-2].split(' ')[1])
+
+    os.system('rm tmp_constraint_clauses.cnf')
+
+    return num_vars, lines[:-2]

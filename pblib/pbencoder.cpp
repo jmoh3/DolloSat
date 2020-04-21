@@ -21,8 +21,6 @@ int main(int argc, char **argv)
 
   char* filename = argv[13];
 
-  cout << filename << endl;
-
   ofstream write_file;
   write_file.open(filename);
 

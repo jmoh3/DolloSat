@@ -106,14 +106,26 @@ if __name__=='__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=1,
+        default=4,
         help='Number of cell clusters to use.'
     )
     parser.add_argument(
         '--t',
         type=int,
-        default=1,
+        default=4,
         help='Number of mutation clusters to use.'
+    )
+    parser.add_argument(
+        '--fn',
+        type=int,
+        default=2,
+        help='number of false negatives'
+    )
+    parser.add_argument(
+        '--fp',
+        type=int,
+        default=2,
+        help='number of false positives'
     )
     parser.add_argument(
         '--allowed_losses',
@@ -144,7 +156,7 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
     write_vars(variables_filename, variables)
 
     if args.sampler == 1:

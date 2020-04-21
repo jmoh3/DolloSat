@@ -21,7 +21,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None):
+def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None, fn=1, fp=1):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -50,13 +50,13 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
     is_two = variables['is_two']
     is_one = generate_is_one(matrix, false_positives, false_negatives, is_two)
+
+    num_row_duplicates = len(row_is_duplicate) - s
+    num_col_duplicates = len(col_is_duplicate) - t
     
     # get clauses
     forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
     not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
-
-    # one_fp = constrain_fp(false_positives)
-    # one_fn = constrain_fp(false_negatives)
 
     row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate)
     col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate)
@@ -64,22 +64,18 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
     row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)
 
-    one_row_duplicate = constrain_fp(row_is_duplicate, False)
-    one_col_duplicate = constrain_fp(col_is_duplicate, False)
-
-    at_least_one_row_dup = at_least_one(row_is_duplicate)
-    at_least_one_col_dup = at_least_one(col_is_duplicate)
+    extra_vars, constraints_clauses = encode_constraints(false_positives, false_negatives,
+                                                        row_is_duplicate, col_is_duplicate,
+                                                        fp, fn, num_row_duplicates, num_col_duplicates)
 
     first_line = ''
     if unigen:
         num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
-        # num_clauses += len(one_fp) + len(one_fn)
         num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
         num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
-        num_clauses += len(one_row_duplicate) + len(one_col_duplicate)
-        num_clauses += len(at_least_one_row_dup) + len(at_least_one_col_dup)
-        
-        num_vars = col_is_duplicate[num_cols-1]
+        num_clauses += len(constraints_clauses)
+
+        num_vars = col_is_duplicate[num_cols-1] + extra_vars
 
         first_line = f'p cnf {num_vars} {num_clauses}\n'
 
@@ -89,20 +85,13 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
         f.writelines(forbidden_clauses)
         f.writelines(not_one_and_two_clauses)
 
-        # f.writelines(one_fp)
-        # f.writelines(one_fn)
-
         f.writelines(row_duplicate_clauses)
         f.writelines(col_duplicate_clauses)
 
         f.writelines(col_pairs_equal_clauses)
         f.writelines(row_pairs_equal_clauses)
 
-        f.writelines(one_row_duplicate)
-        f.writelines(one_col_duplicate)
-
-        f.writelines(at_least_one_row_dup)
-        f.writelines(at_least_one_col_dup)
+        f.writelines(constraints_clauses)
 
     return variables
 
@@ -162,13 +151,25 @@ if __name__ == '__main__':
     parser.add_argument(
         '--t',
         type=int,
-        default=5,
+        default=4,
         help='number of columns in clustered matrix'
+    )
+    parser.add_argument(
+        '--fn',
+        type=int,
+        default=4,
+        help='number of false negatives'
+    )
+    parser.add_argument(
+        '--fp',
+        type=int,
+        default=2,
+        help='number of false positives'
     )
     parser.add_argument(
         '--sampler',
         type=int,
-        default=1,
+        default=2,
         help='1 to use Quicksampler, 2 to use Unigen.'
     )
     parser.add_argument(
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     t = args.t
 
     start = time.time()
-    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses)
+    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
     end = time.time()
 
     write_vars("formula.vars", variables)
