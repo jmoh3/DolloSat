@@ -1,0 +1,1 @@
+g++  -O3 -std=c++11 -O3 -DNDEBUG  -rdynamic CMakeFiles/pbo2maxsat.dir/pbo2maxsat.cpp.o  -o pbo2maxsat  -L/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat -Wl,-rpath,/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat libpblib.a 

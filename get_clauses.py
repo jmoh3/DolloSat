@@ -1,4 +1,5 @@
 from itertools import permutations 
+import os 
 
 def get_lookup(lookup_filename):
     """
@@ -33,6 +34,28 @@ variable_mapping = {'a': [0, [0,0]],
                     'k': [1, [2,0]],
                     'l': [1, [2,1]],}
 
+def generate_is_one(matrix, false_pos, false_neg, is_two):
+    m = len(matrix)
+    n = len(matrix[0])
+    is_one = []
+
+    for i in range(m):
+        curr_row = []
+        for j in range(n):
+            if matrix[i][j] == 1:
+                curr_row.append(f'-{false_pos[i][j]}')
+            else:
+                curr_row.append(str(false_neg[i][j]))
+        is_one.append(curr_row)
+    
+    return is_one
+
+def negate(literal):
+    if literal[0] == '-':
+        return literal[1:]
+    else:
+        return f'-{literal}'
+
 def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
     """
     Returns a string that enforces the abscence of the given submatrix.
@@ -52,7 +75,7 @@ def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
             if use_is_two:
                 clause_cnf += f'-{is_two_sub[location[0]][location[1]]} '
             else:
-                clause_cnf += f'-{is_one_sub[location[0]][location[1]]} '
+                clause_cnf += f'{negate(is_one_sub[location[0]][location[1]])} '
         else:
             label = argument[0]
             use_is_two, location = variable_mapping[label][0], variable_mapping[label][1]
@@ -60,10 +83,9 @@ def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
                 clause_cnf += f'{is_two_sub[location[0]][location[1]]} '
             else:
                 clause_cnf += f'{is_one_sub[location[0]][location[1]]} '
-    clause_cnf += '0\n'
     return clause_cnf
 
-def get_clauses_no_forbidden(is_one, is_two):
+def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate):
     """
     Returns a list of clauses that enforce that no forbidden submatrices can
     be present in clustered matrix.
@@ -71,11 +93,11 @@ def get_clauses_no_forbidden(is_one, is_two):
     is_one - matrix of boolean variables that are 1 if corresponding entry in matrix being 1
     is_two - matrix of boolean variables that are 1 if corresponding entry in matrix being 2
     """
-    s = len(is_one)
-    t = len(is_one[0])
+    m = len(is_one)
+    n = len(is_one[0])
 
-    row_permutations = list(permutations(range(s), 3))
-    column_permutations = list(permutations([i for i in range(t)], 2))
+    row_permutations = list(permutations(range(m), 3))
+    column_permutations = list(permutations([i for i in range(n)], 2))
 
     clauses = []
 
@@ -95,123 +117,14 @@ def get_clauses_no_forbidden(is_one, is_two):
             for possible_submatrix in lookup.keys():
                 clause_raw = lookup[possible_submatrix]
                 clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
-                clauses.append(clause)
 
-    return clauses
+                row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]} '
+                col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]} '
 
-def get_clauses_mapping(variables, allowed_losses):
-    """
-    Returns a list of clauses that enforce mapping between input matrix B and clustered matrix
-    A relates correctly to false positives and false negatives
+                total_clause = f'{clause} {row_duplicates} {col_duplicates} 0\n'
 
-    variables - dictionary containing labels for boolean variables in formula
-    """
-    cell_to_cluster = variables['cell_to_cluster']
-    mutation_to_cluster = variables['mutation_to_cluster']
-    false_positives = variables['false_positives']
-    false_negatives = variables['false_negatives']
-    is_one = variables['is_one']
-    is_two = variables['is_two']
+                clauses.append(total_clause)
 
-    m = len(cell_to_cluster)
-    n = len(mutation_to_cluster)
-    s = len(is_one)
-    t = len(is_one[0])
-
-    clauses = []
-
-    for cell_num in range(m):
-        for mutation_num in range(n):
-            for cell_cluster in range(s):
-                for mutation_cluster in range(t):
-                    cell_cluster_var = cell_to_cluster[cell_num][cell_cluster]
-                    mutation_cluster_var = mutation_to_cluster[mutation_num][mutation_cluster]
-
-                    is_one_var = is_one[cell_cluster][mutation_cluster]
-                    is_two_var = is_two[cell_cluster][mutation_cluster]
-
-                    false_pos_var = false_positives[cell_num][mutation_num]
-                    false_neg_var = false_negatives[cell_num][mutation_num]
-
-                    if false_positives[cell_num][mutation_num] != 0:
-                        # entry is originally a 1
-                        # 1 -> 0 => false positive
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} {false_pos_var} 0\n")
-                        # 1 -> 1 => not false positive
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} -{false_pos_var} 0\n")
-                        if mutation_num in allowed_losses:
-                            # 1 -> 2 => false positive
-                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} {false_pos_var} 0\n")
-                        else:
-                            # prohibit is_two when mapping this mutation to this mutation cluster
-                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} 0\n")
-                    else:
-                        # entry is originally a 0
-                        # 0 -> 0 => not false negative
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} {is_one_var} {is_two_var} -{false_neg_var} 0\n")
-                        # 0 -> 1 => false negative
-                        clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_one_var} {false_neg_var} 0\n")
-                        if mutation_num in allowed_losses:
-                            # 0 -> 2 => not false negative
-                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} -{false_neg_var} 0\n")
-                        else:
-                            # prohibit is_two when mapping this mutation to this mutation cluster
-                            clauses.append(f"-{cell_cluster_var} -{mutation_cluster_var} -{is_two_var} 0\n")
-    return clauses
-
-def get_clauses_surjective(cluster_mapping):
-    """
-    Returns a list of clauses that enforce that mapping of cells/mutations to
-    clusters is surjective, i.e. that each cell/mutation maps to at most one cluster.
-
-    cluster_mapping - matrix of boolean variables where the entry at row i and column j
-    will be 1 if cell/mutation i maps to cluster j, 0 otherwise.
-    """
-    rows = len(cluster_mapping)
-    columns = len(cluster_mapping[0])
-
-    clauses = []
-
-    for i in range(rows):
-        for p in range(columns):
-            for k in range(columns):
-                if p == k:
-                    continue
-                clauses.append(f'-{cluster_mapping[i][p]} -{cluster_mapping[i][k]} 0\n')
-    
-    return clauses
-
-def get_at_least_one_cluster(cluster_matrix):
-    """
-    Returns list of clauses that ensure that cell/mutation maps to at least one cluster.
-
-    cluster_mapping - matrix of boolean variables where the entry at row i and column j
-    will be 1 if cell/mutation i maps to cluster j, 0 otherwise.
-    """
-    clauses = []
-    for i in range(len(cluster_matrix)):
-        clause = ''
-        for j in range(len(cluster_matrix[0])):
-            clause += f'{cluster_matrix[i][j]} '
-        clause += '0\n'
-        clauses.append(clause)
-    return clauses
-
-def each_cluster_has_at_least_one(cluster_mapping):
-    """
-    Returns list of clauses that ensure that each cluster has at least one member. (No 
-    empty clusters)
-
-    cluster_mapping - matrix of boolean variables where the entry at row i and column j
-    will be 1 if cell/mutation i maps to cluster j, 0 otherwise.
-    """
-    clauses = []
-    for j in range(len(cluster_mapping[0])):
-        clause = ''
-        for i in range(len(cluster_mapping)):
-            clause += f'{cluster_mapping[i][j]} '
-        clause += '0\n'
-        clauses.append(clause)
     return clauses
 
 def get_clauses_not_one_and_two(is_one, is_two):
@@ -225,10 +138,10 @@ def get_clauses_not_one_and_two(is_one, is_two):
     clauses = []
     for i in range(len(is_one)):
         for j in range(len(is_one[0])):
-            clauses.append(f'-{is_one[i][j]} -{is_two[i][j]} 0\n')
+            clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
     return clauses
 
-def constrain_fp(false_vars):
+def constrain_fp(false_vars, need_to_flatten=True):
     """
     Returns list of clauses that constrain the number of false positives and false negatives to
     at most 1.
@@ -236,13 +149,16 @@ def constrain_fp(false_vars):
     false_vars - matrix of boolean variable labels where variable at row i, column j is 1 if
     entry i,j of input matrix is a false positive/false negative.
     """
-    flatten = []
-
-    for row in false_vars:
-        for elem in row:
-            if elem != 0:
-                flatten.append(elem)
     clauses = []
+    
+    if need_to_flatten:
+        flatten = []
+        for row in false_vars:
+            for elem in row:
+                if elem != 0:
+                    flatten.append(elem)
+    else:
+        flatten = false_vars
     for i in range(len(flatten)):
         var1 = flatten[i]
         for j in range(i+1, len(flatten)):
@@ -250,3 +166,191 @@ def constrain_fp(false_vars):
             if var1 != var2 and var2 != 0:
                 clauses.append(f'-{var1} -{var2} 0\n')
     return clauses
+
+def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
+    clauses = []
+
+    num_rows = len(row_is_duplicate)
+    num_columns = len(pair_in_col_equal[0][0])
+
+    for row in range(num_rows):
+        for smaller_row in range(row):
+            clause_if = ''
+            
+            for col in range(num_columns):
+                clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
+                # only if
+                clauses.append(f'-{row_is_duplicate[row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
+            
+            clause_if += f'{row_is_duplicate[row]} 0\n'
+            clauses.append(clause_if)
+    
+    # first row cannot be a duplicate
+    clauses.append(f'-{row_is_duplicate[0]} 0\n')
+    
+    return clauses
+
+def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
+    clauses = []
+
+    num_cols = len(col_is_duplicate)
+    num_rows = len(pair_in_row_equal[0])
+
+    for col in range(num_cols):
+        for smaller_col in range(col):
+            clause_if = ''
+
+            for row in range(num_rows):
+                clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
+                # only if
+                clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
+
+            clause_if += f'{col_is_duplicate[col]} 0\n'
+            clauses.append(clause_if)
+    
+    # first col cannot be a duplicate
+    clauses.append(f'-{col_is_duplicate[0]} 0\n')
+
+    return clauses
+
+def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
+    clauses = []
+
+    num_rows = len(is_one)
+    num_cols = len(is_one[0])
+
+    for col in range(num_cols):
+        for row1 in range(num_rows):
+            for row2 in range(row1 + 1, num_rows):
+                ## BOTH ENTRIES ARE 1
+                # B[row1][col] == 1 and B[row2][col] == 1 => pair_in_col_equal[row1][row2][col]
+                clauses.append(f'{negate(is_one[row1][col])} {negate(is_one[row2][col])} {pair_in_col_equal[row1][row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row1][col] == 1 => B[row2][col] == 1
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row1][col])} {is_one[row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row2][col] == 1 => B[row1][col] == 1
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row2][col])} {is_one[row1][col]} 0\n')
+
+                ## BOTH ENTRIES ARE 2
+                # B[row1][col] == 2 and B[row2][col] == 2 => pair_in_col_equal[row1][row2][col]
+                clauses.append(f'-{is_two[row1][col]} -{is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row1][col] == 2 => B[row2][col] == 2
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row1][col]} {is_two[row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row1][col] == 2 => B[row2][col] == 2
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row2][col]} {is_two[row1][col]} 0\n')
+
+                ## BOTH ENTRIES ARE 0
+                # B[row1][col] == 0 and B[row2][col] == 0 => pair_in_col_equal[row1][row2][col]
+                #
+                # equivalent to B[row1][col] != 1 and B[row2][col] != 1 
+                # and B[row1][col] != 2 and B[row2][col] != 2
+                clauses.append(f'{is_one[row1][col]} {is_one[row2][col]} {is_two[row1][col]} {is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row1][col] != 1 and B[row1][col] != 2 => B[row2][col] != 1 and B[row2][col] != 2
+                # (expands into 2 clauses)
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} {negate(is_one[row2][col])} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} -{is_two[row2][col]} 0\n')
+
+                # pair_in_col_equal[row1][row2][col] and B[row2][col] != 1 and B[row2][col] != 2 => B[row1][col] != 1 and B[row1][col] != 2
+                # (expands into 2 clauses)
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} {negate(is_one[row1][col])} 0\n')
+                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} -{is_two[row1][col]} 0\n')
+
+    return clauses
+
+def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
+    clauses = []
+
+    num_rows = len(is_one)
+    num_cols = len(is_one[0])
+
+    for row in range(num_rows):
+        for col1 in range(num_cols):
+            for col2 in range(col1 + 1, num_cols):
+                # BOTH ENTRIES ARE 1
+                # B[row][col1] == 1 and B[row][col2] == 1 => pair_in_row_equal[row][col1][col2]
+                clauses.append(f'{negate(is_one[row][col1])} {negate(is_one[row][col2])} {pair_in_row_equal[row][col1][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col1] == 1 => B[row][col2] == 1
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col1])} {is_one[row][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col2] == 1 => B[row][col1] == 1
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
+
+                # BOTH ENTRIES ARE 2
+                # B[row1][col] == 2 and B[row2][col] == 2
+                clauses.append(f'-{is_two[row][col1]} -{is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col1] == 2 => B[row][col2] == 2
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col1]} {is_two[row][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col2] == 2 => B[row][col1] == 2
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col2]} {is_two[row][col1]} 0\n')
+
+                # BOTH ENTRIES ARE 0
+                # B[row][col1] == 0 and B[row][col2] == 0
+                #
+                # equivalent to B[row][col1] != 1 and B[row][col2] != 1 
+                # and B[row][col1] != 2 and B[row][col2] != 2
+                clauses.append(f'{is_one[row][col1]} {is_one[row][col2]} {is_two[row][col1]} {is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col1] != 1 and B[row][col1] != 2 => B[row][col2] != 1 and B[row][col2] != 2
+                # (expands into 2 clauses)
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} {negate(is_one[row][col2])} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} -{is_two[row][col2]} 0\n')
+
+                # pair_in_row_equal[row][col1][col2] and B[row][col2] != 1 and B[row][col2] != 2 => B[row][col1] != 1 and B[row][col1] != 2
+                # (expands into 2 clauses)
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} {negate(is_one[row][col1])} 0\n')
+                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
+    return clauses
+
+def at_least_one(vars):
+    return [' '.join([str(var) for var in vars]) + ' 0\n']
+
+def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
+                        false_pos_constraint, false_neg_constraint,
+                        row_dup_constraint, col_dup_constraint):
+    command = './pbencoder '
+
+    false_pos_start = 0
+    num_false_pos = 0
+
+    for row in false_pos:
+        for elem in row:
+            if elem != 0:
+                if false_pos_start == 0:
+                    false_pos_start = elem
+                num_false_pos += 1
+    
+    command += f'{false_pos_start} {num_false_pos} {false_pos_constraint} '
+
+    false_neg_start = false_pos_start + num_false_pos
+    num_false_neg = len(false_pos) * len(false_pos[0]) - num_false_pos
+
+    command += f'{false_neg_start} {num_false_neg} {false_neg_constraint} '
+
+    row_dup_start = row_duplicates[0]
+    num_row_dup_vars = len(row_duplicates)
+
+    command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
+
+    col_dup_start = col_duplicates[0]
+    num_col_dup_vars = len(row_duplicates)
+
+    command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
+    command += 'tmp_constraint_clauses.cnf'
+
+    os.system(command)
+
+    with open('tmp_constraint_clauses.cnf', 'r') as fp:
+        lines = fp.readlines()
+
+    num_vars = int(lines[len(lines)-2].split(' ')[1])
+
+    os.system('rm tmp_constraint_clauses.cnf')
+
+    return num_vars, lines[:-2]

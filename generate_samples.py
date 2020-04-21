@@ -106,14 +106,26 @@ if __name__=='__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=1,
+        default=4,
         help='Number of cell clusters to use.'
     )
     parser.add_argument(
         '--t',
         type=int,
-        default=1,
+        default=4,
         help='Number of mutation clusters to use.'
+    )
+    parser.add_argument(
+        '--fn',
+        type=int,
+        default=2,
+        help='number of false negatives'
+    )
+    parser.add_argument(
+        '--fp',
+        type=int,
+        default=2,
+        help='number of false positives'
     )
     parser.add_argument(
         '--allowed_losses',
@@ -144,13 +156,14 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses)
-    write_vars(variables_filename, variables)
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
+    if args.debug:
+        write_vars(variables_filename, variables)
 
     if args.sampler == 1:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
+        reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
         if not args.debug:
             clean_up(shortened_filename, False)
     else:
@@ -164,6 +177,6 @@ if __name__=='__main__':
             convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
             valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(valid_solutions, args.outfile, variables, args.debug)
+            reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
             if not args.debug:
                 clean_up(shortened_filename, True)

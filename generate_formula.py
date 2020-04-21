@@ -21,7 +21,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None):
+def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None, fn=1, fp=1):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -32,28 +32,50 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     t - number of columns in clustered matrix/mutation clusters
     """
     matrix = read_matrix(read_filename)
+
+    num_rows = len(matrix)
+    num_cols = len(matrix[0])
+
     variables = create_variable_matrices(matrix, s, t)
     allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
+
+    false_positives = variables['false_positives']
+    false_negatives = variables['false_negatives']
+
+    pair_in_col_equal = variables['pair_in_col_equal']
+    pair_in_row_equal = variables['pair_in_row_equal']
+
+    col_is_duplicate = variables['col_is_duplicate']
+    row_is_duplicate = variables['row_is_duplicate']
+
+    is_two = variables['is_two']
+    is_one = generate_is_one(matrix, false_positives, false_negatives, is_two)
+
+    num_row_duplicates = len(row_is_duplicate) - s
+    num_col_duplicates = len(col_is_duplicate) - t
     
-    forbidden_clauses  = get_clauses_no_forbidden(variables['is_one'], variables['is_two'])
-    mapping_clauses = get_clauses_mapping(variables, allowed_losses)
-    cell_mapping_clauses = get_clauses_surjective(variables['cell_to_cluster'])
-    mutation_mapping_clauses = get_clauses_surjective(variables['mutation_to_cluster'])
-    not_one_and_two_clauses = get_clauses_not_one_and_two(variables['is_one'], variables['is_two'])
-    cell_map_to_one = get_at_least_one_cluster(variables['cell_to_cluster'])
-    mutation_map_to_one = get_at_least_one_cluster(variables['mutation_to_cluster'])
-    at_least_one_cell_per_cluster = each_cluster_has_at_least_one(variables['cell_to_cluster'])
-    at_least_one_mutation_per_cluster = each_cluster_has_at_least_one(variables['mutation_to_cluster'])
-    one_fp = constrain_fp(variables['false_positives'])
-    one_fn = constrain_fp(variables['false_negatives'])
+    # get clauses
+    forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
+    not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
+
+    row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate)
+    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate)
+
+    col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
+    row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)
+
+    extra_vars, constraints_clauses = encode_constraints(false_positives, false_negatives,
+                                                        row_is_duplicate, col_is_duplicate,
+                                                        fp, fn, num_row_duplicates, num_col_duplicates)
 
     first_line = ''
     if unigen:
-        num_clauses = len(forbidden_clauses) + len(mapping_clauses) + len(cell_mapping_clauses)
-        num_clauses += len(mutation_mapping_clauses) + len(not_one_and_two_clauses) + len(cell_map_to_one) + len(mutation_map_to_one)
-        num_clauses += len(at_least_one_cell_per_cluster) + len(at_least_one_mutation_per_cluster) + len(one_fp) + len(one_fn)
-        
-        num_vars = variables['is_two'][s-1][t-1]
+        num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
+        num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
+        num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
+        num_clauses += len(constraints_clauses)
+
+        num_vars = col_is_duplicate[num_cols-1] + extra_vars
 
         first_line = f'p cnf {num_vars} {num_clauses}\n'
 
@@ -61,16 +83,15 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
         if unigen:
             f.write(first_line)
         f.writelines(forbidden_clauses)
-        f.writelines(mapping_clauses)
-        f.writelines(cell_mapping_clauses)
-        f.writelines(mutation_mapping_clauses)
         f.writelines(not_one_and_two_clauses)
-        f.writelines(cell_map_to_one)
-        f.writelines(mutation_map_to_one)
-        f.writelines(at_least_one_cell_per_cluster)
-        f.writelines(at_least_one_mutation_per_cluster)
-        f.writelines(one_fp)
-        f.writelines(one_fn)
+
+        f.writelines(row_duplicate_clauses)
+        f.writelines(col_duplicate_clauses)
+
+        f.writelines(col_pairs_equal_clauses)
+        f.writelines(row_pairs_equal_clauses)
+
+        f.writelines(constraints_clauses)
 
     return variables
 
@@ -130,13 +151,25 @@ if __name__ == '__main__':
     parser.add_argument(
         '--t',
         type=int,
-        default=5,
+        default=4,
         help='number of columns in clustered matrix'
+    )
+    parser.add_argument(
+        '--fn',
+        type=int,
+        default=4,
+        help='number of false negatives'
+    )
+    parser.add_argument(
+        '--fp',
+        type=int,
+        default=2,
+        help='number of false positives'
     )
     parser.add_argument(
         '--sampler',
         type=int,
-        default=1,
+        default=2,
         help='1 to use Quicksampler, 2 to use Unigen.'
     )
     parser.add_argument(
@@ -154,7 +187,7 @@ if __name__ == '__main__':
     t = args.t
 
     start = time.time()
-    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses)
+    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
     end = time.time()
 
     write_vars("formula.vars", variables)

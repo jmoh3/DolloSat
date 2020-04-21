@@ -1,0 +1,40 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/pblib.dir/IncSimplePBConstraint.cpp.o"
+  "CMakeFiles/pblib.dir/IncrementalData.cpp.o"
+  "CMakeFiles/pblib.dir/PBConfig.cpp.o"
+  "CMakeFiles/pblib.dir/PBFuzzer.cpp.o"
+  "CMakeFiles/pblib.dir/PBParser.cpp.o"
+  "CMakeFiles/pblib.dir/SimplePBConstraint.cpp.o"
+  "CMakeFiles/pblib.dir/VectorClauseDatabase.cpp.o"
+  "CMakeFiles/pblib.dir/auxvarmanager.cpp.o"
+  "CMakeFiles/pblib.dir/clausedatabase.cpp.o"
+  "CMakeFiles/pblib.dir/formula.cpp.o"
+  "CMakeFiles/pblib.dir/helper.cpp.o"
+  "CMakeFiles/pblib.dir/incpbconstraint.cpp.o"
+  "CMakeFiles/pblib.dir/pb2cnf.cpp.o"
+  "CMakeFiles/pblib.dir/pbconstraint.cpp.o"
+  "CMakeFiles/pblib.dir/pbo2maxsat.cpp.o"
+  "CMakeFiles/pblib.dir/preencoder.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/BDD_Seq_Amo.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/BinaryMerge.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/Encoder.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/SWC.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/SortingNetworks.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/adderencoding.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/amo.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/bdd.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/bimander_amo_encoding.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/binary_amo.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/cardencoding.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/commander_encoding.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/k-product.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/naive_amo_encoder.cpp.o"
+  "CMakeFiles/pblib.dir/encoder/sorting_merging.cpp.o"
+  "libpblib.pdb"
+  "libpblib.a"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/pblib.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
