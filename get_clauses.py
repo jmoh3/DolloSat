@@ -147,7 +147,7 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplic
     num_rows = len(row_is_duplicate)
     num_columns = len(pair_in_col_equal[0][0])
 
-    for row in range(num_rows):
+    for row in range(1, num_rows):
         clause_only_if = f'-{row_is_duplicate[row]} '
         for smaller_row in range(row):
             clause_if = ''
@@ -178,7 +178,7 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
     num_cols = len(col_is_duplicate)
     num_rows = len(pair_in_row_equal)
 
-    for col in range(num_cols):
+    for col in range(1, num_cols):
         clause_only_if = f'-{col_is_duplicate[col]} '
 
         for smaller_col in range(col):
