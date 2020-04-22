@@ -126,6 +126,21 @@ class CheckFormula(unittest.TestCase):
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 3)
+    
+    # Matrix should cluster to this matrix:
+    # 1 0 0
+    # 1 1 0
+    # 1 1 1
+    # 6 possible solutions for this clustered matrix:
+    # 1 0 0  1 2 0  1 2 2  1 2 2  1 0 0  1 2 0  
+    # 1 1 0  1 1 0  1 1 0  1 1 2  1 1 2  1 1 2  
+    # 1 1 1, 1 1 1, 1 1 1, 1 1 1, 1 1 1, 1 1 1
+    def test_harder_cluster(self):
+        get_cnf('tests/test_inputs/test_harder_clustering.txt', tmp_formula_path, 3, 3, True, None, 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 6)
 
 if __name__ == '__main__':
     unittest.main()
