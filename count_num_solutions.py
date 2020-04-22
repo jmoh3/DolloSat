@@ -6,6 +6,9 @@ import subprocess
 
 from generate_formula import read_matrix, get_cnf
 
+def parse_output(sharpSAT_output):
+    return ''
+
 def parse_filename(filename):
     split_filename = filename.split('_')
 
@@ -79,5 +82,6 @@ if __name__=='__main__':
                 True, None, expected_fn, expected_fp)
         end = time.time()
 
-        output = subprocess.check_output(f"cat {cnf_filename}", shell=True)
-        break
+        output = subprocess.check_output(f{args.sharpSAT} {cnf_filename}", shell=True)
+        
+        os.system(f'rm {cnf_filename}')

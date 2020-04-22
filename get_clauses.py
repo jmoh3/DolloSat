@@ -194,14 +194,18 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
     clauses = []
 
     num_cols = len(col_is_duplicate)
-    num_rows = len(pair_in_row_equal[0])
+    num_rows = len(pair_in_row_equal)
 
     for col in range(num_cols):
         for smaller_col in range(col):
             clause_if = ''
 
             for row in range(num_rows):
-                clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
+                try:
+                    clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
+                except:
+                    print(f'{row}, {smaller_col}, {col}')
+                    raise Exception()
                 # only if
                 clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
