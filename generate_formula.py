@@ -48,11 +48,14 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
     false_positives = variables['false_positives']
     false_negatives = variables['false_negatives']
 
-    pair_in_col_equal = variables['pair_in_col_equal']
     pair_in_row_equal = variables['pair_in_row_equal']
+    pair_in_col_equal = variables['pair_in_col_equal']
 
-    col_is_duplicate = variables['col_is_duplicate']
     row_is_duplicate = variables['row_is_duplicate']
+    col_is_duplicate = variables['col_is_duplicate']
+
+    row_is_duplicate_of = variables['row_is_duplicate_of']
+    col_is_duplicate_of = variables['col_is_duplicate_of']
 
     is_two = variables['is_two']
     is_one = generate_is_one(matrix, false_positives, false_negatives, is_two)
@@ -64,8 +67,8 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
     forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
     not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
 
-    row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate)
-    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two)
+    row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of)
+    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of)
 
     col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
     row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)

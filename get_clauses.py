@@ -118,10 +118,10 @@ def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
                 clause_raw = lookup[possible_submatrix]
                 clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
 
-                row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]} '
+                row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]}'
                 col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]}'
 
-                total_clause = f'{clause}{row_duplicates} {col_duplicates} 0\n'
+                total_clause = f'{clause} {row_duplicates} {col_duplicates} 0\n'
 
                 clauses.append(total_clause)
 
@@ -141,52 +141,67 @@ def get_clauses_not_one_and_two(is_one, is_two):
             clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
     return clauses
 
-def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
+def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of):
     clauses = []
 
     num_rows = len(row_is_duplicate)
     num_columns = len(pair_in_col_equal[0][0])
 
     for row in range(num_rows):
+        clause_only_if = f'-{row_is_duplicate[row]} '
         for smaller_row in range(row):
             clause_if = ''
             
             for col in range(num_columns):
                 clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
                 # only if
-                clauses.append(f'-{row_is_duplicate[row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
+                clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
             
-            clause_if += f'{row_is_duplicate[row]} 0\n'
+            clause_if += f'{row_is_duplicate_of[smaller_row][row]} 0\n'
             clauses.append(clause_if)
+
+            clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
+
+            clause_only_if += f'{row_is_duplicate_of[smaller_row][row]} '
+        
+        clause_only_if += '0\n'
+        clauses.append(clause_only_if)
     
     # first row cannot be a duplicate
     clauses.append(f'-{row_is_duplicate[0]} 0\n')
-    
+
     return clauses
 
-def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two):
+def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of):
     clauses = []
 
     num_cols = len(col_is_duplicate)
     num_rows = len(pair_in_row_equal)
 
     for col in range(num_cols):
+        clause_only_if = f'-{col_is_duplicate[col]} '
+
         for smaller_col in range(col):
             clause_if = ''
 
             for row in range(num_rows):
                 clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
                 # only if
-                clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
+                clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
             if col in unsupported_losses:
-                for row in range(num_rows):
-                    clause_forbid_is_two = f'{clause_if} -{is_two[row][smaller_col]} 0\n'
-                    clauses.append(clause_forbid_is_two)
+                clause_forbid_is_two = f'{col_is_duplicate_of[smaller_col][col]} -{is_two[row][smaller_col]} 0\n'
+                clauses.append(clause_forbid_is_two)
 
-            clause_if += f'{col_is_duplicate[col]} 0\n'
+            clause_if += f'{col_is_duplicate_of[smaller_col][col]} 0\n'
 
             clauses.append(clause_if)
+            clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
+
+            clause_only_if += f'{col_is_duplicate_of[smaller_col][col]} '
+        
+        clause_only_if += '0\n'
+        clauses.append(clause_only_if)
     
     # first col cannot be a duplicate
     clauses.append(f'-{col_is_duplicate[0]} 0\n')

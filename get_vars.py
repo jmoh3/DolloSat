@@ -44,6 +44,20 @@ def create_variable_matrices(matrix, s, t):
             for k in range(n):
                 pair_in_col_equal[i][j][k] = offset
                 offset += 1
+    
+    row_is_duplicate_of = [[0 for i in range(m)] for j in range(m)]
+    
+    for i in range(m):
+        for j in range(i+1, m):
+            row_is_duplicate_of[i][j] = offset
+            offset += 1
+
+    col_is_duplicate_of = [[0 for i in range(n)] for j in range(n)]
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            col_is_duplicate_of[i][j] = offset
+            offset += 1
 
     row_is_duplicate = [i+offset for i in range(m)]
     offset += m
@@ -56,6 +70,8 @@ def create_variable_matrices(matrix, s, t):
                 'is_two': is_two,
                 'pair_in_row_equal': pair_in_row_equal,
                 'pair_in_col_equal': pair_in_col_equal,
+                'row_is_duplicate_of': row_is_duplicate_of,
+                'col_is_duplicate_of': col_is_duplicate_of,
                 'row_is_duplicate': row_is_duplicate,
                 'col_is_duplicate': col_is_duplicate}
         
