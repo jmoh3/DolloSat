@@ -119,9 +119,9 @@ def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
                 clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
 
                 row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]} '
-                col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]} '
+                col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]}'
 
-                total_clause = f'{clause} {row_duplicates} {col_duplicates} 0\n'
+                total_clause = f'{clause}{row_duplicates} {col_duplicates} 0\n'
 
                 clauses.append(total_clause)
 
@@ -139,32 +139,6 @@ def get_clauses_not_one_and_two(is_one, is_two):
     for i in range(len(is_one)):
         for j in range(len(is_one[0])):
             clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
-    return clauses
-
-def constrain_fp(false_vars, need_to_flatten=True):
-    """
-    Returns list of clauses that constrain the number of false positives and false negatives to
-    at most 1.
-
-    false_vars - matrix of boolean variable labels where variable at row i, column j is 1 if
-    entry i,j of input matrix is a false positive/false negative.
-    """
-    clauses = []
-    
-    if need_to_flatten:
-        flatten = []
-        for row in false_vars:
-            for elem in row:
-                if elem != 0:
-                    flatten.append(elem)
-    else:
-        flatten = false_vars
-    for i in range(len(flatten)):
-        var1 = flatten[i]
-        for j in range(i+1, len(flatten)):
-            var2 = flatten[j]
-            if var1 != var2 and var2 != 0:
-                clauses.append(f'-{var1} -{var2} 0\n')
     return clauses
 
 def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
@@ -311,9 +285,6 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
                 clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} {negate(is_one[row][col1])} 0\n')
                 clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
     return clauses
-
-def at_least_one(vars):
-    return [' '.join([str(var) for var in vars]) + ' 0\n']
 
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,

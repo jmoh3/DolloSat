@@ -158,6 +158,7 @@ def read_matrix(filename):
     """
     matrix_file = open(filename, 'r')
     lines = matrix_file.readlines()[2:]
+    matrix_file.close()
     
     return [[int(x) for x in line.split()] for line in lines]
 
