@@ -164,7 +164,7 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
     
     return clauses
 
-def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
+def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two):
     clauses = []
 
     num_cols = len(col_is_duplicate)
@@ -175,15 +175,18 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
             clause_if = ''
 
             for row in range(num_rows):
-                try:
-                    clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
-                except:
-                    print(f'{row}, {smaller_col}, {col}')
-                    raise Exception()
+                clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
                 # only if
                 clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
+            # please check this
+            if col in unsupported_losses:
+                for row in range(num_rows):
+                    clause_forbid_is_two = f'{clause_if} -{is_two[row][smaller_col]} 0\n'
+                    clauses.append(clause_forbid_is_two)
+
             clause_if += f'{col_is_duplicate[col]} 0\n'
+
             clauses.append(clause_if)
     
     # first col cannot be a duplicate
@@ -329,3 +332,11 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     os.system('rm tmp_constraint_clauses.cnf')
 
     return num_vars, lines[:-2]
+
+def clause_forbid_unsupported_losses(forbidden_losses, is_two):
+    clauses = []
+    for forbidden_loss in forbidden_losses:
+        for row in range(len(is_two)):
+            clauses.append(f'-{is_two[row][forbidden_loss]} 0\n')
+    
+    return clauses

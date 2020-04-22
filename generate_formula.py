@@ -21,7 +21,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filename=None, fn=1, fp=1):
+def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=None, fn=1, fp=1):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -38,6 +38,12 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
     variables = create_variable_matrices(matrix, s, t)
     allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
+
+    unsupported_losses = []
+
+    for i in range(num_cols):
+        if i not in allowed_losses:
+            unsupported_losses.append(i)
 
     false_positives = variables['false_positives']
     false_negatives = variables['false_negatives']
@@ -59,10 +65,12 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
     not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
 
     row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate)
-    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate)
+    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two)
 
     col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
     row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)
+
+    forbid_unsupported = clause_forbid_unsupported_losses(unsupported_losses, is_two)
 
     extra_vars, constraints_clauses = encode_constraints(false_positives, false_negatives,
                                                         row_is_duplicate, col_is_duplicate,
@@ -73,7 +81,7 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
         num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
         num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
         num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
-        num_clauses += len(constraints_clauses)
+        num_clauses += len(constraints_clauses) + len(forbid_unsupported)
 
         num_vars = col_is_duplicate[num_cols-1] + extra_vars
 
@@ -124,6 +132,8 @@ def get_cnf(read_filename, write_filename, s=5, t=5, unigen=True, losses_filenam
 
         f.writelines(col_pairs_equal_clauses)
         f.writelines(row_pairs_equal_clauses)
+
+        f.writelines(forbid_unsupported)
 
         f.writelines(constraints_clauses)
 
