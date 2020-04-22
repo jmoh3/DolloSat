@@ -179,7 +179,6 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
                 # only if
                 clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
-            # please check this
             if col in unsupported_losses:
                 for row in range(num_rows):
                     clause_forbid_is_two = f'{clause_if} -{is_two[row][smaller_col]} 0\n'

@@ -22,7 +22,7 @@ class CheckFormula(unittest.TestCase):
         self.assertEqual(num_sols, 0)
 
     # A single forbidden matrix, no clustering allowed, no false positives or false negatives allowed,
-    # all losses allowed
+    # all losses allowed.
     #
     # 3 solutions are:
     # 1 2   1 0   1 2
@@ -35,7 +35,7 @@ class CheckFormula(unittest.TestCase):
 
         self.assertEqual(num_sols, 3)
 
-    # No way to cluster this matrix to a 4x4 using only one fn
+    # No way to cluster this matrix to a 4x4 using only one false negative
     def test_no_solutions_no_clustering(self):
         get_cnf('tests/test_inputs/no_clustering.txt', tmp_formula_path, 4, 4, True, None, 1, 0)
         num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
