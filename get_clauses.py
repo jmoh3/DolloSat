@@ -194,14 +194,18 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
     clauses = []
 
     num_cols = len(col_is_duplicate)
-    num_rows = len(pair_in_row_equal[0])
+    num_rows = len(pair_in_row_equal)
 
     for col in range(num_cols):
         for smaller_col in range(col):
             clause_if = ''
 
             for row in range(num_rows):
-                clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
+                try:
+                    clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
+                except:
+                    print(f'{row}, {smaller_col}, {col}')
+                    raise Exception()
                 # only if
                 clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
@@ -339,7 +343,7 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
 
     col_dup_start = col_duplicates[0]
-    num_col_dup_vars = len(row_duplicates)
+    num_col_dup_vars = len(col_duplicates)
 
     command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
     command += 'tmp_constraint_clauses.cnf'

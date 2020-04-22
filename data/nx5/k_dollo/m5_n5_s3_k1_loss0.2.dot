@@ -1,0 +1,17 @@
+digraph T {
+	10 [label="4"]
+	9 [label="3"]
+	8 [label="2"]
+	7 [label="1"]
+	6 [label=""]
+	5 [label="0"]
+	1 [label=""]
+	0 [label=""]
+	6 -> 10 [label=""]
+	6 -> 8 [label=""]
+	6 -> 7 [label=""]
+	1 -> 5 [label="1,1\n2,1\n3,1"]
+	1 -> 9 [label=""]
+	0 -> 6 [label="0,1"]
+	0 -> 1 [label="4,1"]
+}
