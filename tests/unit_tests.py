@@ -20,6 +20,20 @@ class CheckFormula(unittest.TestCase):
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 0)
+    
+    # A single forbidden matrix, no clustering allowed, no false positives or false negatives allowed,
+    # only one loss in 2nd mutation is allowed.
+    #
+    # 1 solution:
+    # 1 2 
+    # 0 1
+    # 1 1
+    def test_simple_allow_one_loss(self):
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, True, 'tests/test_inputs/one_allowed_loss.txt', 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 1)
 
     # A single forbidden matrix, no clustering allowed, no false positives or false negatives allowed,
     # all losses allowed.
@@ -28,7 +42,7 @@ class CheckFormula(unittest.TestCase):
     # 1 2   1 0   1 2
     # 0 1   2 1   2 1
     # 1 1 , 1 1,  1 1
-    def test_simple_forbidden(self):
+    def test_simple_allow_all_losses(self):
         get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, True, None, 0, 0)
         num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
@@ -68,6 +82,50 @@ class CheckFormula(unittest.TestCase):
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 9)
+
+    # A matrix that clusters to a forbidden matrix, no false positives or
+    # false negatives allowed, no mutation loss is allowed.
+    # 
+    # No solutions.
+    def test_cell_cluster_to_forbidden(self):
+        get_cnf('tests/test_inputs/cluster_cells.txt', tmp_formula_path, 3, 2, True, 'tests/test_inputs/no_allowed_losses.txt', 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 0)
+    
+    # A matrix that clusters to a forbidden matrix, no false positives or
+    # false negatives allowed, no mutation loss is allowed.
+    # 
+    # No solutions.
+    def test_cell_cluster_to_forbidden(self):
+        get_cnf('tests/test_inputs/cluster_mutations.txt', tmp_formula_path, 3, 2, True, 'tests/test_inputs/no_allowed_losses.txt', 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 0)
+    
+    # A matrix that clusters to a forbidden matrix, no false positives or
+    # false negatives allowed, all mutation loss is allowed.
+    # 
+    # 3 solutions (should be same as test_simple_allow_all_losses)
+    def test_cell_cluster_to_forbidden_allow_losses(self):
+        get_cnf('tests/test_inputs/cluster_cells.txt', tmp_formula_path, 3, 2, True, None, 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 3)
+    
+    # A matrix that clusters to a forbidden matrix, no false positives or
+    # false negatives allowed, all mutation loss is allowed.
+    # 
+    # 3 solutions (should be same as test_simple_allow_all_losses)
+    def test_mutation_cluster_to_forbidden_allow_losses(self):
+        get_cnf('tests/test_inputs/cluster_mutations.txt', tmp_formula_path, 3, 2, True, None, 0, 0)
+        num_sols = get_num_solutions(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 3)
 
 if __name__ == '__main__':
     unittest.main()

@@ -44,7 +44,7 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
     for i in range(num_cols):
         if i not in allowed_losses:
             unsupported_losses.append(i)
-
+    
     false_positives = variables['false_positives']
     false_negatives = variables['false_negatives']
 
