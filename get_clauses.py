@@ -343,7 +343,7 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
 
     col_dup_start = col_duplicates[0]
-    num_col_dup_vars = len(row_duplicates)
+    num_col_dup_vars = len(col_duplicates)
 
     command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
     command += 'tmp_constraint_clauses.cnf'

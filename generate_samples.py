@@ -60,7 +60,6 @@ def clean_up(shortened_filename, unigen):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
     remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
     remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
-    remove_vars = f'rm {shortened_filename}.variables'
 
     os.system(remove_formula)
     os.system(remove_valid)

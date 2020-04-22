@@ -5,9 +5,11 @@ import time
 import subprocess
 
 from generate_formula import get_cnf
+from get_vars import write_vars
 
 def get_num_solutions(sharpSAT_output):
-    return 0
+    split_output = sharpSAT_output.splitlines()[-5]
+    return int(split_output)
 
 def parse_filename(filename):
     split_filename = filename.split('_')
@@ -48,13 +50,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--s',
         type=float,
-        default=0.75,
+        default=1,
         help='Ratio of cell clusters to m, number of cells in input'
     )
     parser.add_argument(
         '--t',
         type=float,
-        default=0.75,
+        default=1,
         help='Ratio of mutation clusters to n, number of mutations in input'
     )
 
@@ -70,13 +72,21 @@ if __name__=='__main__':
         full_filename = f'{args.dir}/{filename}'
         param_dict = parse_filename(filename)
 
-        cell_clusters = math.ceil(args.s * param_dict['m'])
-        mutation_clusters = math.ceil(args.s * param_dict['n'])
+        m = param_dict['m']
+        n = param_dict['n']
 
-        num_entries = param_dict['m'] * param_dict['n']
+        fp_rate = param_dict['fp_rate']
+        fn_rate = param_dict['fn_rate']
 
-        expected_fp = math.ceil(num_entries * param_dict['fp_rate'])
-        expected_fn = math.ceil(num_entries * param_dict['fn_rate'])
+        loss = param_dict['loss']
+
+        cell_clusters = math.ceil(args.s * m)
+        mutation_clusters = math.ceil(args.t * n)
+
+        num_entries = m * n
+
+        expected_fp = math.ceil(num_entries * fp_rate)
+        expected_fn = math.ceil(num_entries * fn_rate)
 
         cnf_filename = f'{filename}.tmp.formula.cnf'
         
@@ -88,8 +98,12 @@ if __name__=='__main__':
         output = subprocess.check_output(f'{args.sharpSAT} {cnf_filename}', shell=True)
         num_solutions = get_num_solutions(output)
 
-        out_csv.write(f'{filename},{param_dict['m']},{param_dict['n']},{param_dict['fp_rate']},{param_dict['fn_rate']},{total_time},{num_solutions}\n')
+        row = f'{filename},{m},{n},{fp_rate},{fn_rate},{total_time},{num_solutions}\n'
+
+        out_csv.write(row)
         
         os.system(f'rm {cnf_filename}')
+        
+        print(f'Finished {filename}')
     
     out_csv.close()
