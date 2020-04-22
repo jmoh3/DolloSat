@@ -21,8 +21,7 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
     m = len(variables['false_positives'])
     n = len(variables['false_positives'][0])
 
-    num_vars = variables['col_is_duplicate'][n-1]
-    solutions = get_binary_vectors(solution_filename, num_vars)
+    solutions = get_binary_vectors(solution_filename)
 
     col_is_duplicate = variables['col_is_duplicate']
     row_is_duplicate = variables['row_is_duplicate']
@@ -34,52 +33,86 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
     for solution in solutions:
         if len(solution) == 0:
             continue
+        
         num_false_positives = 0
         num_false_negatives = 0
+        idx = 0
+
+        solution_matrix = [[0 for j in range(n)] for i in range(m)]
+
         for i in range(m):
-            if solution[row_is_duplicate[i]-1] == 1:
+            for j in range(n):
+                if matrix[i][j] == 0 and solution[idx] == 1:
+                    # is false negative, 0 -> 1
+                    solution_matrix[i][j] = 1
+                    num_false_negatives += 1
+                elif matrix[i][j] == 1 and solution[idx] == 0:
+                    # is a true positive, entry is 1
+                    solution_matrix[i][j] = 1
+                elif matrix[i][j] == 1 and solution[idx] == 1:
+                    num_false_positives += 1
+                idx += 1
+        
+        for i in range(m):
+            for j in range(n):
+                if solution[idx] == 1:
+                    solution_matrix[i][j] = 2
+                idx += 1
+
+        row_is_duplicate, col_is_duplicate = cluster_matrix(solution_matrix)
+        
+        for i in range(m):
+            if row_is_duplicate[i]:
                 continue
             line = ''
             for j in range(n):
-                if solution[col_is_duplicate[j]-1] == 1:
+                if col_is_duplicate[j]:
                     continue
-                is_one_val = 0
-                is_two_val = 0
-
-                if matrix[i][j] == 0:
-                    false_neg_varname = variables['false_negatives'][i][j] - 1
-                    is_two_varname = variables['is_two'][i][j] - 1
-
-                    is_one_val = solution[false_neg_varname] == 1
-                    num_false_negatives += is_one_val
-                    is_two_val = solution[is_two_varname] == 1
-
-                if matrix[i][j] == 1:
-                    false_pos_varname = variables['false_positives'][i][j] - 1
-                    is_two_varname = variables['is_two'][i][j] - 1
-
-                    is_one_val = solution[false_pos_varname] == 0
-                    num_false_positives += solution[false_pos_varname]
-                    is_two_val = solution[is_two_varname] == 1
-                
-                if is_one_val:
-                    line += '1 '
-                elif is_two_val:
-                    line += '2 '
-                else:
-                    line += '0 '
+                line += f'{solution_matrix[i][j]} '
             line += '\n'
             f.write(line)
-
-            # write_vars_debug("solution_vars", variables, solution)
 
         if debug:    
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             
         f.write('======================\n')
 
+def cluster_matrix(matrix):
+    row_is_duplicate = [False for x in range(len(matrix))]
+    col_is_duplicate = [False for x in range(len(matrix[0]))]
 
-def get_binary_vectors(valid_sample_filename, num_vars):
+    for row in range(len(matrix)):
+        for larger_row in range(row+1, len(matrix)):
+            if row_is_duplicate[larger_row]:
+                continue
+            larger_row_is_dup = True
+
+            for col in range(len(matrix[0])):
+                if matrix[row][col] != matrix[larger_row][col]:
+                    larger_row_is_dup = False
+                    break
+
+            if larger_row_is_dup:
+                row_is_duplicate[larger_row] = True
+    
+    for col in range(len(matrix[0])):
+        for larger_col in range(col+1, len(matrix[0])):
+            if col_is_duplicate[larger_col]:
+                continue
+            
+            larger_col_is_dup = True
+
+            for row in range(len(matrix)):
+                if matrix[row][col] != matrix[row][larger_col]:
+                    larger_col_is_dup = False
+                    break
+            
+            if larger_col_is_dup:
+                col_is_duplicate[larger_col] = True
+    
+    return row_is_duplicate, col_is_duplicate
+
+def get_binary_vectors(valid_sample_filename):
     """
     Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
 
