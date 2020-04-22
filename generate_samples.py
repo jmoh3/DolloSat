@@ -2,18 +2,17 @@
 
 """
 USAGE
-$ python3 generate_samples.py --filename=INPUT_MATRIX_FILENAME
-                            --outfile=SOLUTIONS_OUTFILE
-                            --timeout=TIMEOUT
-                            --num_samples=NUMBER_OF_SAMPLES
-                            --sampler=SAMPLER_TYPE
-                            --s=NUM_CELL_CLUSTERS
-                            --t=NUM_MUTATION_CLUSTERS
-                            --allowed_losses=LOSSES_FILENAME
-                            --debug
+$ python3 generate_samples.py [-h] [--filename FILENAME] [--outfile OUTFILE]
+                           [--timeout TIMEOUT] [--num_samples NUM_SAMPLES]
+                           [--sampler SAMPLER] [--s S] [--t T] [--fn FALSE_NEGATIVES]
+                           [--fp FALSE_POSITIVES] [--allowed_losses ALLOWED_LOSSES]
+                           [--debug]
 
-Generates samples for matrix in INPUT_MATRIX_FILENAME and saves reconstructed k-Dollo matrices to
-SOLUTIONS_OUTFILE.
+This will attempt to sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing, where only mutations specified in LOSSES_FILENAME can be lost. The solutions will contain exactly FALSE_NEGATIVES false negatives and exactly FALSE_POSITIVES false positives.
+
+The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
+
+SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 """
 
 from generate_formula import read_matrix, get_cnf
@@ -25,6 +24,9 @@ import time
 import os 
 import argparse
 import platform
+
+QUICKSAMPLER = 1
+UNIGEN = 2
 
 def unigensampler_generator(infile, outfile, num_samples, timeout):
     unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} {infile} {outfile}'
@@ -100,7 +102,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--sampler',
         type=int,
-        default=1,
+        default=UNIGEN,
         help='1 to use Quicksampler, 2 to use Unigen.'
     )
     parser.add_argument(
@@ -160,7 +162,7 @@ if __name__=='__main__':
     if args.debug:
         write_vars(variables_filename, variables)
 
-    if args.sampler == 1:
+    if args.sampler == QUICKSAMPLER:
         quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
         valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
         reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
