@@ -4,10 +4,10 @@ import math
 import time
 import subprocess
 
-from generate_formula import read_matrix, get_cnf
+from generate_formula import get_cnf
 
-def parse_output(sharpSAT_output):
-    return ''
+def get_num_solutions(sharpSAT_output):
+    return 0
 
 def parse_filename(filename):
     split_filename = filename.split('_')
@@ -63,6 +63,9 @@ if __name__=='__main__':
 
     input_files = os.listdir(args.dir)
 
+    out_csv = open(args.outfile, 'w')
+    out_csv.write('filename,m,n,fp_rate,fn_rate,formula_time,num_solutions\n')
+
     for filename in input_files:
         full_filename = f'{args.dir}/{filename}'
         param_dict = parse_filename(filename)
@@ -80,8 +83,13 @@ if __name__=='__main__':
         start = time.time()
         get_cnf(full_filename, cnf_filename, cell_clusters, mutation_clusters,
                 True, None, expected_fn, expected_fp)
-        end = time.time()
+        total_time = time.time() - start
 
-        output = subprocess.check_output(f{args.sharpSAT} {cnf_filename}", shell=True)
+        output = subprocess.check_output(f'{args.sharpSAT} {cnf_filename}', shell=True)
+        num_solutions = get_num_solutions(output)
+
+        out_csv.write(f'{filename},{param_dict['m']},{param_dict['n']},{param_dict['fp_rate']},{param_dict['fn_rate']},{total_time},{num_solutions}\n')
         
         os.system(f'rm {cnf_filename}')
+    
+    out_csv.close()
