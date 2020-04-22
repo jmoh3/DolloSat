@@ -1,15 +1,35 @@
-import os 
+import os
+import os.path
 import argparse
 import math
 import time
 import subprocess
 
-from generate_formula import get_cnf
+from generate_formula import get_cnf, read_matrix
 from get_vars import write_vars
 
-def get_num_solutions(sharpSAT_output):
-    split_output = sharpSAT_output.splitlines()[-5]
-    return int(split_output)
+def parse_csv(csv_file, dir):
+    with open(csv_file, 'r') as fp:
+        lines = fp.readlines()
+    seen = {}
+    seen_files = set()
+    for line in lines[1:]:
+        split_line = line.split(',')
+        full_filename = f'{dir}/{split_line[0]}'
+        matrix_str = matrix_to_str(full_filename)
+        seen[matrix_str] = (split_line[5], split_line[6])
+        seen_files.add(split_line[0])
+    return seen, seen_files
+
+def matrix_to_str(filename):
+    matrix = read_matrix(filename)
+    rows = [''.join([str(elem) for elem in row]) for row in matrix]
+    return ''.join(rows)
+
+def get_num_solutions(sharpSAT_path, cnf_filename):
+    output = subprocess.check_output(f'{sharpSAT_path} {cnf_filename}', shell=True)
+    num_sols = output.splitlines()[-5]
+    return int(num_sols)
 
 def parse_filename(filename):
     split_filename = filename.split('_')
@@ -27,7 +47,7 @@ def parse_filename(filename):
     return param_dict
 
 if __name__=='__main__':
-    parser = argparse.ArgumentParser(description='Generate samples for given directories')
+    parser = argparse.ArgumentParser(description='Count number of solutions for inputs in a directory')
     
     parser.add_argument(
         '--sharpSAT',
@@ -65,15 +85,29 @@ if __name__=='__main__':
 
     input_files = os.listdir(args.dir)
 
-    out_csv = open(args.outfile, 'w')
-    out_csv.write('filename,m,n,fp_rate,fn_rate,formula_time,num_solutions\n')
+    if os.path.exists(args.outfile):
+        seen, seen_files = parse_csv(args.outfile, args.dir)
+        out_csv = open(args.outfile, 'a+')
+    else:
+        seen = {}
+        seen_files = set()
+        out_csv = open(args.outfile, 'w')
+        out_csv.write('filename,m,n,fp_rate,fn_rate,formula_time,num_solutions\n')
 
     for filename in input_files:
+        if filename in seen_files:
+            print(f'Skipping {filename}')
+            continue
         full_filename = f'{args.dir}/{filename}'
         param_dict = parse_filename(filename)
 
         m = param_dict['m']
         n = param_dict['n']
+
+        if m * n > 30:
+            continue
+        
+        matrix_str = matrix_to_str(full_filename)
 
         fp_rate = param_dict['fp_rate']
         fn_rate = param_dict['fn_rate']
@@ -88,6 +122,14 @@ if __name__=='__main__':
         expected_fp = math.ceil(num_entries * fp_rate)
         expected_fn = math.ceil(num_entries * fn_rate)
 
+        if matrix_str in seen:
+            total_time = seen[matrix_str][0]
+            num_solutions = seen[matrix_str][1]
+            row = f'{filename},{m},{n},{fp_rate},{fn_rate},{total_time},{num_solutions}\n'
+            out_csv.write(row)
+            print(f'Already seen {filename}')
+            continue
+
         cnf_filename = f'{filename}.tmp.formula.cnf'
         
         start = time.time()
@@ -95,15 +137,16 @@ if __name__=='__main__':
                 True, None, expected_fn, expected_fp)
         total_time = time.time() - start
 
-        output = subprocess.check_output(f'{args.sharpSAT} {cnf_filename}', shell=True)
-        num_solutions = get_num_solutions(output)
+        print(f'Starting sharpSAT on {filename}')
+        num_solutions = get_num_solutions(args.sharpSAT, cnf_filename, output)
 
         row = f'{filename},{m},{n},{fp_rate},{fn_rate},{total_time},{num_solutions}\n'
 
         out_csv.write(row)
-        
+        print(row)
         os.system(f'rm {cnf_filename}')
-        
-        print(f'Finished {filename}')
+
+        seen[filename] = (total_time,num_solutions)
+        seen_files.add(filename)
     
     out_csv.close()

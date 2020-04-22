@@ -118,8 +118,8 @@ def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
                 clause_raw = lookup[possible_submatrix]
                 clause = get_forbidden_clause(is_one_sub, is_two_sub, clause_raw)
 
-                row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]} '
-                col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]} '
+                row_duplicates = f'{row_is_duplicate[row1]} {row_is_duplicate[row2]} {row_is_duplicate[row3]}'
+                col_duplicates = f'{col_is_duplicate[col1]} {col_is_duplicate[col2]}'
 
                 total_clause = f'{clause} {row_duplicates} {col_duplicates} 0\n'
 
@@ -141,76 +141,67 @@ def get_clauses_not_one_and_two(is_one, is_two):
             clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
     return clauses
 
-def constrain_fp(false_vars, need_to_flatten=True):
-    """
-    Returns list of clauses that constrain the number of false positives and false negatives to
-    at most 1.
-
-    false_vars - matrix of boolean variable labels where variable at row i, column j is 1 if
-    entry i,j of input matrix is a false positive/false negative.
-    """
-    clauses = []
-    
-    if need_to_flatten:
-        flatten = []
-        for row in false_vars:
-            for elem in row:
-                if elem != 0:
-                    flatten.append(elem)
-    else:
-        flatten = false_vars
-    for i in range(len(flatten)):
-        var1 = flatten[i]
-        for j in range(i+1, len(flatten)):
-            var2 = flatten[j]
-            if var1 != var2 and var2 != 0:
-                clauses.append(f'-{var1} -{var2} 0\n')
-    return clauses
-
-def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate):
+def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of):
     clauses = []
 
     num_rows = len(row_is_duplicate)
     num_columns = len(pair_in_col_equal[0][0])
 
-    for row in range(num_rows):
+    for row in range(1, num_rows):
+        clause_only_if = f'-{row_is_duplicate[row]} '
         for smaller_row in range(row):
             clause_if = ''
             
             for col in range(num_columns):
                 clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
                 # only if
-                clauses.append(f'-{row_is_duplicate[row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
+                clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
             
-            clause_if += f'{row_is_duplicate[row]} 0\n'
+            clause_if += f'{row_is_duplicate_of[smaller_row][row]} 0\n'
             clauses.append(clause_if)
+
+            clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
+
+            clause_only_if += f'{row_is_duplicate_of[smaller_row][row]} '
+        
+        clause_only_if += '0\n'
+        clauses.append(clause_only_if)
     
     # first row cannot be a duplicate
     clauses.append(f'-{row_is_duplicate[0]} 0\n')
-    
+
     return clauses
 
-def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate):
+def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of):
     clauses = []
 
     num_cols = len(col_is_duplicate)
     num_rows = len(pair_in_row_equal)
 
-    for col in range(num_cols):
+    for col in range(1, num_cols):
+        clause_only_if = f'-{col_is_duplicate[col]} '
+
         for smaller_col in range(col):
             clause_if = ''
 
             for row in range(num_rows):
-                try:
-                    clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
-                except:
-                    print(f'{row}, {smaller_col}, {col}')
-                    raise Exception()
+                clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
                 # only if
-                clauses.append(f'-{col_is_duplicate[col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
+                clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
 
-            clause_if += f'{col_is_duplicate[col]} 0\n'
+            if col in unsupported_losses:
+                clause_forbid_is_two = f'{col_is_duplicate_of[smaller_col][col]} -{is_two[row][smaller_col]} 0\n'
+                clauses.append(clause_forbid_is_two)
+
+            clause_if += f'{col_is_duplicate_of[smaller_col][col]} 0\n'
+
             clauses.append(clause_if)
+            clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
+
+            clause_only_if += f'{col_is_duplicate_of[smaller_col][col]} '
+        
+        clause_only_if += '0\n'
+        clauses.append(clause_only_if)
     
     # first col cannot be a duplicate
     clauses.append(f'-{col_is_duplicate[0]} 0\n')
@@ -312,9 +303,6 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
                 clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
     return clauses
 
-def at_least_one(vars):
-    return [' '.join([str(var) for var in vars]) + ' 0\n']
-
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
                         row_dup_constraint, col_dup_constraint):
@@ -358,3 +346,11 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     os.system('rm tmp_constraint_clauses.cnf')
 
     return num_vars, lines[:-2]
+
+def clause_forbid_unsupported_losses(forbidden_losses, is_two):
+    clauses = []
+    for forbidden_loss in forbidden_losses:
+        for row in range(len(is_two)):
+            clauses.append(f'-{is_two[row][forbidden_loss]} 0\n')
+    
+    return clauses

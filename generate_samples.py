@@ -63,7 +63,6 @@ def clean_up(shortened_filename, unigen):
 
     os.system(remove_formula)
     os.system(remove_valid)
-    os.system(remove_vars)
 
     if unigen:
         remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'

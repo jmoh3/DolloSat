@@ -3,7 +3,7 @@ import sys
 import time
 import argparse
 import os
-import progressbar
+# import progressbar
 
 """
 USAGE:
@@ -15,17 +15,17 @@ $ python3 brute_force_solver.py --matrixfilename=INPUT_MATRIX_FILENAME
 This will generate all 1-dollo phylogeny solutions to the matrix contained in INPUT_MATRIX_FILENAME
 """
 
-def find_all_solutions(matrix_filename, solution_filename, s=5, t=5, write=True):
+def find_all_solutions(matrix_filename, solution_filename, s, t, write, fn, fp):
     matrix = read_matrix(matrix_filename)
     variables = create_variable_matrices(matrix, s, t)
-    num_vars = variables['is_two'][s-1][t-1]
     
-    get_cnf(matrix_filename, 'tmp.cnf',s,t)
+    get_cnf(matrix_filename, 'tmp.cnf', s, t, True, 'tests/test_inputs/no_allowed_losses.txt', fn, fp)
 
     cnf_file = open('tmp.cnf', 'r')
     clauses = cnf_file.readlines()
     cnf_file.close()
-    
+
+    num_vars = int(clauses[0].split(' ')[2])
     os.system('rm tmp.cnf')
 
     solution_file = None
@@ -33,24 +33,20 @@ def find_all_solutions(matrix_filename, solution_filename, s=5, t=5, write=True)
         solution_file = open(solution_filename, 'w')
     count = 0
 
-    with progressbar.ProgressBar(max_value=2**num_vars) as bar:
-        idx = 0
-        for i in gen_binary_strings(num_vars):
-            satisifes = True
-            # check whether i satisfies the satisfiability problem by checking each of the clauses
-            for clause in clauses:
-                # if one clause is false, the solution does not work
-                if clause[0] != 'p' and not check_clause(i, clause):
-                    satisifes = False
-                    break
+    for i in gen_binary_strings(num_vars):
+        satisifes = True
+        # check whether i satisfies the satisfiability problem by checking each of the clauses
+        for clause in clauses:
+            # if one clause is false, the solution does not work
+            if clause[0] != 'p' and clause[0] != 'c' and not check_clause(i, clause):
+                satisifes = False
+                break
 
-            # if it does, add it to solutions
-            if satisifes:
-                if write:
-                    solution_file.write(i + '\n')
-                count += 1
-            idx += 1
-            bar.update(idx)
+        # if it does, add it to solutions
+        if satisifes:
+            if write:
+                solution_file.write(i + '\n')
+            count += 1
     
     return count
     
@@ -106,10 +102,28 @@ if __name__ == '__main__':
         type=int,
         help='number of mutation clusters'
     )
+    parser.add_argument(
+        '--fn',
+        type=int,
+        default=2,
+        help='number of false negatives'
+    )
+    parser.add_argument(
+        '--fp',
+        type=int,
+        default=2,
+        help='number of false positives'
+    )
+    parser.add_argument(
+        '--allowed_losses',
+        type=str,
+        default=None,
+        help='Filename containing allowed mutation losses, listed on one line, separated by commas.'
+    )
 
     args = parser.parse_args()
 
     start = time.time()
-    num_solutions = find_all_solutions(args.matrixfilename, args.solutionfilename, args.s, args.t)
+    num_solutions = find_all_solutions(args.matrixfilename, args.solutionfilename, args.s, args.t, True, args.fn, args.fp)
     end = time.time()
     print(f'Generated {num_solutions} solutions in {end - start} seconds')
