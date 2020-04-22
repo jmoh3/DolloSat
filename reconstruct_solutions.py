@@ -21,8 +21,7 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
     m = len(variables['false_positives'])
     n = len(variables['false_positives'][0])
 
-    num_vars = variables['col_is_duplicate'][n-1]
-    solutions = get_binary_vectors(solution_filename, num_vars)
+    solutions = get_binary_vectors(solution_filename)
 
     col_is_duplicate = variables['col_is_duplicate']
     row_is_duplicate = variables['row_is_duplicate']
@@ -113,7 +112,7 @@ def cluster_matrix(matrix):
     
     return row_is_duplicate, col_is_duplicate
 
-def get_binary_vectors(valid_sample_filename, num_vars):
+def get_binary_vectors(valid_sample_filename):
     """
     Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
 
