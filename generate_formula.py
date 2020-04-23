@@ -21,7 +21,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=None, fn=1, fp=1):
+def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -140,7 +140,10 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
 
         f.writelines(constraints_clauses)
 
-    return variables
+    if return_num_vars_clauses:
+        return num_vars, num_clauses
+    else:
+        return variables
 
 def parse_allowed_losses(filename, num_mutations):
     if not filename:

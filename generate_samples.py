@@ -29,7 +29,7 @@ QUICKSAMPLER = 1
 UNIGEN = 2
 
 def unigensampler_generator(infile, outfile, num_samples, timeout):
-    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} {infile} {outfile}'
+    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} --verbosity=0 {infile} {outfile}'
 
     os.system(unigen_cmd)
 
@@ -44,25 +44,11 @@ def quicksampler_generator(cnf_file, num_samples, timeout, osname):
     os.system(q_cmd)
     os.system(z3_cmd)
 
-def convert_unigen_to_quicksample(unigen_outfile, samples_outfile):
-    unigen_file = open(unigen_outfile, 'r')
-    samples_file = open(samples_outfile, 'w')
-
-    unigen_lines = unigen_file.readlines()
-
-    for unigen_sample in unigen_lines:
-        samples_file.write(f'{unigen_sample.strip()[1:]}\n')
-
-    unigen_file.close()
-    samples_file.close()
-
 def clean_up(shortened_filename, unigen):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
     remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
-    remove_valid = f'rm {shortened_filename}.tmp.formula.cnf.samples.valid'
 
     os.system(remove_formula)
-    os.system(remove_valid)
 
     if unigen:
         remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
@@ -94,7 +80,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--num_samples',
         type=int,
-        default=10000,
+        default=100,
         help='number of samples to generate'
     )
     parser.add_argument(
@@ -124,7 +110,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--fp',
         type=int,
-        default=2,
+        default=1,
         help='number of false positives'
     )
     parser.add_argument(
@@ -171,12 +157,8 @@ if __name__=='__main__':
             print('Unigen not compatible with OS X')
         else:
             unigen_outfile = cnf_filename + '.unigen'
-            samples_outfile = cnf_filename + '.samples.valid'
-
             unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
-            convert_unigen_to_quicksample(unigen_outfile, samples_outfile)
 
-            valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-            reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
+            reconstruct_solutions(args.filename, unigen_outfile, args.outfile, variables, args.debug)
             if not args.debug:
                 clean_up(shortened_filename, True)

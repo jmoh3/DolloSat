@@ -126,7 +126,10 @@ def get_binary_vectors(valid_sample_filename):
     out = []
 
     for line in valid:
-        split_line = line.split(' ')
+        if len(line) <= 1:
+            continue
+        cleaned_line = line.split('v')[1]
+        split_line = cleaned_line.split(' ')
         if len(split_line)-1 <= 0:
             continue
         binary_str = ''
