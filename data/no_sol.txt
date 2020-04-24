@@ -1,0 +1,5 @@
+3 # cells
+2 # mutations
+1 0 
+0 1 
+1 1 
