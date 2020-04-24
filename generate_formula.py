@@ -126,9 +126,15 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
     write_file.close()
 
     from_file = open(write_filename + '.tmp') 
+    
     to_file = open(write_filename,mode="w")
     to_file.write(first_line)
     shutil.copyfileobj(from_file, to_file)
+    
+    to_file.close()
+    from_file.close()
+
+    os.system(f'rm {write_filename}.tmp')
 
     if return_num_vars_clauses:
         return num_vars, num_clauses
