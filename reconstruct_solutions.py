@@ -6,9 +6,7 @@ from generate_formula import read_matrix
 def reconstruct_solutions(matrix_filename, solution_filename, write_file, variables, debug=True):
     """
     Writes k-dollo phylogeny matrices reconstructed from samples in solution_filename to write_file.
-
     Reconstructed matrices are separated by '======================'
-
     solution_filename - file containing satisfying variable assignments
     write_file - file to write reconstructed solutions to
     variables - dictionary of variable matrices
@@ -115,7 +113,6 @@ def cluster_matrix(matrix):
 def get_binary_vectors(valid_sample_filename):
     """
     Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
-
     valid_sample_filename - file that contains satisfying variable assignments
     """
     valid = []
@@ -126,7 +123,10 @@ def get_binary_vectors(valid_sample_filename):
     out = []
 
     for line in valid:
-        split_line = line.split(' ')
+        if len(line) <= 1:
+            continue
+        cleaned_line = line.split('v')[1]
+        split_line = cleaned_line.split(' ')
         if len(split_line)-1 <= 0:
             continue
         binary_str = ''
@@ -146,7 +146,6 @@ def get_binary_vectors(valid_sample_filename):
 def write_vars_debug(var_filename, variables, solution):
     """
     Writes variables to given file for debugging purposes.
-
     var_filename - file to write variables to
     variables - dictionary of variable matrices
     """

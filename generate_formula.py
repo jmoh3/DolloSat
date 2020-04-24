@@ -137,7 +137,7 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     os.system(f'rm {write_filename}.tmp')
 
     if return_num_vars_clauses:
-        return num_vars, num_clauses
+        return num_vars, clause_count
     else:
         return variables
 
