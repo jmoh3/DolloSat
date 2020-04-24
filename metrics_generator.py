@@ -28,11 +28,15 @@ def run_unigen(cnf_filename, num_samples, timeout):
     return total_ugen_time, ugen_samples
 
 def get_info(infile, directory, num_samples, timeout, s, t):
-    print(f'Starting {infile}')
     row_info = parse_filename(infile)
 
     m = row_info['m']
     n = row_info['n']
+
+    if m != 5 or n > 15:
+        return None
+
+    print(f'Starting {infile}')
 
     fp_rate = row_info['fp_rate']
     fn_rate = row_info['fn_rate']
@@ -44,8 +48,8 @@ def get_info(infile, directory, num_samples, timeout, s, t):
 
     num_entries = m * n
 
-    expected_fp = math.floor(num_entries * fp_rate * 0.5)
-    expected_fn = math.floor(num_entries * fn_rate * 0.5)
+    expected_fp = math.floor(num_entries * fp_rate)
+    expected_fn = math.floor(num_entries * fn_rate)
 
     cnf_filename = f'{FORMULAS_DIRECTORY}/{infile}.tmp.formula.cnf'
     full_filename = f'{directory}/{infile}'
@@ -71,11 +75,12 @@ def generate_info(files, directory, outfile, num_samples, timeout, s, t):
 
         for file in files:
             row_info = get_info(file, directory, num_samples, timeout, s, t)
-            row = f'{file}'
-            for metric in metrics[1:]:
-                row = f'{row},{row_info[metric]}'
-            print(row)
-            ofile.write(f'{row}\n')
+            if row_info:
+                row = f'{file}'
+                for metric in metrics[1:]:
+                    row = f'{row},{row_info[metric]}'
+                print(row)
+                ofile.write(f'{row}\n')
         
     ofile.close()
 
@@ -85,7 +90,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/5xn/flip/smallflip',
+        default='data/big_data/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(

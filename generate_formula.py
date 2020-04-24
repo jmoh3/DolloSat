@@ -5,6 +5,7 @@ import sys
 import os
 import time
 import argparse
+import shutil
 
 """
 USAGE
@@ -62,83 +63,72 @@ def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=No
 
     num_row_duplicates = len(row_is_duplicate) - s
     num_col_duplicates = len(col_is_duplicate) - t
-    
-    # get clauses
-    forbidden_clauses  = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
-    not_one_and_two_clauses = get_clauses_not_one_and_two(is_one, is_two)
 
-    row_duplicate_clauses = get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of)
-    col_duplicate_clauses = get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of)
+    independent_lines = []
 
-    col_pairs_equal_clauses = get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal)
-    row_pairs_equal_clauses = get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal)
+    c_ind = 'c ind '
+    num_ind = 0
 
-    forbid_unsupported = clause_forbid_unsupported_losses(unsupported_losses, is_two)
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 0:
+                elem = false_negatives[i][j]
+            else:
+                elem = false_positives[i][j]
+            c_ind += f'{elem} '
+            num_ind += 1
+            if num_ind == 10:
+                c_ind += '0\n'
+                independent_lines.append(c_ind)
+                c_ind = 'c ind '
+                num_ind = 0
 
-    extra_vars, constraints_clauses = encode_constraints(false_positives, false_negatives,
-                                                        row_is_duplicate, col_is_duplicate,
-                                                        fp, fn, num_row_duplicates, num_col_duplicates)
-
-    first_line = ''
-    if unigen:
-        num_clauses = len(forbidden_clauses) + len(not_one_and_two_clauses)
-        num_clauses += len(row_duplicate_clauses) + len(col_duplicate_clauses)
-        num_clauses += len(col_pairs_equal_clauses) + len(row_pairs_equal_clauses)
-        num_clauses += len(constraints_clauses) + len(forbid_unsupported)
-
-        num_vars = col_is_duplicate[num_cols-1] + extra_vars
-
-        independent_lines = []
-
-        c_ind = 'c ind '
-        num_ind = 0
-
-        for i in range(len(matrix)):
-            for j in range(len(matrix[0])):
-                if matrix[i][j] == 0:
-                    elem = false_negatives[i][j]
-                else:
-                    elem = false_positives[i][j]
-                c_ind += f'{elem} '
-                num_ind += 1
-                if num_ind == 10:
-                    c_ind += '0\n'
-                    independent_lines.append(c_ind)
-                    c_ind = 'c ind '
-                    num_ind = 0
-
-        for row in is_two:
-            for elem in row:
-                c_ind += f'{elem} '
-                num_ind += 1
-                if num_ind == 10:
-                    c_ind += '0\n'
-                    independent_lines.append(c_ind)
-                    c_ind = 'c ind '
-                    num_ind = 0
+    for row in is_two:
+        for elem in row:
+            c_ind += f'{elem} '
+            num_ind += 1
+            if num_ind == 10:
+                c_ind += '0\n'
+                independent_lines.append(c_ind)
+                c_ind = 'c ind '
+                num_ind = 0
         
-        if num_ind != 0:
-            c_ind += '0\n'
-            independent_lines.append(c_ind)
+    if num_ind != 0:
+        c_ind += '0\n'
+        independent_lines.append(c_ind)
 
-        first_line = f'p cnf {num_vars} {num_clauses}\n'
+    write_file = open(write_filename + '.tmp', 'w')
+    write_file.writelines(independent_lines)
+    
+    clause_count = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file)
 
-    with open(write_filename, 'w') as f:
-        if unigen:
-            f.write(first_line)
-            f.writelines(independent_lines)
-        f.writelines(forbidden_clauses)
-        f.writelines(not_one_and_two_clauses)
+    clause_count += get_clauses_not_one_and_two(is_one, is_two, write_file)
 
-        f.writelines(row_duplicate_clauses)
-        f.writelines(col_duplicate_clauses)
+    clause_count += get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of, write_file)
+    
+    clause_count += get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of, write_file)
 
-        f.writelines(col_pairs_equal_clauses)
-        f.writelines(row_pairs_equal_clauses)
+    clause_count += get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal, write_file)
 
-        f.writelines(forbid_unsupported)
+    clause_count += get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file)
 
-        f.writelines(constraints_clauses)
+    clause_count += clause_forbid_unsupported_losses(unsupported_losses, is_two, write_file)
+
+    extra_vars, num_constraints_clauses = encode_constraints(false_positives, false_negatives,
+                                                        row_is_duplicate, col_is_duplicate,
+                                                        fp, fn, num_row_duplicates, num_col_duplicates, write_file)
+    clause_count += num_constraints_clauses
+
+    num_vars = col_is_duplicate[num_cols-1] + extra_vars
+
+    first_line = f'p cnf {num_vars} {clause_count}\n'
+
+    write_file.close()
+
+    from_file = open(write_filename + '.tmp') 
+    to_file = open(write_filename,mode="w")
+    to_file.write(first_line)
+    shutil.copyfileobj(from_file, to_file)
 
     if return_num_vars_clauses:
         return num_vars, num_clauses
