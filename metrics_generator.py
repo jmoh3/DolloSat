@@ -56,8 +56,7 @@ def get_info(infile, directory, num_samples, timeout, s, t):
 
     start = time.time()
     row_info['num_variables'], row_info['num_clauses'] = get_cnf(full_filename, cnf_filename, cell_clusters,
-                                                                mutation_clusters, True, None,
-                                                                expected_fn, expected_fp, True)
+                                                                mutation_clusters, None, expected_fn, expected_fp, True)
     row_info['formula_gen_time'] = time.time() - start
 
     row_info['unigen_time'], row_info['num_samples'] = run_unigen(cnf_filename, num_samples, timeout)

@@ -22,7 +22,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s, t, unigen=True, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False):
+def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.

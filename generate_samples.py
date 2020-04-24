@@ -34,28 +34,12 @@ def unigensampler_generator(infile, outfile, num_samples, timeout):
 
     os.system(unigen_cmd)
 
-def quicksampler_generator(cnf_file, num_samples, timeout, osname):
-    q_cmd = f'./samplers/quicksampler -n {num_samples} -t {timeout} {cnf_file}'
-    z3_cmd = f'./samplers/z3 sat.quicksampler_check=true {cnf_file}'
-
-    if osname == 'macOS':
-        q_cmd = f'./samplers/macOS/quicksampler -n {num_samples} -t {timeout} {cnf_file}'
-        z3_cmd = f'./samplers/macOS/z3 sat.quicksampler_check=true {cnf_file}'
-
-    os.system(q_cmd)
-    os.system(z3_cmd)
-
-def clean_up(shortened_filename, unigen):
+def clean_up(shortened_filename):
     remove_formula = f'rm {shortened_filename}.tmp.formula.cnf'
-    remove_samples = f'rm {shortened_filename}.tmp.formula.cnf.samples'
-
     os.system(remove_formula)
 
-    if unigen:
-        remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
-        os.system(remove_unigen_file)
-    else:
-        os.system(remove_samples)
+    remove_unigen_file = f'rm {shortened_filename}.tmp.formula.cnf.unigen'
+    os.system(remove_unigen_file)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
@@ -83,12 +67,6 @@ if __name__=='__main__':
         type=int,
         default=100,
         help='number of samples to generate'
-    )
-    parser.add_argument(
-        '--sampler',
-        type=int,
-        default=UNIGEN,
-        help='1 to use Quicksampler, 2 to use Unigen.'
     )
     parser.add_argument(
         '--s',
@@ -144,27 +122,26 @@ if __name__=='__main__':
     variables_filename = f'{shortened_filename}.variables'
 
     m1 = memory_profiler.memory_usage()
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
+    t1 = time.time()
+    
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.allowed_losses, args.fn, args.fp)
+    
     m2 = memory_profiler.memory_usage()
+    t2 = time.time()
     mem_diff = m2[0] - m1[0]
-    print(f"It took {mem_diff} Mb to execute this method")
+    time_diff = t2 - t1
+
+    print(f"It took {mem_diff} Mb and {time_diff} seconds to generate this formula")
     
     if args.debug:
         write_vars(variables_filename, variables)
 
-    if args.sampler == QUICKSAMPLER:
-        quicksampler_generator(cnf_filename, args.num_samples, args.timeout, os_name)
-        valid_solutions = f'{shortened_filename}.tmp.formula.cnf.samples.valid'
-        reconstruct_solutions(args.filename, valid_solutions, args.outfile, variables, args.debug)
-        if not args.debug:
-            clean_up(shortened_filename, False)
+    if os_name == 'macOS':
+        print('Unigen not compatible with OS X')
     else:
-        if os_name == 'macOS':
-            print('Unigen not compatible with OS X')
-        else:
-            unigen_outfile = cnf_filename + '.unigen'
-            unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
+        unigen_outfile = cnf_filename + '.unigen'
+        unigensampler_generator(cnf_filename, unigen_outfile, args.num_samples, args.timeout)
 
-            reconstruct_solutions(args.filename, unigen_outfile, args.outfile, variables, args.debug)
-            if not args.debug:
-                clean_up(shortened_filename, True)
+        reconstruct_solutions(args.filename, unigen_outfile, args.outfile, variables, args.debug)
+        if not args.debug:
+            clean_up(shortened_filename)
