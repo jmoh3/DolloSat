@@ -85,7 +85,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/5xn/flip',
+        default='data/5xn/flip/smallflip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(
