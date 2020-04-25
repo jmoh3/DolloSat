@@ -85,7 +85,7 @@ def get_forbidden_clause(is_one_sub, is_two_sub, raw_clause):
                 clause_cnf += f'{is_one_sub[location[0]][location[1]]} '
     return clause_cnf
 
-def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate):
+def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file):
     """
     Returns a list of clauses that enforce that no forbidden submatrices can
     be present in clustered matrix.
@@ -99,7 +99,7 @@ def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
     row_permutations = list(permutations(range(m), 3))
     column_permutations = list(permutations([i for i in range(n)], 2))
 
-    clauses = []
+    clause_count = 0
 
     for rows in row_permutations:
         for columns in column_permutations:
@@ -123,11 +123,12 @@ def get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate)
 
                 total_clause = f'{clause} {row_duplicates} {col_duplicates} 0\n'
 
-                clauses.append(total_clause)
+                write_file.write(total_clause)
+                clause_count += 1
 
-    return clauses
+    return clause_count
 
-def get_clauses_not_one_and_two(is_one, is_two):
+def get_clauses_not_one_and_two(is_one, is_two, write_file):
     """
     Returns list of clauses enforcing that an entry of the clustered matrix cannot be 
     both 1 and 2 at the same time.
@@ -135,14 +136,16 @@ def get_clauses_not_one_and_two(is_one, is_two):
     is_one - matrix of boolean variables that are 1 if corresponding entry in matrix being 1
     is_two - matrix of boolean variables that are 1 if corresponding entry in matrix being 2
     """
-    clauses = []
+    clause_count = 0
     for i in range(len(is_one)):
         for j in range(len(is_one[0])):
-            clauses.append(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
-    return clauses
+            write_file.write(f'{negate(is_one[i][j])} -{is_two[i][j]} 0\n')
+            clause_count += 1
+    
+    return clause_count
 
-def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of):
-    clauses = []
+def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplicate_of, write_file):
+    clause_count = 0
 
     num_rows = len(row_is_duplicate)
     num_columns = len(pair_in_col_equal[0][0])
@@ -155,25 +158,29 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplic
             for col in range(num_columns):
                 clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
                 # only if
-                clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
+                write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
+                clause_count += 1
             
             clause_if += f'{row_is_duplicate_of[smaller_row][row]} 0\n'
-            clauses.append(clause_if)
+            write_file.write(clause_if)
 
-            clauses.append(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
+            write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
+            clause_count += 2
 
             clause_only_if += f'{row_is_duplicate_of[smaller_row][row]} '
         
         clause_only_if += '0\n'
-        clauses.append(clause_only_if)
+        write_file.write(clause_only_if)
+        clause_count += 1
     
     # first row cannot be a duplicate
-    clauses.append(f'-{row_is_duplicate[0]} 0\n')
+    write_file.write(f'-{row_is_duplicate[0]} 0\n')
+    clause_count += 1
 
-    return clauses
+    return clause_count
 
-def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of):
-    clauses = []
+def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_losses, is_two, col_is_duplicate_of, write_file):
+    clause_count = 0
 
     num_cols = len(col_is_duplicate)
     num_rows = len(pair_in_row_equal)
@@ -187,29 +194,34 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
             for row in range(num_rows):
                 clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
                 # only if
-                clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
-
+                write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
+                clause_count += 1
+            
             if col in unsupported_losses:
                 clause_forbid_is_two = f'{col_is_duplicate_of[smaller_col][col]} -{is_two[row][smaller_col]} 0\n'
-                clauses.append(clause_forbid_is_two)
+                write_file.write(clause_forbid_is_two)
+                clause_count +=1
 
             clause_if += f'{col_is_duplicate_of[smaller_col][col]} 0\n'
 
-            clauses.append(clause_if)
-            clauses.append(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
+            write_file.write(clause_if)
+            write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
+            clause_count += 2
 
             clause_only_if += f'{col_is_duplicate_of[smaller_col][col]} '
         
         clause_only_if += '0\n'
-        clauses.append(clause_only_if)
+        write_file.write(clause_only_if)
+        clause_count += 1
     
     # first col cannot be a duplicate
-    clauses.append(f'-{col_is_duplicate[0]} 0\n')
+    write_file.write(f'-{col_is_duplicate[0]} 0\n')
+    clause_count += 1
 
-    return clauses
+    return clause_count
 
-def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
-    clauses = []
+def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal, write_file):
+    clause_count = 0
 
     num_rows = len(is_one)
     num_cols = len(is_one[0])
@@ -219,45 +231,47 @@ def get_col_pairs_equal_clauses(is_one, is_two, pair_in_col_equal):
             for row2 in range(row1 + 1, num_rows):
                 ## BOTH ENTRIES ARE 1
                 # B[row1][col] == 1 and B[row2][col] == 1 => pair_in_col_equal[row1][row2][col]
-                clauses.append(f'{negate(is_one[row1][col])} {negate(is_one[row2][col])} {pair_in_col_equal[row1][row2][col]} 0\n')
+                write_file.write(f'{negate(is_one[row1][col])} {negate(is_one[row2][col])} {pair_in_col_equal[row1][row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] == 1 => B[row2][col] == 1
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row1][col])} {is_one[row2][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row1][col])} {is_one[row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row2][col] == 1 => B[row1][col] == 1
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row2][col])} {is_one[row1][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {negate(is_one[row2][col])} {is_one[row1][col]} 0\n')
 
                 ## BOTH ENTRIES ARE 2
                 # B[row1][col] == 2 and B[row2][col] == 2 => pair_in_col_equal[row1][row2][col]
-                clauses.append(f'-{is_two[row1][col]} -{is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
+                write_file.write(f'-{is_two[row1][col]} -{is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] == 2 => B[row2][col] == 2
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row1][col]} {is_two[row2][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row1][col]} {is_two[row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] == 2 => B[row2][col] == 2
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row2][col]} {is_two[row1][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} -{is_two[row2][col]} {is_two[row1][col]} 0\n')
 
                 ## BOTH ENTRIES ARE 0
                 # B[row1][col] == 0 and B[row2][col] == 0 => pair_in_col_equal[row1][row2][col]
                 #
                 # equivalent to B[row1][col] != 1 and B[row2][col] != 1 
                 # and B[row1][col] != 2 and B[row2][col] != 2
-                clauses.append(f'{is_one[row1][col]} {is_one[row2][col]} {is_two[row1][col]} {is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
+                write_file.write(f'{is_one[row1][col]} {is_one[row2][col]} {is_two[row1][col]} {is_two[row2][col]} {pair_in_col_equal[row1][row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row1][col] != 1 and B[row1][col] != 2 => B[row2][col] != 1 and B[row2][col] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} {negate(is_one[row2][col])} 0\n')
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} -{is_two[row2][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} {negate(is_one[row2][col])} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row1][col]} {is_two[row1][col]} -{is_two[row2][col]} 0\n')
 
                 # pair_in_col_equal[row1][row2][col] and B[row2][col] != 1 and B[row2][col] != 2 => B[row1][col] != 1 and B[row1][col] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} {negate(is_one[row1][col])} 0\n')
-                clauses.append(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} -{is_two[row1][col]} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} {negate(is_one[row1][col])} 0\n')
+                write_file.write(f'-{pair_in_col_equal[row1][row2][col]} {is_one[row2][col]} {is_two[row2][col]} -{is_two[row1][col]} 0\n')
 
-    return clauses
+                clause_count += 11
 
-def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
-    clauses = []
+    return clause_count
+
+def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
+    clause_count = 0
 
     num_rows = len(is_one)
     num_cols = len(is_one[0])
@@ -267,45 +281,48 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal):
             for col2 in range(col1 + 1, num_cols):
                 # BOTH ENTRIES ARE 1
                 # B[row][col1] == 1 and B[row][col2] == 1 => pair_in_row_equal[row][col1][col2]
-                clauses.append(f'{negate(is_one[row][col1])} {negate(is_one[row][col2])} {pair_in_row_equal[row][col1][col2]} 0\n')
+                write_file.write(f'{negate(is_one[row][col1])} {negate(is_one[row][col2])} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] == 1 => B[row][col2] == 1
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col1])} {is_one[row][col2]} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col1])} {is_one[row][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col2] == 1 => B[row][col1] == 1
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 2
                 # B[row1][col] == 2 and B[row2][col] == 2
-                clauses.append(f'-{is_two[row][col1]} -{is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
+                write_file.write(f'-{is_two[row][col1]} -{is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] == 2 => B[row][col2] == 2
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col1]} {is_two[row][col2]} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col1]} {is_two[row][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col2] == 2 => B[row][col1] == 2
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col2]} {is_two[row][col1]} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col2]} {is_two[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 0
                 # B[row][col1] == 0 and B[row][col2] == 0
                 #
                 # equivalent to B[row][col1] != 1 and B[row][col2] != 1 
                 # and B[row][col1] != 2 and B[row][col2] != 2
-                clauses.append(f'{is_one[row][col1]} {is_one[row][col2]} {is_two[row][col1]} {is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
+                write_file.write(f'{is_one[row][col1]} {is_one[row][col2]} {is_two[row][col1]} {is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] != 1 and B[row][col1] != 2 => B[row][col2] != 1 and B[row][col2] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} {negate(is_one[row][col2])} 0\n')
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} -{is_two[row][col2]} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} {negate(is_one[row][col2])} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col1]} {is_two[row][col1]} -{is_two[row][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col2] != 1 and B[row][col2] != 2 => B[row][col1] != 1 and B[row][col1] != 2
                 # (expands into 2 clauses)
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} {negate(is_one[row][col1])} 0\n')
-                clauses.append(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
-    return clauses
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} {negate(is_one[row][col1])} 0\n')
+                write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {is_one[row][col2]} {is_two[row][col2]} -{is_two[row][col1]} 0\n')
+                
+                clause_count += 11
+    
+    return clause_count
 
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
-                        row_dup_constraint, col_dup_constraint):
+                        row_dup_constraint, col_dup_constraint, write_file):
     command = './pbencoder '
 
     false_pos_start = 0
@@ -341,16 +358,18 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     with open('tmp_constraint_clauses.cnf', 'r') as fp:
         lines = fp.readlines()
 
+    write_file.writelines(lines[:-2])
     num_vars = int(lines[len(lines)-2].split(' ')[1])
 
     os.system('rm tmp_constraint_clauses.cnf')
 
-    return num_vars, lines[:-2]
+    return num_vars, len(lines[:-2])
 
-def clause_forbid_unsupported_losses(forbidden_losses, is_two):
-    clauses = []
+def clause_forbid_unsupported_losses(forbidden_losses, is_two, write_file):
+    clause_count = 0
     for forbidden_loss in forbidden_losses:
         for row in range(len(is_two)):
-            clauses.append(f'-{is_two[row][forbidden_loss]} 0\n')
+            write_file.write(f'-{is_two[row][forbidden_loss]} 0\n')
+            clause_count += 1
     
-    return clauses
+    return clause_count

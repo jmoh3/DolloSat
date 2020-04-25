@@ -36,11 +36,16 @@ int main(int argc, char **argv)
     }
 
     vector<vector<int32_t>> formula;
-    first_fresh_variable = pb2cnf.encodeAtMostK(literals, k, formula, first_fresh_variable) + 1;
     
     // only enforce equality if we're looking at # of cell or mutation clusters
     if (i > 4) {
+      first_fresh_variable = pb2cnf.encodeAtMostK(literals, k, formula, first_fresh_variable) + 1;
       first_fresh_variable = pb2cnf.encodeAtLeastK(literals, k, formula, first_fresh_variable) + 1;
+    } else {
+      first_fresh_variable = pb2cnf.encodeAtMostK(literals, k+1, formula, first_fresh_variable) + 1;
+      if (k > 0) {
+        first_fresh_variable = pb2cnf.encodeAtMostK(literals, k-1, formula, first_fresh_variable) + 1;
+      }
     }
 
     for (auto clause : formula)
