@@ -27,13 +27,22 @@ def run_unigen(cnf_filename, num_samples, timeout):
 
     return total_ugen_time, ugen_samples
 
+def get_num_ones(matrix_filename):
+    matrix = read_matrix(matrix_filename)
+    count = 0
+    for row in matrix:
+        for elem in row:
+            if elem == 1:
+                count += 1
+    return count
+
 def get_info(infile, directory, num_samples, timeout, s, t):
     row_info = parse_filename(infile)
 
     m = row_info['m']
     n = row_info['n']
 
-    if m != 5 or n > 15:
+    if m > 15 or n > 15:
         return None
 
     print(f'Starting {infile}')
@@ -46,13 +55,14 @@ def get_info(infile, directory, num_samples, timeout, s, t):
     mutation_clusters = math.ceil(args.t * n)
     row_info['num_mutation_clusters'] = mutation_clusters
 
-    num_entries = m * n
-
-    expected_fp = math.floor(num_entries * fp_rate)
-    expected_fn = math.floor(num_entries * fn_rate)
-
     cnf_filename = f'{FORMULAS_DIRECTORY}/{infile}.tmp.formula.cnf'
     full_filename = f'{directory}/{infile}'
+
+    num_ones = get_num_ones(full_filename)
+    num_zeroes = m * n - num_ones
+
+    expected_fp = math.floor(num_ones * fp_rate)
+    expected_fn = math.floor(num_zeroes * fn_rate)
 
     start = time.time()
     row_info['num_variables'], row_info['num_clauses'] = get_cnf(full_filename, cnf_filename, cell_clusters,
@@ -89,13 +99,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/5xn/flip',
+        default='data/big_data/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(
         '--outfile',
         type=str,
-        default='metrics_5xn.csv',
+        default='metrics_big_data.csv',
         help='outfile to write metrics to'
     )
     parser.add_argument(
