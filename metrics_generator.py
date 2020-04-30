@@ -96,6 +96,7 @@ if __name__=='__main__':
         '--outfile',
         type=str,
         default='metrics_5xn.csv',
+        default='metrics.csv',
         help='outfile to write metrics to'
     )
     parser.add_argument(

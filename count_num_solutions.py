@@ -134,7 +134,7 @@ if __name__=='__main__':
         
         start = time.time()
         get_cnf(full_filename, cnf_filename, cell_clusters, mutation_clusters,
-                True, None, expected_fn, expected_fp)
+                None, expected_fn, expected_fp)
         total_time = time.time() - start
 
         print(f'Starting sharpSAT on {filename}')
