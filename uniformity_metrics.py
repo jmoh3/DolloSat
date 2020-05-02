@@ -3,16 +3,17 @@ import time
 import os 
 import argparse 
 import math
-import pandas as pd
 
 from generate_formula import get_cnf
 from generate_samples import unigensampler_generator
 from utils import get_matrix_info, parse_filename
+from count_num_solutions import get_num_solutions_sharpSAT
 
 total_solutions_path = 'total_solutions.csv'
 FORMULAS_DIRECTORY = 'data/formulas'
+sharpSAT_path = '../../../scratch/software/src/sharpSAT/build/Release/sharpSAT'
 
-def run_unigen(cnf_filename, num_samples, timeout):
+def get_unigen_frequencies(cnf_filename, num_samples, timeout):
     unigen_outfile = cnf_filename + '.unigen'
 
     start = time.time()
@@ -22,11 +23,16 @@ def run_unigen(cnf_filename, num_samples, timeout):
     fp = open(unigen_outfile)
     lines = fp.readlines()
     fp.close()
-    ugen_samples = len(lines) - 1
+
+    frequencies = []
+    
+    for line in lines:
+        sampled_freq = int(line.split(':')[1])
+        frequencies.append(sampled_freq)
 
     os.system(f'rm {unigen_outfile}')
 
-    return total_ugen_time, ugen_samples
+    return frequencies
 
 def get_info(infile, directory, num_samples, timeout, s, t):
     row_info = parse_filename(infile)
@@ -59,7 +65,16 @@ def get_info(infile, directory, num_samples, timeout, s, t):
                                                                 mutation_clusters, None, expected_fn, expected_fp, True)
     row_info['formula_gen_time'] = time.time() - start
 
-    row_info['unigen_time'], row_info['num_samples'] = run_unigen(cnf_filename, num_samples, timeout)
+    num_solutions = get_num_solutions_sharpSAT(sharpSAT_path, cnf_filename)
+    frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
+    frequencies = [float(frequency)/num_solutions for frequency in frequencies]
+
+    if len(frequencies) == 0:
+        row_info['min_freq'] = 1
+        row_info['max_freq'] = 1
+    else:
+        row_info['min_freq'] = min(frequencies)
+        row_info['max_freq'] = max(frequencies)
 
     os.system(f'rm {cnf_filename}')
     
@@ -67,14 +82,10 @@ def get_info(infile, directory, num_samples, timeout, s, t):
 
 def generate_info(files, directory, outfile, num_samples, timeout, s, t):
     metrics = ['filename', 'm', 'n', 'num_cell_clusters', 'num_mutation_clusters',
-                'num_variables', 'num_clauses', 'formula_gen_time', 'unigen_time', 'num_samples']
+                'num_variables', 'num_clauses', 'formula_gen_time', 'min_freq', 'max_freq']
 
-    df = pd.read_csv(outfile)
-    seen = set(df['filename'].values)
-    files = [file for file in files if file not in seen]
-
-    with open(outfile, 'a+') as ofile:
-        # ofile.write(','.join(metrics) + '\n')
+    with open(outfile, 'w') as ofile:
+        ofile.write(','.join(metrics) + '\n')
 
         sorted_files = sorted(files, key=lambda a: parse_filename(a)['m'])
 
@@ -101,13 +112,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--outfile',
         type=str,
-        default='metrics_mx5.csv',
+        default='uniformity.csv',
         help='outfile to write metrics to'
     )
     parser.add_argument(
         '--samples',
         type=int,
-        default=100,
+        default=11000,
         help='number of samples to generate'
     )
     parser.add_argument(
