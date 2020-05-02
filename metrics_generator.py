@@ -28,7 +28,7 @@ def run_unigen(cnf_filename, num_samples, timeout):
 
     return total_ugen_time, ugen_samples
 
-def get_info(infile, directory, num_samples, timeout, s, t):
+def get_info(infile, directory, num_samples, timeout):
     row_info = parse_filename(infile)
     full_filename = f'{directory}/{infile}'
 
@@ -65,7 +65,7 @@ def get_info(infile, directory, num_samples, timeout, s, t):
     
     return row_info
 
-def generate_info(files, directory, outfile, num_samples, timeout, s, t):
+def generate_info(files, directory, outfile, num_samples, timeout):
     metrics = ['filename', 'm', 'n', 'num_cell_clusters', 'num_mutation_clusters',
                 'num_variables', 'num_clauses', 'formula_gen_time', 'unigen_time', 'num_samples']
 
@@ -79,7 +79,7 @@ def generate_info(files, directory, outfile, num_samples, timeout, s, t):
         sorted_files = sorted(files, key=lambda a: parse_filename(a)['m'])
 
         for file in sorted_files:
-            row_info = get_info(file, directory, num_samples, timeout, s, t)
+            row_info = get_info(file, directory, num_samples, timeout)
             if row_info:
                 row = f'{file}'
                 for metric in metrics[1:]:
@@ -116,18 +116,6 @@ if __name__=='__main__':
         default=7200.0,
         help='number of samples to generate'
     )
-    parser.add_argument(
-        '--s',
-        type=float,
-        default=0.8,
-        help='Ratio of cell clusters to m, number of cells in input'
-    )
-    parser.add_argument(
-        '--t',
-        type=float,
-        default=0.8,
-        help='Ratio of mutation clusters to n, number of mutations in input'
-    )
 
     parser.set_defaults(debug=False)
     args = parser.parse_args()
@@ -141,4 +129,4 @@ if __name__=='__main__':
     if not os.path.exists(FORMULAS_DIRECTORY):
         os.makedirs(FORMULAS_DIRECTORY)
 
-    generate_info(files, directory, out_file, num_samples, args.timeout, args.s, args.t)
+    generate_info(files, directory, out_file, num_samples, args.timeout)

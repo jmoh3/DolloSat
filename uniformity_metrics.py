@@ -25,14 +25,16 @@ def get_unigen_frequencies(cnf_filename, num_samples, timeout):
     fp.close()
 
     frequencies = []
+    total_samples = 0
     
     for line in lines:
         sampled_freq = int(line.split(':')[1])
-        frequencies.append(sampled_freq)
+        total_samples += sampled_freq
+        frequencies.append(float(sampled_freq))
 
     os.system(f'rm {unigen_outfile}')
 
-    return frequencies
+    return total_samples, frequencies
 
 def get_info(infile, directory, num_samples, timeout, s, t):
     row_info = parse_filename(infile)
@@ -66,8 +68,9 @@ def get_info(infile, directory, num_samples, timeout, s, t):
     row_info['formula_gen_time'] = time.time() - start
 
     num_solutions = get_num_solutions_sharpSAT(sharpSAT_path, cnf_filename)
-    frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
-    frequencies = [float(frequency)/num_solutions for frequency in frequencies]
+
+    total_samples, frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
+    frequencies = [frequency/num_solutions for frequency in frequencies]
 
     if len(frequencies) == 0:
         row_info['min_freq'] = 1
