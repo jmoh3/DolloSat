@@ -1,5 +1,7 @@
 from itertools import permutations 
 import os 
+import math
+from CNF import CNF
 
 def get_lookup(lookup_filename):
     """
@@ -344,50 +346,66 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
     
     return clause_count
 
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
+def to_bin_list(val,n_bits):
+    # Convert a integer to a vector of binary values
+    lb=bin(val)[2:][::-1]
+    ans=[]
+    for i in range(n_bits):
+        if i<len(lb):
+            ans.append(1 if lb[i]=="1" else -1)
+        else: ans.append(-1)
+    return ans
+
+def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
+    constraint_bin = to_bin_list(constraint, N)
+
+    Sum = [CNF_obj.false() for k in range(N) ]
+    for q in vars_to_sum:
+        tmp = [CNF_obj.false() for f in range(N)]
+        tmp[0] = q
+        Sum = CNF_obj.add(Sum,tmp)
+    
+    CNF_obj.leq(Sum,constraint_bin)
+
+def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
+    constraint_bin = to_bin_list(constraint, N)
+
+    Sum = [CNF_obj.false() for k in range(N) ]
+    for q in vars_to_sum:
+        tmp = [CNF_obj.false() for f in range(N)]
+        tmp[0] = q
+        Sum = CNF_obj.add(Sum,tmp)
+    
+    CNF_obj.eq(Sum,constraint_bin)
+
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
                         row_dup_constraint, col_dup_constraint, write_file):
-    command = './pbencoder '
-
-    false_pos_start = 0
-    num_false_pos = 0
-
-    for row in false_pos:
-        for elem in row:
-            if elem != 0:
-                if false_pos_start == 0:
-                    false_pos_start = elem
-                num_false_pos += 1
     
-    command += f'{false_pos_start} {num_false_pos} {false_pos_constraint} '
+    first_fresh_var = col_duplicates[-1]+1
+    CNF_obj = CNF(first_fresh_var)
+    num_entries = len(false_pos) * len(false_pos[0])
 
-    false_neg_start = false_pos_start + num_false_pos
-    num_false_neg = len(false_pos) * len(false_pos[0]) - num_false_pos
+    N=math.ceil(math.log(num_entries, 2))
+    
+    encode_at_most_k([var for row in false_pos for var in row], false_pos_constraint, CNF_obj, N)
+    encode_at_most_k([var for row in false_neg for var in row], false_neg_constraint, CNF_obj, N)
+    
+    encode_eq_k(row_duplicates, row_dup_constraint, CNF_obj, N)
+    encode_eq_k(col_duplicates, col_dup_constraint, CNF_obj, N)
 
-    command += f'{false_neg_start} {num_false_neg} {false_neg_constraint} '
+    for cl in CNF_obj.clauses:
+        if cl[0]=="c":
+            continue
+        for lit in cl:
+            write_file.write("%d "%lit)
+        write_file.write("0\n")
+    
+    extra_vars = CNF_obj.var - first_fresh_var
+    return extra_vars, len(CNF_obj.clauses)
 
-    row_dup_start = row_duplicates[0]
-    num_row_dup_vars = len(row_duplicates)
-
-    command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
-
-    col_dup_start = col_duplicates[0]
-    num_col_dup_vars = len(col_duplicates)
-
-    command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
-    command += 'tmp_constraint_clauses.cnf'
-
-    os.system(command)
-
-    with open('tmp_constraint_clauses.cnf', 'r') as fp:
-        lines = fp.readlines()
-
-    write_file.writelines(lines[:-2])
-    num_vars = int(lines[len(lines)-2].split(' ')[1])
-
-    os.system('rm tmp_constraint_clauses.cnf')
-
-    return num_vars, len(lines[:-2])
 
 def clause_forbid_unsupported_losses(forbidden_losses, is_two, write_file):
     clause_count = 0

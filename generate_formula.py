@@ -121,7 +121,7 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
                                                         fp, fn, num_row_duplicates, num_col_duplicates, write_file)
     clause_count += num_constraints_clauses
 
-    num_vars = col_is_duplicate[num_cols-1] + extra_vars
+    num_vars = col_is_duplicate[-1] + extra_vars
 
     first_line = f'p cnf {num_vars} {clause_count}\n'
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=5,
+        default=4,
         help='number of rows in clustered matrix'
     )
     parser.add_argument(
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     t = args.t
 
     start = time.time()
-    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
+    variables = get_cnf(filename, outfile, s, t, args.allowed_losses, args.fn, args.fp)
     end = time.time()
 
     write_vars("formula.vars", variables)

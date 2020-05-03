@@ -3,17 +3,18 @@
 
 class CNF:
 
-    def __init__(self):
-        self.clauses=[[1]]
+    def __init__(self, first_fresh_var):
         self.ind=[]
-        self.var=1
+        self.var = first_fresh_var
+        self.true_var = first_fresh_var
+        self.clauses=[[self.true_var]]
 
 #basic functions
     def true(self):
-        return 1
+        return self.true_var
     
     def false(self):
-        return -1
+        return -self.true_var
     
     def new_var(self,ind=False):
         self.var+=1
