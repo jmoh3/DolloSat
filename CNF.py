@@ -43,8 +43,9 @@ class CNF:
         self.clauses.append([r,-a,b])
         return r
     
-    def only_one_in_all(self,literals):
-        self.clauses.append(literals)
+    def only_one_in_all(self,literals, less_than_allowed=False):
+        if not less_than_allowed:
+            self.clauses.append(literals)
         for i in range(len(literals)):
             for j in range(i):
                 self.clauses.append([-literals[i],-literals[j]])
@@ -53,7 +54,7 @@ class CNF:
         self.clauses.append([lit])
 
 
-#calcultions
+#calculations
     def half_adder(self,a,b,result,carry):
         self.XOR(a,b,result)
         self.AND(a,b,carry)

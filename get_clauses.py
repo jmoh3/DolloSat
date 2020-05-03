@@ -361,6 +361,13 @@ def to_bin_list(val,n_bits,CNF_obj):
 # credit to:
 # https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
 def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
+    if constraint == 0:
+        encode_none(vars_to_sum, CNF_obj)
+        return
+    elif constraint == 1:
+        CNF_obj.only_one_in_all(vars_to_sum, True)
+        return
+    
     constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
     Sum = [CNF_obj.false() for k in range(N)]
@@ -369,11 +376,18 @@ def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
         tmp[0] = q
         Sum = CNF_obj.add(Sum,tmp)
     
-    CNF_obj.leq(Sum,constraint_bin)
+    CNF_obj.leq(Sum, constraint_bin)
 
 # credit to:
 # https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
 def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
+    if constraint == 0:
+        encode_none(vars_to_sum, CNF_obj)
+        return
+    elif constraint == 1:
+        CNF_obj.only_one_in_all(vars_to_sum)
+        return
+
     constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
     Sum = [CNF_obj.false() for k in range(N) ]
@@ -384,10 +398,14 @@ def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
     
     CNF_obj.eq(Sum,constraint_bin)
 
+def encode_none(vars, CNF_obj):
+    for var in vars:
+        CNF_obj.set_true(-var)
+    
+
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
                         row_dup_constraint, col_dup_constraint, write_file):
-    
     first_fresh_var = col_duplicates[-1] + 1
     CNF_obj = CNF(first_fresh_var)
 
@@ -415,6 +433,20 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     extra_vars = CNF_obj.var - first_fresh_var + 1
     
     return extra_vars, len(CNF_obj.clauses)
+
+    # for var in false_pos_vars:
+    #     write_file.write(f'-{var} 0\n')
+
+    # for var in false_neg_vars:
+    #     write_file.write(f'-{var} 0\n')
+
+    # for var in row_duplicates:
+    #     write_file.write(f'-{var} 0\n')
+
+    # for var in col_duplicates:
+    #     write_file.write(f'-{var} 0\n')
+    
+    # return 0, len(false_pos_vars) + len(false_neg_vars) + len(row_duplicates) + len(col_duplicates)
 
 
 def clause_forbid_unsupported_losses(forbidden_losses, is_two, write_file):
