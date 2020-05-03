@@ -17,7 +17,7 @@ class CNF:
         return -self.true_var
     
     def new_var(self,ind=False):
-        self.var+=1
+        self.var += 1
         if(ind): self.ind.append(self.var)
         return self.var
     

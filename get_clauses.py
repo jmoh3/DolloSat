@@ -348,18 +348,18 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
 
 # credit to:
 # https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
-def to_bin_list(val,n_bits):
+def to_bin_list(val,n_bits,CNF_obj):
     # Convert a integer to a vector of binary values
     lb=bin(val)[2:][::-1]
     ans=[]
     for i in range(n_bits):
         if i<len(lb):
-            ans.append(1 if lb[i]=="1" else -1)
-        else: ans.append(-1)
+            ans.append(CNF_obj.true() if lb[i]=="1" else CNF_obj.false())
+        else: ans.append(CNF_obj.false())
     return ans
 
 def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
-    constraint_bin = to_bin_list(constraint, N)
+    constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
     Sum = [CNF_obj.false() for k in range(N) ]
     for q in vars_to_sum:
@@ -370,7 +370,7 @@ def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
     CNF_obj.leq(Sum,constraint_bin)
 
 def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
-    constraint_bin = to_bin_list(constraint, N)
+    constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
     Sum = [CNF_obj.false() for k in range(N) ]
     for q in vars_to_sum:
@@ -388,10 +388,10 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
     CNF_obj = CNF(first_fresh_var)
     num_entries = len(false_pos) * len(false_pos[0])
 
-    N=math.ceil(math.log(num_entries, 2))
+    N=math.ceil(math.log(num_entries, 2)) # bits required to encode sum of fp and fn variables
     
-    encode_at_most_k([var for row in false_pos for var in row], false_pos_constraint, CNF_obj, N)
-    encode_at_most_k([var for row in false_neg for var in row], false_neg_constraint, CNF_obj, N)
+    encode_at_most_k([var for row in false_pos for var in row if var != 0], false_pos_constraint, CNF_obj, N)
+    encode_at_most_k([var for row in false_neg for var in row if var != 0], false_neg_constraint, CNF_obj, N)
     
     encode_eq_k(row_duplicates, row_dup_constraint, CNF_obj, N)
     encode_eq_k(col_duplicates, col_dup_constraint, CNF_obj, N)
@@ -403,7 +403,8 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
             write_file.write("%d "%lit)
         write_file.write("0\n")
     
-    extra_vars = CNF_obj.var - first_fresh_var
+    extra_vars = CNF_obj.var - first_fresh_var + 1
+    
     return extra_vars, len(CNF_obj.clauses)
 
 
