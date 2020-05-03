@@ -151,19 +151,31 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplic
     num_columns = len(pair_in_col_equal[0][0])
 
     for row in range(1, num_rows):
+        # Clause that is satisfied if
+        # row_is_duplicate[row] => row_is_duplicate_of[0][row] or row_is_duplicate_of[1][row] or ... row_is_duplicate_of[row-1][row]
+        # is satisfied
         clause_only_if = f'-{row_is_duplicate[row]} '
         for smaller_row in range(row):
+            # Clause that is satisfied if
+            # pair_in_col_equal[smaller][row][0] and pair_in_col_equal[smaller][row][1] and ... pair_in_col_equal[smaller][row][n]
+            # => row_is_duplicate_of[smaller][row]
+            # is satisfied
             clause_if = ''
             
             for col in range(num_columns):
                 clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
-                # only if
+                # Clause that enforces
+                # row_is_duplicate_of[smaller][row] => pair_in_col_equal[smaller][row][col]
+                # is satisfied
                 write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
                 clause_count += 1
             
             clause_if += f'{row_is_duplicate_of[smaller_row][row]} 0\n'
             write_file.write(clause_if)
 
+            # Clause that enforces
+            # row_is_duplicate_of[smaller][row] => row_is_duplicate[row]
+            # is satisfied
             write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
             clause_count += 2
 
@@ -186,14 +198,23 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
     num_rows = len(pair_in_row_equal)
 
     for col in range(1, num_cols):
+        # Clause that is satisfied if
+        # col_is_duplicate[col] => col_is_duplicate_of[0][col] or col_is_duplicate_of[1][col] or ... col_is_duplicate_of[col-1][col]
+        # is satisfied
         clause_only_if = f'-{col_is_duplicate[col]} '
 
         for smaller_col in range(col):
+            # Clause that is satisfied if
+            # pair_in_row_equal[0][smaller_col][col] and pair_in_row_equal[1][smaller_col][col] and ... pair_in_row_equal[n][smaller_col][col]
+            # => col_is_duplicate_of[smaller_col][col]
+            # is satisfied
             clause_if = ''
 
             for row in range(num_rows):
                 clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
-                # only if
+                # Clause that enforces
+                # col_is_duplicate_of[smaller_col][col] => pair_in_row_equal[row][smaller_col][col]
+                # is satisfied
                 write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
                 clause_count += 1
             
@@ -203,8 +224,11 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
                 clause_count +=1
 
             clause_if += f'{col_is_duplicate_of[smaller_col][col]} 0\n'
-
             write_file.write(clause_if)
+
+            # Clause that enforces
+            # col_is_duplicate_of[smaller][col] => col_is_duplicate[col]
+            # is satisfied
             write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
             clause_count += 2
 
@@ -290,7 +314,7 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
                 write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 2
-                # B[row1][col] == 2 and B[row2][col] == 2
+                # B[row1][col] == 2 and B[row2][col] == 2 => pair_in_row_equal[row][col1][col2]
                 write_file.write(f'-{is_two[row][col1]} -{is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] == 2 => B[row][col2] == 2
@@ -300,7 +324,7 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
                 write_file.write(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col2]} {is_two[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 0
-                # B[row][col1] == 0 and B[row][col2] == 0
+                # B[row][col1] == 0 and B[row][col2] == 0 => pair_in_row_equal[row][col1][col2]
                 #
                 # equivalent to B[row][col1] != 1 and B[row][col2] != 1 
                 # and B[row][col1] != 2 and B[row][col2] != 2

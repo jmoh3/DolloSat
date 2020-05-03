@@ -92,15 +92,17 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
                 independent_lines.append(c_ind)
                 c_ind = 'c ind '
                 num_ind = 0
-        
+
     if num_ind != 0:
         c_ind += '0\n'
         independent_lines.append(c_ind)
 
     write_file = open(write_filename + '.tmp', 'w')
-    write_file.writelines(independent_lines)
-    
-    clause_count = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file)
+    # write_file.writelines(independent_lines)
+
+    clause_count = 0
+
+    clause_count += get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file)
 
     clause_count += get_clauses_not_one_and_two(is_one, is_two, write_file)
 

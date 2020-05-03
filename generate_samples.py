@@ -123,9 +123,7 @@ if __name__=='__main__':
 
     # m1 = memory_profiler.memory_usage()
     # t1 = time.time()
-    
     variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.allowed_losses, args.fn, args.fp)
-    
     # m2 = memory_profiler.memory_usage()
     # t2 = time.time()
     # mem_diff = m2[0] - m1[0]
