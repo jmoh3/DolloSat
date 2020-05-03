@@ -1,23 +1,19 @@
-# from https://github.com/elkebir-group/UniPPM/blob/master/CNF.py
-# thanks!
-
 class CNF:
 
-    def __init__(self, first_fresh_var):
+    def __init__(self):
+        self.clauses=[[1]]
         self.ind=[]
-        self.var = first_fresh_var
-        self.true_var = first_fresh_var
-        self.clauses=[[self.true_var]]
+        self.var=1
 
 #basic functions
     def true(self):
-        return self.true_var
+        return 1
     
     def false(self):
-        return -self.true_var
+        return -1
     
     def new_var(self,ind=False):
-        self.var += 1
+        self.var+=1
         if(ind): self.ind.append(self.var)
         return self.var
     
@@ -43,9 +39,8 @@ class CNF:
         self.clauses.append([r,-a,b])
         return r
     
-    def only_one_in_all(self,literals, less_than_allowed=False):
-        if not less_than_allowed:
-            self.clauses.append(literals)
+    def only_one_in_all(self,literals):
+        self.clauses.append(literals)
         for i in range(len(literals)):
             for j in range(i):
                 self.clauses.append([-literals[i],-literals[j]])
@@ -54,7 +49,7 @@ class CNF:
         self.clauses.append([lit])
 
 
-#calculations
+#calcultions
     def half_adder(self,a,b,result,carry):
         self.XOR(a,b,result)
         self.AND(a,b,carry)

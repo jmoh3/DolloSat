@@ -71,13 +71,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=4,
+        default=3,
         help='Number of cell clusters to use.'
     )
     parser.add_argument(
         '--t',
         type=int,
-        default=4,
+        default=2,
         help='Number of mutation clusters to use.'
     )
     parser.add_argument(
@@ -89,7 +89,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--fp',
         type=int,
-        default=1,
+        default=0,
         help='number of false positives'
     )
     parser.add_argument(

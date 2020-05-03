@@ -1,4 +1,6 @@
-def create_variable_matrices(matrix, s, t):
+from CNF import CNF
+
+def create_variable_matrices(matrix, s, t, CNF_obj):
     """
     Returns dictionary where keys are the names of the variable matrices,
     and values are matrices containing labels for boolean variables in formula.
@@ -9,7 +11,6 @@ def create_variable_matrices(matrix, s, t):
     """
     m = len(matrix)
     n = len(matrix[0])
-    offset = 1
 
     false_positives = [[0 for x in range(n)] for y in range(m)]
     false_negatives = [[0 for x in range(n)] for y in range(m)]
@@ -17,53 +18,44 @@ def create_variable_matrices(matrix, s, t):
     for i in range(m):
         for j in range(n):
             if matrix[i][j] == 1:
-                false_positives[i][j] = offset
-                offset += 1
+                false_positives[i][j] = CNF_obj.new_var()
     
     for i in range(m):
         for j in range(n):
             if matrix[i][j] == 0:
-                false_negatives[i][j] = offset
-                offset += 1
+                false_negatives[i][j] = CNF_obj.new_var()
     
-    is_two = [[n*i+j+offset for j in range(n)] for i in range(m)]
-    offset += m*n
+    is_two = [[CNF_obj.new_var() for j in range(n)] for i in range(m)]
 
     pair_in_row_equal = [[[0 for l in range(n)] for k in range(n)] for i in range(m)]
 
     for i in range(m):
         for k in range(n):
             for l in range(k+1,n):
-                pair_in_row_equal[i][k][l] = offset
-                offset += 1
+                pair_in_row_equal[i][k][l] = CNF_obj.new_var()
 
     pair_in_col_equal = [[[0 for k in range(n)] for j in range(m)] for i in range(m)]
 
     for i in range(m):
         for j in range(i+1,m):
             for k in range(n):
-                pair_in_col_equal[i][j][k] = offset
-                offset += 1
+                pair_in_col_equal[i][j][k] = CNF_obj.new_var()
     
     row_is_duplicate_of = [[0 for i in range(m)] for j in range(m)]
     
     for i in range(m):
         for j in range(i+1, m):
-            row_is_duplicate_of[i][j] = offset
-            offset += 1
+            row_is_duplicate_of[i][j] = CNF_obj.new_var()
 
     col_is_duplicate_of = [[0 for i in range(n)] for j in range(n)]
     
     for i in range(n):
         for j in range(i+1, n):
-            col_is_duplicate_of[i][j] = offset
-            offset += 1
+            col_is_duplicate_of[i][j] = CNF_obj.new_var()
 
-    row_is_duplicate = [i+offset for i in range(m)]
-    offset += m
+    row_is_duplicate = [CNF_obj.new_var() for i in range(m)]
 
-    col_is_duplicate = [i+offset for i in range(n)]
-    offset += n
+    col_is_duplicate = [CNF_obj.new_var() for i in range(n)]
 
     variables = {'false_positives': false_positives,
                 'false_negatives': false_negatives,

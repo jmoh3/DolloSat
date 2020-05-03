@@ -1,5 +1,6 @@
 from get_clauses import *
 from get_vars import create_variable_matrices, write_vars
+from CNF import CNF
 
 import sys
 import os
@@ -37,7 +38,9 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     num_rows = len(matrix)
     num_cols = len(matrix[0])
 
-    variables = create_variable_matrices(matrix, s, t)
+    F = CNF()
+
+    variables = create_variable_matrices(matrix, s, t, F)
     allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
 
     unsupported_losses = []
@@ -116,14 +119,13 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
 
     clause_count += clause_forbid_unsupported_losses(unsupported_losses, is_two, write_file)
 
-    extra_vars, num_constraints_clauses = encode_constraints(false_positives, false_negatives,
-                                                        row_is_duplicate, col_is_duplicate,
-                                                        fp, fn, num_row_duplicates, num_col_duplicates, write_file)
-    clause_count += num_constraints_clauses
+    num_constraints_clauses = encode_constraints(false_positives, false_negatives,
+                                                row_is_duplicate, col_is_duplicate,
+                                                fp, fn, num_row_duplicates, num_col_duplicates,
+                                                write_file, F)
+    clause_count += num_constraints_clauses + 1
 
-    num_vars = col_is_duplicate[-1] + extra_vars
-
-    first_line = f'p cnf {num_vars} {clause_count}\n'
+    first_line = f'p cnf {F.var} {clause_count}\n'
 
     write_file.close()
 

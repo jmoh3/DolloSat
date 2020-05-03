@@ -164,6 +164,14 @@ class CheckFormula(unittest.TestCase):
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 6)
+    
+
+    def test_more_fn(self):
+        get_cnf('tests/test_inputs/zero_3x2.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 2, 0)
+        num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 6)
 
 if __name__ == '__main__':
     unittest.main()
