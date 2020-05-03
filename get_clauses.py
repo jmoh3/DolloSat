@@ -358,10 +358,12 @@ def to_bin_list(val,n_bits,CNF_obj):
         else: ans.append(CNF_obj.false())
     return ans
 
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
 def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
     constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
-    Sum = [CNF_obj.false() for k in range(N) ]
+    Sum = [CNF_obj.false() for k in range(N)]
     for q in vars_to_sum:
         tmp = [CNF_obj.false() for f in range(N)]
         tmp[0] = q
@@ -369,6 +371,8 @@ def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
     
     CNF_obj.leq(Sum,constraint_bin)
 
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
 def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
     constraint_bin = to_bin_list(constraint, N, CNF_obj)
 
@@ -384,16 +388,21 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
                         row_dup_constraint, col_dup_constraint, write_file):
     
-    first_fresh_var = col_duplicates[-1]+1
+    first_fresh_var = col_duplicates[-1] + 1
     CNF_obj = CNF(first_fresh_var)
-    num_entries = len(false_pos) * len(false_pos[0])
 
-    N=math.ceil(math.log(num_entries, 2)) # bits required to encode sum of fp and fn variables
+    false_pos_vars = [var for row in false_pos for var in row if var != 0]
+    N=math.ceil(math.log(len(false_pos_vars), 2)) # bits required to encode sum of fp variables
+    encode_at_most_k(false_pos_vars, false_pos_constraint, CNF_obj, N)
     
-    encode_at_most_k([var for row in false_pos for var in row if var != 0], false_pos_constraint, CNF_obj, N)
-    encode_at_most_k([var for row in false_neg for var in row if var != 0], false_neg_constraint, CNF_obj, N)
+    false_neg_vars = [var for row in false_neg for var in row if var != 0]
+    N=math.ceil(math.log(len(false_neg_vars), 2)) # bits required to encode sum of fp variables
+    encode_at_most_k(false_neg_vars, false_neg_constraint, CNF_obj, N)
     
+    N=math.ceil(math.log(len(row_duplicates), 2))
     encode_eq_k(row_duplicates, row_dup_constraint, CNF_obj, N)
+
+    N=math.ceil(math.log(len(col_duplicates), 2))
     encode_eq_k(col_duplicates, col_dup_constraint, CNF_obj, N)
 
     for cl in CNF_obj.clauses:
