@@ -1,8 +1,0 @@
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/install/local.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/minisat-lib-shared.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/install.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/install/strip.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/minisat-lib-static.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/edit_cache.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/rebuild_cache.dir
-/root/1-Dollo-Phylogeny-Solution-Sampler/pblib/BasicPBSolver/minisat/CMakeFiles/list_install_components.dir

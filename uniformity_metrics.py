@@ -3,16 +3,17 @@ import time
 import os 
 import argparse 
 import math
-import pandas as pd
 
 from generate_formula import get_cnf
 from generate_samples import unigensampler_generator
 from utils import get_matrix_info, parse_filename
+from count_num_solutions import get_num_solutions_sharpSAT, get_num_solutions
 
 total_solutions_path = 'total_solutions.csv'
 FORMULAS_DIRECTORY = 'data/formulas'
+sharpSAT_path = '../../../scratch/software/src/sharpSAT/build/Release/sharpSAT'
 
-def run_unigen(cnf_filename, num_samples, timeout):
+def get_unigen_frequencies(cnf_filename, num_samples, timeout):
     unigen_outfile = cnf_filename + '.unigen'
 
     start = time.time()
@@ -22,11 +23,22 @@ def run_unigen(cnf_filename, num_samples, timeout):
     fp = open(unigen_outfile)
     lines = fp.readlines()
     fp.close()
-    ugen_samples = len(lines) - 1
+
+    frequencies = []
+    total_samples = 0
+    
+    for line in lines:
+        try:
+            if len(line) > 0:
+                sampled_freq = int(line.split(':')[1])
+                total_samples += sampled_freq
+                frequencies.append(float(sampled_freq))
+        except:
+            print(line)
 
     os.system(f'rm {unigen_outfile}')
 
-    return total_ugen_time, ugen_samples
+    return total_samples, frequencies
 
 def get_info(infile, directory, num_samples, timeout):
     row_info = parse_filename(infile)
@@ -35,7 +47,7 @@ def get_info(infile, directory, num_samples, timeout):
     m = row_info['m']
     n = row_info['n']
 
-    if n > 8:
+    if m*n > 36:
         return None
 
     print(f'Starting {infile}')
@@ -59,7 +71,25 @@ def get_info(infile, directory, num_samples, timeout):
                                                                 mutation_clusters, None, expected_fn, expected_fp, True)
     row_info['formula_gen_time'] = time.time() - start
 
-    row_info['unigen_time'], row_info['num_samples'] = run_unigen(cnf_filename, num_samples, timeout)
+    num_solutions = get_num_solutions_sharpSAT(sharpSAT_path, cnf_filename)
+    print(f'Total solutions: {num_solutions}')
+
+    if num_solutions > 10**4:
+        return None
+    
+    total_samples, frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
+    frequencies = [(frequency*num_solutions/(total_samples)) for frequency in frequencies]
+    print(f'TOTAL SAMPLES: {total_samples}')
+    print(f'ALL SOLUTIONS FOUND? {len(frequencies) == num_solutions}')
+
+    if len(frequencies) == 0:
+        row_info['min_freq'] = -1
+        row_info['max_freq'] = -1
+        row_info['average_freq'] = -1
+    else:
+        row_info['min_freq'] = min(frequencies)
+        row_info['max_freq'] = max(frequencies)
+        row_info['average_freq'] = sum(frequencies)/len(frequencies)
 
     os.system(f'rm {cnf_filename}')
     
@@ -67,14 +97,10 @@ def get_info(infile, directory, num_samples, timeout):
 
 def generate_info(files, directory, outfile, num_samples, timeout):
     metrics = ['filename', 'm', 'n', 'num_cell_clusters', 'num_mutation_clusters',
-                'num_variables', 'num_clauses', 'formula_gen_time', 'unigen_time', 'num_samples']
+                'num_variables', 'num_clauses', 'formula_gen_time', 'is_min', 'freq']
 
-    df = pd.read_csv(outfile)
-    seen = set(df['filename'].values)
-    files = [file for file in files if file not in seen]
-
-    with open(outfile, 'a+') as ofile:
-        # ofile.write(','.join(metrics) + '\n')
+    with open(outfile, 'w') as ofile:
+        ofile.write(','.join(metrics) + '\n')
 
         sorted_files = sorted(files, key=lambda a: parse_filename(a)['m'])
 
@@ -82,11 +108,25 @@ def generate_info(files, directory, outfile, num_samples, timeout):
             row_info = get_info(file, directory, num_samples, timeout)
             if row_info:
                 row = f'{file}'
-                for metric in metrics[1:]:
+                for metric in metrics[1:-2]:
                     row = f'{row},{row_info[metric]}'
-                print(row)
-                ofile.write(f'{row}\n')
-        
+                
+                min_freq = row_info['min_freq']
+                max_freq = row_info['max_freq']
+                avg_freq = row_info['average_freq']
+
+                min_row = f'{row},min,{min_freq}'
+                max_row = f'{row},max,{max_freq}'
+                avg_row = f'{row},avg,{avg_freq}'
+
+                print(min_row)
+                print(max_row)
+                print(avg_row)
+
+                ofile.write(f'{min_row}\n')
+                ofile.write(f'{max_row}\n')
+                ofile.write(f'{avg_row}\n')
+
     ofile.close()
 
 if __name__=='__main__':
@@ -95,25 +135,25 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/5xn/flip',
+        default='data/nx5/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(
         '--outfile',
         type=str,
-        default='metrics_5xn.csv',
+        default='uniformity.csv',
         help='outfile to write metrics to'
     )
     parser.add_argument(
         '--samples',
         type=int,
-        default=100,
+        default=1000000,
         help='number of samples to generate'
     )
     parser.add_argument(
         '--timeout',
         type=float,
-        default=7200.0,
+        default=1200.0,
         help='number of samples to generate'
     )
 

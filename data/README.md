@@ -1,1 +1,1 @@
-All `perfect_phylogeny` data courtesy of <https://github.com/elkebir-group/SPhyR/tree/7ff075db08378c8f421aa3de2f012b56ba33a4f7/data>
+All perfect_phylogeny data courtesy of <https://github.com/elkebir-group/SPhyR/tree/7ff075db08378c8f421aa3de2f012b56ba33a4f7/data>

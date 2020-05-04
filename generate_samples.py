@@ -24,7 +24,6 @@ import time
 import os 
 import argparse
 import platform
-import memory_profiler
 
 QUICKSAMPLER = 1
 UNIGEN = 2
@@ -121,17 +120,7 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    m1 = memory_profiler.memory_usage()
-    t1 = time.time()
-    
     variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.allowed_losses, args.fn, args.fp)
-    
-    m2 = memory_profiler.memory_usage()
-    t2 = time.time()
-    mem_diff = m2[0] - m1[0]
-    time_diff = t2 - t1
-
-    print(f"It took {mem_diff} Mb and {time_diff} seconds to generate this formula")
     
     if args.debug:
         write_vars(variables_filename, variables)

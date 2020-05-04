@@ -1,5 +1,6 @@
 from get_clauses import *
 from get_vars import create_variable_matrices, write_vars
+from CNF import CNF
 
 import sys
 import os
@@ -14,7 +15,6 @@ $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
                             --s=NUM_CELL_CLUSTERS
                             --t=NUM_MUTATION_CLUSTERS
                             --allowed_losses=LOSSES_FILENAME
-                            --sampler=SAMPLER_TYPE
 
 Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
 to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS where only losses
@@ -22,22 +22,19 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False):
+def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False, forced_clauses=None):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
-
-    read_filename - file containing input matrix
-    write_filename - file to write formula to
-    s - number of rows in clustered matrix/cell clusters
-    t - number of columns in clustered matrix/mutation clusters
     """
     matrix = read_matrix(read_filename)
 
     num_rows = len(matrix)
     num_cols = len(matrix[0])
 
-    variables = create_variable_matrices(matrix, s, t)
+    F = CNF()
+
+    variables = create_variable_matrices(matrix, s, t, F)
     allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
 
     unsupported_losses = []
@@ -92,15 +89,16 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
                 independent_lines.append(c_ind)
                 c_ind = 'c ind '
                 num_ind = 0
-        
     if num_ind != 0:
         c_ind += '0\n'
         independent_lines.append(c_ind)
 
     write_file = open(write_filename + '.tmp', 'w')
     write_file.writelines(independent_lines)
-    
-    clause_count = get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file)
+
+    clause_count = 0
+
+    clause_count += get_clauses_no_forbidden(is_one, is_two, row_is_duplicate, col_is_duplicate, write_file)
 
     clause_count += get_clauses_not_one_and_two(is_one, is_two, write_file)
 
@@ -114,14 +112,16 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
 
     clause_count += clause_forbid_unsupported_losses(unsupported_losses, is_two, write_file)
 
-    extra_vars, num_constraints_clauses = encode_constraints(false_positives, false_negatives,
-                                                        row_is_duplicate, col_is_duplicate,
-                                                        fp, fn, num_row_duplicates, num_col_duplicates, write_file)
-    clause_count += num_constraints_clauses
+    num_constraints_clauses = encode_constraints(false_positives, false_negatives,
+                                                row_is_duplicate, col_is_duplicate,
+                                                fp, fn, num_row_duplicates, num_col_duplicates, write_file, F)
+    clause_count += num_constraints_clauses + 1
 
-    num_vars = col_is_duplicate[num_cols-1] + extra_vars
+    if forced_clauses:
+        write_file.writelines(forced_clauses)
+        clause_count += len(forced_clauses)
 
-    first_line = f'p cnf {num_vars} {clause_count}\n'
+    first_line = f'p cnf {F.var} {clause_count}\n'
 
     write_file.close()
 
@@ -137,7 +137,7 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     os.system(f'rm {write_filename}.tmp')
 
     if return_num_vars_clauses:
-        return num_vars, num_clauses
+        return F.var, clause_count
     else:
         return variables
 
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=5,
+        default=4,
         help='number of rows in clustered matrix'
     )
     parser.add_argument(
@@ -214,12 +214,6 @@ if __name__ == '__main__':
         help='number of false positives'
     )
     parser.add_argument(
-        '--sampler',
-        type=int,
-        default=2,
-        help='1 to use Quicksampler, 2 to use Unigen.'
-    )
-    parser.add_argument(
         '--allowed_losses',
         type=str,
         default=None,
@@ -234,7 +228,7 @@ if __name__ == '__main__':
     t = args.t
 
     start = time.time()
-    variables = get_cnf(filename, outfile, s, t, args.sampler == 2, args.allowed_losses, args.fn, args.fp)
+    variables = get_cnf(filename, outfile, s, t, args.allowed_losses, args.fn, args.fp)
     end = time.time()
 
     write_vars("formula.vars", variables)

@@ -1,5 +1,7 @@
 from itertools import permutations 
 import os 
+import math
+from CNF import CNF
 
 def get_lookup(lookup_filename):
     """
@@ -151,19 +153,31 @@ def get_row_duplicate_clauses(pair_in_col_equal, row_is_duplicate, row_is_duplic
     num_columns = len(pair_in_col_equal[0][0])
 
     for row in range(1, num_rows):
+        # Clause that is satisfied if
+        # row_is_duplicate[row] => row_is_duplicate_of[0][row] or row_is_duplicate_of[1][row] or ... row_is_duplicate_of[row-1][row]
+        # is satisfied
         clause_only_if = f'-{row_is_duplicate[row]} '
         for smaller_row in range(row):
+            # Clause that is satisfied if
+            # pair_in_col_equal[smaller][row][0] and pair_in_col_equal[smaller][row][1] and ... pair_in_col_equal[smaller][row][n]
+            # => row_is_duplicate_of[smaller][row]
+            # is satisfied
             clause_if = ''
             
             for col in range(num_columns):
                 clause_if += f'-{pair_in_col_equal[smaller_row][row][col]} '
-                # only if
+                # Clause that enforces
+                # row_is_duplicate_of[smaller][row] => pair_in_col_equal[smaller][row][col]
+                # is satisfied
                 write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {pair_in_col_equal[smaller_row][row][col]} 0\n')
                 clause_count += 1
             
             clause_if += f'{row_is_duplicate_of[smaller_row][row]} 0\n'
             write_file.write(clause_if)
 
+            # Clause that enforces
+            # row_is_duplicate_of[smaller][row] => row_is_duplicate[row]
+            # is satisfied
             write_file.write(f'-{row_is_duplicate_of[smaller_row][row]} {row_is_duplicate[row]} 0\n')
             clause_count += 2
 
@@ -186,14 +200,23 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
     num_rows = len(pair_in_row_equal)
 
     for col in range(1, num_cols):
+        # Clause that is satisfied if
+        # col_is_duplicate[col] => col_is_duplicate_of[0][col] or col_is_duplicate_of[1][col] or ... col_is_duplicate_of[col-1][col]
+        # is satisfied
         clause_only_if = f'-{col_is_duplicate[col]} '
 
         for smaller_col in range(col):
+            # Clause that is satisfied if
+            # pair_in_row_equal[0][smaller_col][col] and pair_in_row_equal[1][smaller_col][col] and ... pair_in_row_equal[n][smaller_col][col]
+            # => col_is_duplicate_of[smaller_col][col]
+            # is satisfied
             clause_if = ''
 
             for row in range(num_rows):
                 clause_if += f'-{pair_in_row_equal[row][smaller_col][col]} '
-                # only if
+                # Clause that enforces
+                # col_is_duplicate_of[smaller_col][col] => pair_in_row_equal[row][smaller_col][col]
+                # is satisfied
                 write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {pair_in_row_equal[row][smaller_col][col]} 0\n')
                 clause_count += 1
             
@@ -203,8 +226,11 @@ def get_col_duplicate_clauses(pair_in_row_equal, col_is_duplicate, unsupported_l
                 clause_count +=1
 
             clause_if += f'{col_is_duplicate_of[smaller_col][col]} 0\n'
-
             write_file.write(clause_if)
+
+            # Clause that enforces
+            # col_is_duplicate_of[smaller][col] => col_is_duplicate[col]
+            # is satisfied
             write_file.write(f'-{col_is_duplicate_of[smaller_col][col]} {col_is_duplicate[col]} 0\n')
             clause_count += 2
 
@@ -290,7 +316,7 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
                 write_file.write(f'-{pair_in_row_equal[row][col1][col2]} {negate(is_one[row][col2])} {is_one[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 2
-                # B[row1][col] == 2 and B[row2][col] == 2
+                # B[row1][col] == 2 and B[row2][col] == 2 => pair_in_row_equal[row][col1][col2]
                 write_file.write(f'-{is_two[row][col1]} -{is_two[row][col2]} {pair_in_row_equal[row][col1][col2]} 0\n')
 
                 # pair_in_row_equal[row][col1][col2] and B[row][col1] == 2 => B[row][col2] == 2
@@ -300,7 +326,7 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
                 write_file.write(f'-{pair_in_row_equal[row][col1][col2]} -{is_two[row][col2]} {is_two[row][col1]} 0\n')
 
                 # BOTH ENTRIES ARE 0
-                # B[row][col1] == 0 and B[row][col2] == 0
+                # B[row][col1] == 0 and B[row][col2] == 0 => pair_in_row_equal[row][col1][col2]
                 #
                 # equivalent to B[row][col1] != 1 and B[row][col2] != 1 
                 # and B[row][col1] != 2 and B[row][col2] != 2
@@ -320,50 +346,77 @@ def get_row_pairs_equal_clauses(is_one, is_two, pair_in_row_equal, write_file):
     
     return clause_count
 
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
+def to_bin_list(val,n_bits,CNF_obj):
+    # Convert a integer to a vector of binary values
+    lb=bin(val)[2:][::-1]
+    ans=[]
+    for i in range(n_bits):
+        if i<len(lb):
+            ans.append(CNF_obj.true() if lb[i]=="1" else CNF_obj.false())
+        else: ans.append(CNF_obj.false())
+    return ans
+
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
+def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):    
+    constraint_bin = to_bin_list(constraint, N, CNF_obj)
+
+    Sum = [CNF_obj.false() for k in range(N)]
+    for q in vars_to_sum:
+        tmp = [CNF_obj.false() for f in range(N)]
+        tmp[0] = q
+        Sum = CNF_obj.add(Sum,tmp)
+    
+    CNF_obj.leq(Sum, constraint_bin)
+
+# credit to:
+# https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
+def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
+    constraint_bin = to_bin_list(constraint, N, CNF_obj)
+
+    Sum = [CNF_obj.false() for k in range(N) ]
+    for q in vars_to_sum:
+        tmp = [CNF_obj.false() for f in range(N)]
+        tmp[0] = q
+        Sum = CNF_obj.add(Sum,tmp)
+    
+    CNF_obj.eq(Sum,constraint_bin)
+
+def encode_none(vars, CNF_obj):
+    for var in vars:
+        CNF_obj.set_true(-var)
+    
+
 def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
                         false_pos_constraint, false_neg_constraint,
-                        row_dup_constraint, col_dup_constraint, write_file):
-    command = './pbencoder '
+                        row_dup_constraint, col_dup_constraint, write_file, CNF_obj):
 
-    false_pos_start = 0
-    num_false_pos = 0
-
-    for row in false_pos:
-        for elem in row:
-            if elem != 0:
-                if false_pos_start == 0:
-                    false_pos_start = elem
-                num_false_pos += 1
+    false_pos_vars = [var for row in false_pos for var in row if var != 0]
+    if (len(false_pos_vars) > 0):
+        N=math.ceil(math.log(len(false_pos_vars), 2)) # bits required to encode sum of fp variables
+        encode_at_most_k(false_pos_vars, false_pos_constraint, CNF_obj, N)
     
-    command += f'{false_pos_start} {num_false_pos} {false_pos_constraint} '
+    false_neg_vars = [var for row in false_neg for var in row if var != 0]
+    if (len(false_neg_vars) > 0):
+        N=math.ceil(math.log(len(false_neg_vars), 2)) # bits required to encode sum of fp variables
+        encode_at_most_k(false_neg_vars, false_neg_constraint, CNF_obj, N)
+    
+    N=math.ceil(math.log(len(row_duplicates), 2))
+    encode_eq_k(row_duplicates, row_dup_constraint, CNF_obj, N)
 
-    false_neg_start = false_pos_start + num_false_pos
-    num_false_neg = len(false_pos) * len(false_pos[0]) - num_false_pos
+    N=math.ceil(math.log(len(col_duplicates), 2))
+    encode_eq_k(col_duplicates, col_dup_constraint, CNF_obj, N)
 
-    command += f'{false_neg_start} {num_false_neg} {false_neg_constraint} '
-
-    row_dup_start = row_duplicates[0]
-    num_row_dup_vars = len(row_duplicates)
-
-    command += f'{row_dup_start} {num_row_dup_vars} {row_dup_constraint} '
-
-    col_dup_start = col_duplicates[0]
-    num_col_dup_vars = len(col_duplicates)
-
-    command += f'{col_dup_start} {num_col_dup_vars} {col_dup_constraint} '
-    command += 'tmp_constraint_clauses.cnf'
-
-    os.system(command)
-
-    with open('tmp_constraint_clauses.cnf', 'r') as fp:
-        lines = fp.readlines()
-
-    write_file.writelines(lines[:-2])
-    num_vars = int(lines[len(lines)-2].split(' ')[1])
-
-    os.system('rm tmp_constraint_clauses.cnf')
-
-    return num_vars, len(lines[:-2])
+    for cl in CNF_obj.clauses:
+        if cl[0]=="c":
+            continue
+        for lit in cl:
+            write_file.write("%d "%lit)
+        write_file.write("0\n")
+        
+    return len(CNF_obj.clauses)
 
 def clause_forbid_unsupported_losses(forbidden_losses, is_two, write_file):
     clause_count = 0
