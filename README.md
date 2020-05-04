@@ -11,7 +11,7 @@ This repository uses [UniGen](https://bitbucket.org/kuldeepmeel/unigen/src/maste
 
 ## Usage Instructions
 
-### Generating 1-dollo phylogenies for a given input matrix using QuickSampler
+### Generating 1-dollo phylogenies for a given input matrix
 
 Run with:
 
@@ -26,8 +26,6 @@ python3 generate_samples.py [-h] [--filename FILENAME] [--outfile OUTFILE]
 This will attempt to sample NUMBER_OF_SAMPLES 1-dollo phylogeny matrices for the matrix in INPUT_MATRIX_FILENAME using the sampler of your choosing, where only mutations specified in LOSSES_FILENAME can be lost. The solutions will contain exactly FALSE_NEGATIVES false negatives and exactly FALSE_POSITIVES false positives.
 
 The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
-
-SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 
 ### Generating CNF formulae
 
