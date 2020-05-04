@@ -89,7 +89,6 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
                 independent_lines.append(c_ind)
                 c_ind = 'c ind '
                 num_ind = 0
-
     if num_ind != 0:
         c_ind += '0\n'
         independent_lines.append(c_ind)

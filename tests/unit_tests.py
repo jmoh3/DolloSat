@@ -218,7 +218,7 @@ class CheckFormula(unittest.TestCase):
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
-        self.assertEqual(num_sols, 6)
+        self.assertEqual(num_sols, 2)
 
 class CheckIndependentSupport(unittest.TestCase):
     def test1(self):
