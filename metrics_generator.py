@@ -83,8 +83,6 @@ def generate_info(files, directory, outfilename, num_samples, timeout, approxMC)
         ofile = open(outfilename, 'w')
         ofile.write(','.join(metrics) + '\n')
 
-    ofile.write(','.join(metrics) + '\n')
-
     sorted_files = sorted(files, key=lambda a: parse_filename(a)['m']*parse_filename(a)['n'])
 
     for file in sorted_files:

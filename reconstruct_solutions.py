@@ -1,7 +1,6 @@
 import copy
 import sys
-from generate_formula import read_matrix
-
+from utils import read_matrix, cluster_matrix
 
 def reconstruct_solutions(matrix_filename, solution_filename, write_file, variables, debug=True):
     """
@@ -74,41 +73,6 @@ def reconstruct_solutions(matrix_filename, solution_filename, write_file, variab
             f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
             
         f.write('======================\n')
-
-def cluster_matrix(matrix):
-    row_is_duplicate = [False for x in range(len(matrix))]
-    col_is_duplicate = [False for x in range(len(matrix[0]))]
-
-    for row in range(len(matrix)):
-        for larger_row in range(row+1, len(matrix)):
-            if row_is_duplicate[larger_row]:
-                continue
-            larger_row_is_dup = True
-
-            for col in range(len(matrix[0])):
-                if matrix[row][col] != matrix[larger_row][col]:
-                    larger_row_is_dup = False
-                    break
-
-            if larger_row_is_dup:
-                row_is_duplicate[larger_row] = True
-    
-    for col in range(len(matrix[0])):
-        for larger_col in range(col+1, len(matrix[0])):
-            if col_is_duplicate[larger_col]:
-                continue
-            
-            larger_col_is_dup = True
-
-            for row in range(len(matrix)):
-                if matrix[row][col] != matrix[row][larger_col]:
-                    larger_col_is_dup = False
-                    break
-            
-            if larger_col_is_dup:
-                col_is_duplicate[larger_col] = True
-    
-    return row_is_duplicate, col_is_duplicate
 
 def get_binary_vectors(valid_sample_filename):
     """

@@ -1,6 +1,6 @@
 import sys
 import argparse
-from generate_formula import read_matrix
+from utils import read_matrix
 
 """
 USAGE:

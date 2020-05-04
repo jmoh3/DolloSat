@@ -1,7 +1,0 @@
-filename,m,n,num_cell_clusters,num_mutation_clusters,num_variables,num_clauses,formula_gen_time,unigen_time,num_samples
-filename,m,n,num_cell_clusters,num_mutation_clusters,num_variables,num_clauses,formula_gen_time,unigen_time,num_samples
-filename,m,n,num_cell_clusters,num_mutation_clusters,num_variables,num_clauses,formula_gen_time,unigen_time,num_samples
-filename,m,n,num_cell_clusters,num_mutation_clusters,num_variables,num_clauses,formula_gen_time,unigen_time,num_samples
-m5_n5_s1_k1_loss0.1_a0.001_b0.01.B,5,5,4,3,841,33577,0.18495726585388184,0.25505685806274414,63
-m5_n5_s1_k1_loss0.2_a0.001_b0.01.B,5,5,4,3,841,33577,0.19218873977661133,0.2515370845794678,61
-m5_n5_s2_k1_loss0.1_a0.001_b0.01.B,5,5,3,4,766,33322,0.18652033805847168,0.09639930725097656,-1
