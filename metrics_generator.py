@@ -95,13 +95,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/nx5/flip',
+        default='data/5xn/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(
         '--outfile',
         type=str,
-        default='metrics_mx5.csv',
+        default='metrics_5xn.csv',
         help='outfile to write metrics to'
     )
     parser.add_argument(

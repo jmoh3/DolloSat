@@ -71,13 +71,13 @@ if __name__=='__main__':
     parser.add_argument(
         '--s',
         type=int,
-        default=3,
+        default=4,
         help='Number of cell clusters to use.'
     )
     parser.add_argument(
         '--t',
         type=int,
-        default=2,
+        default=4,
         help='Number of mutation clusters to use.'
     )
     parser.add_argument(
@@ -89,7 +89,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--fp',
         type=int,
-        default=0,
+        default=1,
         help='number of false positives'
     )
     parser.add_argument(
@@ -121,15 +121,7 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    # m1 = memory_profiler.memory_usage()
-    # t1 = time.time()
     variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.allowed_losses, args.fn, args.fp)
-    # m2 = memory_profiler.memory_usage()
-    # t2 = time.time()
-    # mem_diff = m2[0] - m1[0]
-    # time_diff = t2 - t1
-
-    # print(f"It took {mem_diff} Mb and {time_diff} seconds to generate this formula")
     
     if args.debug:
         write_vars(variables_filename, variables)

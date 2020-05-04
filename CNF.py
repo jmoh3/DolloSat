@@ -49,7 +49,7 @@ class CNF:
         self.clauses.append([lit])
 
 
-#calcultions
+#calculations
     def half_adder(self,a,b,result,carry):
         self.XOR(a,b,result)
         self.AND(a,b,carry)
@@ -150,4 +150,4 @@ class CNF:
                 fcnf.write("%d "%lit)
             fcnf.write("0\n")
         
-        fcnf.close()
+        return fcnf

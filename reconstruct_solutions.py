@@ -2,6 +2,79 @@ import copy
 import sys
 from generate_formula import read_matrix
 
+
+def reconstruct_solutions(matrix_filename, solution_filename, write_file, variables, debug=True):
+    """
+    Writes k-dollo phylogeny matrices reconstructed from samples in solution_filename to write_file.
+    Reconstructed matrices are separated by '======================'
+    solution_filename - file containing satisfying variable assignments
+    write_file - file to write reconstructed solutions to
+    variables - dictionary of variable matrices
+    debug - if set to True, will write information about false positives/negatives and clustering to
+    write_file, if set to False, only matrices will be written
+    """
+
+    matrix = read_matrix(matrix_filename)
+
+    m = len(variables['false_positives'])
+    n = len(variables['false_positives'][0])
+
+    solutions = get_binary_vectors(solution_filename)
+
+    col_is_duplicate = variables['col_is_duplicate']
+    row_is_duplicate = variables['row_is_duplicate']
+
+    f = open(write_file, 'w')
+
+    solution_matrices = []
+
+    for solution in solutions:
+        if len(solution) == 0:
+            continue
+        
+        num_false_positives = 0
+        num_false_negatives = 0
+        idx = 0
+
+        solution_matrix = [[0 for j in range(n)] for i in range(m)]
+
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == 0 and solution[idx] == 1:
+                    # is false negative, 0 -> 1
+                    solution_matrix[i][j] = 1
+                    num_false_negatives += 1
+                elif matrix[i][j] == 1 and solution[idx] == 0:
+                    # is a true positive, entry is 1
+                    solution_matrix[i][j] = 1
+                elif matrix[i][j] == 1 and solution[idx] == 1:
+                    num_false_positives += 1
+                idx += 1
+        
+        for i in range(m):
+            for j in range(n):
+                if solution[idx] == 1:
+                    solution_matrix[i][j] = 2
+                idx += 1
+
+        row_is_duplicate, col_is_duplicate = cluster_matrix(solution_matrix)
+        
+        for i in range(m):
+            if row_is_duplicate[i]:
+                continue
+            line = ''
+            for j in range(n):
+                if col_is_duplicate[j]:
+                    continue
+                line += f'{solution_matrix[i][j]} '
+            line += '\n'
+            f.write(line)
+
+        if debug:    
+            f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
+            
+        f.write('======================\n')
+
 def cluster_matrix(matrix):
     row_is_duplicate = [False for x in range(len(matrix))]
     col_is_duplicate = [False for x in range(len(matrix[0]))]
@@ -37,81 +110,7 @@ def cluster_matrix(matrix):
     
     return row_is_duplicate, col_is_duplicate
 
-def reconstruct_solutions(matrix_filename, solution_filename, write_file, variables, debug=True):
-    """
-    Writes k-dollo phylogeny matrices reconstructed from samples in solution_filename to write_file.
-    Reconstructed matrices are separated by '======================'
-    solution_filename - file containing satisfying variable assignments
-    write_file - file to write reconstructed solutions to
-    variables - dictionary of variable matrices
-    debug - if set to True, will write information about false positives/negatives and clustering to
-    write_file, if set to False, only matrices will be written
-    """
-
-    matrix = read_matrix(matrix_filename)
-
-    m = len(variables['false_positives'])
-    n = len(variables['false_positives'][0])
-
-    num_vars = variables['col_is_duplicate'][n-1]
-    solutions = get_binary_vectors(solution_filename, num_vars)
-
-    col_is_duplicate = variables['col_is_duplicate']
-    row_is_duplicate = variables['row_is_duplicate']
-
-    f = open(write_file, 'w')
-
-    solution_matrices = []
-
-    for solution in solutions:
-        if len(solution) == 0:
-            continue
-        num_false_positives = 0
-        num_false_negatives = 0
-        for i in range(m):
-            if solution[row_is_duplicate[i]-1] == 1:
-                continue
-            line = ''
-            for j in range(n):
-                if solution[col_is_duplicate[j]-1] == 1:
-                    continue
-                is_one_val = 0
-                is_two_val = 0
-
-                if matrix[i][j] == 0:
-                    false_neg_varname = variables['false_negatives'][i][j] - 1
-                    is_two_varname = variables['is_two'][i][j] - 1
-
-                    is_one_val = solution[false_neg_varname] == 1
-                    num_false_negatives += is_one_val
-                    is_two_val = solution[is_two_varname] == 1
-
-                if matrix[i][j] == 1:
-                    false_pos_varname = variables['false_positives'][i][j] - 1
-                    is_two_varname = variables['is_two'][i][j] - 1
-
-                    is_one_val = solution[false_pos_varname] == 0
-                    num_false_positives += solution[false_pos_varname]
-                    is_two_val = solution[is_two_varname] == 1
-                
-                if is_one_val:
-                    line += '1 '
-                elif is_two_val:
-                    line += '2 '
-                else:
-                    line += '0 '
-            line += '\n'
-            f.write(line)
-
-            # write_vars_debug("solution_vars", variables, solution)
-
-        if debug:    
-            f.write(f'{num_false_negatives} false negatives, {num_false_positives} false positives\n')
-            
-        f.write('======================\n')
-
-
-def get_binary_vectors(valid_sample_filename, num_vars):
+def get_binary_vectors(valid_sample_filename):
     """
     Returns a list of binary vectors corresponding to solutions in valid_sample_filename.
     valid_sample_filename - file that contains satisfying variable assignments
@@ -124,8 +123,10 @@ def get_binary_vectors(valid_sample_filename, num_vars):
     out = []
 
     for line in valid:
-        line = line.strip()
-        split_line = line.split(' ')
+        if len(line) <= 1:
+            continue
+        cleaned_line = line.split('v')[1]
+        split_line = cleaned_line.split(' ')
         if len(split_line)-1 <= 0:
             continue
         binary_str = ''

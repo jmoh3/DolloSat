@@ -414,7 +414,7 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
         for lit in cl:
             write_file.write("%d "%lit)
         write_file.write("0\n")
-    
+        
     return len(CNF_obj.clauses)
 
 def clause_forbid_unsupported_losses(forbidden_losses, is_two, write_file):

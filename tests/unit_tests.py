@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from generate_formula import get_cnf, read_matrix
 from get_vars import write_vars
 from count_num_solutions import get_num_solutions_sharpSAT
+from generate_samples import unigensampler_generator
 
 sharpSAT_path = '../../../scratch/software/src/sharpSAT/build/Release/sharpSAT'
 tmp_formula_path = 'tmp_formula.cnf'
@@ -165,13 +166,47 @@ class CheckFormula(unittest.TestCase):
 
         self.assertEqual(num_sols, 6)
     
-
+    # Input matrix of all 0s, 2 false negatives allowed, 0 false positives, no allowed losses
+    #
+    # All row permutations of the following solution are valid solutions
+    # 3! = 6 solutions for this matrix:
+    # 1 0
+    # 0 1
+    # 0 0
     def test_more_fn(self):
         get_cnf('tests/test_inputs/zero_3x2.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 2, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 6)
+
+class CheckIndependentSupport(unittest.TestCase):
+    def test(self):
+        get_cnf('data/example.txt', tmp_formula_path, 4, 4, None, 2, 2)
+        unigensampler_generator(tmp_formula_path, 'tmp.unigen', 100, 120)
+
+        with open('tmp.unigen', 'r') as fp:
+            lines = fp.readlines()
+        
+        for idx, line in enumerate(lines):
+            if len(line) <= 1:
+                continue
+            line = line.strip()
+            cleaned_line = line.split('v')[1]
+            split_line = cleaned_line.split(' ')[:-1]
+            split_line = [f'{lit} 0\n' for lit in split_line]
+            
+            tmp_formula = f'tmp{idx}.cnf'
+            get_cnf('data/example.txt', tmp_formula, 4, 4, None, 2, 2, forced_clauses=split_line)
+            
+            num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula)
+
+            self.assertEqual(num_sols, 1)
+            print(f'Passed independent support {idx}')
+            os.system(f'rm {tmp_formula}')
+        
+        os.system(f'rm {tmp_formula_path}')
+        os.system('rm tmp.unigen')
 
 if __name__ == '__main__':
     unittest.main()

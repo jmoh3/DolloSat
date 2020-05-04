@@ -23,7 +23,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False):
+def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False, forced_clauses=None):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -101,7 +101,7 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
         independent_lines.append(c_ind)
 
     write_file = open(write_filename + '.tmp', 'w')
-    # write_file.writelines(independent_lines)
+    write_file.writelines(independent_lines)
 
     clause_count = 0
 
@@ -121,9 +121,12 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
 
     num_constraints_clauses = encode_constraints(false_positives, false_negatives,
                                                 row_is_duplicate, col_is_duplicate,
-                                                fp, fn, num_row_duplicates, num_col_duplicates,
-                                                write_file, F)
+                                                fp, fn, num_row_duplicates, num_col_duplicates, write_file, F)
     clause_count += num_constraints_clauses + 1
+
+    if forced_clauses:
+        write_file.writelines(forced_clauses)
+        clause_count += len(forced_clauses)
 
     first_line = f'p cnf {F.var} {clause_count}\n'
 

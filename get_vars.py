@@ -18,14 +18,14 @@ def create_variable_matrices(matrix, s, t, CNF_obj):
     for i in range(m):
         for j in range(n):
             if matrix[i][j] == 1:
-                false_positives[i][j] = CNF_obj.new_var()
+                false_positives[i][j] = CNF_obj.new_var(True)
     
     for i in range(m):
         for j in range(n):
             if matrix[i][j] == 0:
-                false_negatives[i][j] = CNF_obj.new_var()
+                false_negatives[i][j] = CNF_obj.new_var(True)
     
-    is_two = [[CNF_obj.new_var() for j in range(n)] for i in range(m)]
+    is_two = [[CNF_obj.new_var(True) for j in range(n)] for i in range(m)]
 
     pair_in_row_equal = [[[0 for l in range(n)] for k in range(n)] for i in range(m)]
 
