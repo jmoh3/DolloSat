@@ -1,6 +1,7 @@
 from get_clauses import *
 from get_vars import create_variable_matrices, write_vars
 from CNF import CNF
+from utils import parse_allowed_losses_file, read_matrix
 
 import sys
 import os
@@ -22,7 +23,7 @@ specified in LOSSES_FILENAME are allowed. The formula is in the format required 
 written to FORMULA_FILENAME.
 """
 
-def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=1, return_num_vars_clauses=False, forced_clauses=None):
+def get_cnf(read_filename, write_filename, s, t, allowed_losses=None, fn=1, fp=1, return_num_vars_clauses=False, forced_clauses=None):
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
@@ -35,7 +36,9 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     F = CNF()
 
     variables = create_variable_matrices(matrix, s, t, F)
-    allowed_losses = parse_allowed_losses(losses_filename, len(matrix[0]))
+
+    if allowed_losses == None:
+        allowed_losses = set([i for i in range(num_cols)])
 
     unsupported_losses = []
 
@@ -141,39 +144,6 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     else:
         return variables
 
-def parse_allowed_losses(filename, num_mutations):
-    if not filename:
-        return set([i for i in range(num_mutations)])
-    with open(filename, 'r') as f:
-        lines = f.readlines()
-        if len(lines) > 0:
-            allowed = lines[0].split(',')
-            return set([int(i) for i in allowed])
-        else:
-            return set()
-
-def read_matrix(filename):
-    """
-    Returns matrix parsed from given file.
-    First two lines of matrix file must specify number of cells and mutations of input.
-
-    For example:
-    5 # cells
-    5 # mutations
-    0 1 0 0 0
-    0 0 1 0 1
-    0 0 0 0 0
-    0 0 0 0 0
-    1 0 0 1 0
-
-    filename - file that contains input matrix
-    """
-    matrix_file = open(filename, 'r')
-    lines = matrix_file.readlines()[2:]
-    matrix_file.close()
-    
-    return [[int(x) for x in line.split()] for line in lines]
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate samples for given directories')
 
@@ -227,8 +197,13 @@ if __name__ == '__main__':
     s = args.s
     t = args.t
 
+    if args.allowed_losses:
+        allowed_losses = parse_allowed_losses_file(args.allowed_losses)
+    else:
+        allowed_losses = None
+
     start = time.time()
-    variables = get_cnf(filename, outfile, s, t, args.allowed_losses, args.fn, args.fp)
+    variables = get_cnf(filename, outfile, s, t, allowed_losses, args.fn, args.fp)
     end = time.time()
 
     write_vars("formula.vars", variables)

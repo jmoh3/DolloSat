@@ -3,9 +3,9 @@ import os, sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from generate_formula import get_cnf, read_matrix
+from generate_formula import get_cnf
 from get_vars import write_vars
-from count_num_solutions import get_num_solutions_sharpSAT
+from utils import get_num_solutions_sharpSAT, read_matrix
 from generate_samples import unigensampler_generator
 
 sharpSAT_path = '../../../scratch/software/src/sharpSAT/build/Release/sharpSAT'
@@ -18,7 +18,7 @@ class CheckFormula(unittest.TestCase):
     #
     # No solutions.
     def test_simple_forbidden_no_solutions(self):
-        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 0, 0)
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, [], 0, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -32,7 +32,7 @@ class CheckFormula(unittest.TestCase):
     # 0 1
     # 1 1
     def test_simple_allow_one_loss(self):
-        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/one_allowed_loss.txt', 0, 0)
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, [1], 0, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -62,7 +62,7 @@ class CheckFormula(unittest.TestCase):
     # All other choices of false positives lead to unwanted clustering, and no false positives
     # gives us a forbidden matrix.
     def test_simple_one_fp_no_losses(self):
-        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 0, 1)
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, [], 0, 1)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -111,7 +111,7 @@ class CheckFormula(unittest.TestCase):
     # 
     # No solutions.
     def test_cell_cluster_to_forbidden(self):
-        get_cnf('tests/test_inputs/cluster_cells.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 0, 0)
+        get_cnf('tests/test_inputs/cluster_cells.txt', tmp_formula_path, 3, 2, [], 0, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -122,7 +122,7 @@ class CheckFormula(unittest.TestCase):
     # 
     # No solutions.
     def test_cell_cluster_to_forbidden(self):
-        get_cnf('tests/test_inputs/cluster_mutations.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 0, 0)
+        get_cnf('tests/test_inputs/cluster_mutations.txt', tmp_formula_path, 3, 2, [], 0, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -174,7 +174,7 @@ class CheckFormula(unittest.TestCase):
     # 0 1
     # 0 0
     def test_more_fn(self):
-        get_cnf('tests/test_inputs/zero_3x2.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 2, 0)
+        get_cnf('tests/test_inputs/zero_3x2.txt', tmp_formula_path, 3, 2, [], 2, 0)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 
@@ -214,7 +214,7 @@ class CheckFormula(unittest.TestCase):
     # 0 1  0 0
     # 1 1, 1 1
     def test_one_fn_one_fp_no_loss(self):
-        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 1, 1)
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, [], 1, 1)
         num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
         os.system(f'rm {tmp_formula_path}')
 

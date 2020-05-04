@@ -2,7 +2,8 @@
 
 A method that samples solutions to the k-Dollo Phylogeny Problem for k = 1, a variant of the Two State Perfect Phylogeny Problem in which we are trying to infer a character-based phylogenetic tree T where each character is gained once and can be lost at most once.
 
-![](figures/new_pipeline_figure.png)
+![](figures/fig1a.png)
+![](figures/fig1b.png)
 
 ## Requirements
 

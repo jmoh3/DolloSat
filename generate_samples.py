@@ -15,9 +15,10 @@ The reconstructed 1-dollo matrices will be saved to SOLUTIONS_OUTFILE.
 SAMPLER_TYPE can either be 1 for Quicksampler or 2 for Unigen. Note that Unigen is not Mac compatible.
 """
 
-from generate_formula import read_matrix, get_cnf
+from generate_formula import get_cnf
 from get_vars import write_vars
 from reconstruct_solutions import reconstruct_solutions
+from utils import parse_allowed_losses_file, read_matrix
 
 import sys
 import time
@@ -120,7 +121,12 @@ if __name__=='__main__':
     cnf_filename = f'{shortened_filename}.tmp.formula.cnf'
     variables_filename = f'{shortened_filename}.variables'
 
-    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, args.allowed_losses, args.fn, args.fp)
+    if args.allowed_losses:
+        allowed_losses = parse_allowed_losses_file(args.allowed_losses)
+    else:
+        allowed_losses = None
+
+    variables = get_cnf(args.filename, cnf_filename, args.s, args.t, allowed_losses, args.fn, args.fp)
     
     if args.debug:
         write_vars(variables_filename, variables)
