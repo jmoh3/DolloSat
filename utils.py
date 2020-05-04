@@ -1,5 +1,6 @@
 from generate_formula import read_matrix
 from reconstruct_solutions import cluster_matrix
+import subprocess
 
 def parse_filename(filename):
     split_filename = filename.split('_')
@@ -49,3 +50,29 @@ def get_matrix_info(matrix_filename, directory):
     cell_clusters = len(matrix[0]) - num_col_duplicates
 
     return ones_count, row_clusters, cell_clusters
+
+def parse_appmc_output(num_sols_str):
+    prefix = int(num_sols_str.decode("ascii").split(':')[1].split(' ')[1])
+    power_of_two = int(num_sols_str.decode("ascii").split(':')[1].split(' ')[3].split('^')[1])
+
+    return prefix, power_of_two
+
+def matrix_to_str(filename):
+    matrix = read_matrix(filename)
+    rows = [''.join([str(elem) for elem in row]) for row in matrix]
+    return ''.join(rows)
+
+def get_num_solutions_sharpSAT(sharpSAT_path, cnf_filename):
+    output = subprocess.check_output(f'{sharpSAT_path} {cnf_filename}', shell=True)
+    num_sols = output.splitlines()[-5]
+    return int(num_sols)
+
+def get_num_solutions_appmc(approxMC_path, cnf_filename):
+    try:
+        output = subprocess.check_output(f'{approxMC_path} {cnf_filename}', shell=True, timeout=3600)
+    except subprocess.CalledProcessError as err:
+        output = err.output.splitlines()
+    except subprocess.TimeoutExpired as err:
+        return -1, -1
+    prefix, power_of_two = parse_appmc_output(output[-1])
+    return prefix * 2**power_of_two
