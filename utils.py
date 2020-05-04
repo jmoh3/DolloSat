@@ -155,6 +155,7 @@ def parse_allowed_losses(matrix_filename, directory):
     dollo_full_filename = f'{data_dir}/k_dollo/{dollo_filename}.B'
     dollo_matrix = read_matrix(dollo_full_filename)
 
+    m = len(dollo_matrix)
     n = len(dollo_matrix[0])
     L = set()
 
