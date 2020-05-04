@@ -40,14 +40,14 @@ def get_unigen_frequencies(cnf_filename, num_samples, timeout):
 
     return total_samples, frequencies
 
-def get_info(infile, directory, num_samples, timeout, s, t):
+def get_info(infile, directory, num_samples, timeout):
     row_info = parse_filename(infile)
     full_filename = f'{directory}/{infile}'
 
     m = row_info['m']
     n = row_info['n']
 
-    if n > 8:
+    if m*n > 36:
         return None
 
     print(f'Starting {infile}')
@@ -77,23 +77,25 @@ def get_info(infile, directory, num_samples, timeout, s, t):
     if num_solutions > 10**4:
         return None
     
-    total_samples, frequencies = get_unigen_frequencies(cnf_filename, num_solutions*10, timeout)
-    frequencies = [(frequency*num_solutions/(num_solutions*10)) for frequency in frequencies]
-    print(f'SUM: {sum(frequencies)}')
-    print(f'LEN: {len(frequencies)}')
+    total_samples, frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
+    frequencies = [(frequency*num_solutions/(total_samples)) for frequency in frequencies]
+    print(f'TOTAL SAMPLES: {total_samples}')
+    print(f'ALL SOLUTIONS FOUND? {len(frequencies) == num_solutions}')
 
     if len(frequencies) == 0:
         row_info['min_freq'] = -1
         row_info['max_freq'] = -1
+        row_info['average_freq'] = -1
     else:
         row_info['min_freq'] = min(frequencies)
         row_info['max_freq'] = max(frequencies)
+        row_info['average_freq'] = sum(frequencies)/len(frequencies)
 
     os.system(f'rm {cnf_filename}')
     
     return row_info
 
-def generate_info(files, directory, outfile, num_samples, timeout, s, t):
+def generate_info(files, directory, outfile, num_samples, timeout):
     metrics = ['filename', 'm', 'n', 'num_cell_clusters', 'num_mutation_clusters',
                 'num_variables', 'num_clauses', 'formula_gen_time', 'is_min', 'freq']
 
@@ -103,7 +105,7 @@ def generate_info(files, directory, outfile, num_samples, timeout, s, t):
         sorted_files = sorted(files, key=lambda a: parse_filename(a)['m'])
 
         for file in sorted_files:
-            row_info = get_info(file, directory, num_samples, timeout, s, t)
+            row_info = get_info(file, directory, num_samples, timeout)
             if row_info:
                 row = f'{file}'
                 for metric in metrics[1:-2]:
@@ -111,15 +113,19 @@ def generate_info(files, directory, outfile, num_samples, timeout, s, t):
                 
                 min_freq = row_info['min_freq']
                 max_freq = row_info['max_freq']
+                avg_freq = row_info['average_freq']
 
                 min_row = f'{row},min,{min_freq}'
-                max_row = f'{row},min,{max_freq}'
+                max_row = f'{row},max,{max_freq}'
+                avg_row = f'{row},avg,{avg_freq}'
 
                 print(min_row)
                 print(max_row)
+                print(avg_row)
 
                 ofile.write(f'{min_row}\n')
                 ofile.write(f'{max_row}\n')
+                ofile.write(f'{avg_row}\n')
 
     ofile.close()
 
@@ -141,26 +147,14 @@ if __name__=='__main__':
     parser.add_argument(
         '--samples',
         type=int,
-        default=10000,
+        default=1000000,
         help='number of samples to generate'
     )
     parser.add_argument(
         '--timeout',
         type=float,
-        default=60.0,
+        default=1200.0,
         help='number of samples to generate'
-    )
-    parser.add_argument(
-        '--s',
-        type=float,
-        default=0.8,
-        help='Ratio of cell clusters to m, number of cells in input'
-    )
-    parser.add_argument(
-        '--t',
-        type=float,
-        default=0.8,
-        help='Ratio of mutation clusters to n, number of mutations in input'
     )
 
     parser.set_defaults(debug=False)
@@ -175,4 +169,4 @@ if __name__=='__main__':
     if not os.path.exists(FORMULAS_DIRECTORY):
         os.makedirs(FORMULAS_DIRECTORY)
 
-    generate_info(files, directory, out_file, num_samples, args.timeout, args.s, args.t)
+    generate_info(files, directory, out_file, num_samples, args.timeout)

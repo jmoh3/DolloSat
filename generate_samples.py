@@ -24,7 +24,6 @@ import time
 import os 
 import argparse
 import platform
-# import memory_profiler
 
 QUICKSAMPLER = 1
 UNIGEN = 2

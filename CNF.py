@@ -48,7 +48,6 @@ class CNF:
     def set_true(self,lit):
         self.clauses.append([lit])
 
-
 #calculations
     def half_adder(self,a,b,result,carry):
         self.XOR(a,b,result)

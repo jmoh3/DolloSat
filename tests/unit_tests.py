@@ -179,9 +179,49 @@ class CheckFormula(unittest.TestCase):
         os.system(f'rm {tmp_formula_path}')
 
         self.assertEqual(num_sols, 6)
+    
+    # Input matrix of all 1s, 2 false positives allowed, 0 false negatives, all allowed losses
+    #
+    # All row permutations of the following 5 solutions are valid:
+    # 1 2   1 0   1 0   0 1   0 1   
+    # 2 1   2 1   1 2   2 1   1 2  
+    # 1 1 , 1 1 , 1 1 , 1 1 , 1 1
+    # 5*3! = 30 solutions
+    def test_more_fp(self):
+        get_cnf('tests/test_inputs/ones_3x2.txt', tmp_formula_path, 3, 2, None, 0, 2)
+        num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 30)
+    
+    # Input matrix is 4x4, clustered to 2x2 matrix, 2 false positives, 0 false negatives, all losses
+    #
+    # 2 solutions:
+    # 1 0  1 2
+    # 1 1, 1 1
+    def test_small_cluster(self):
+        get_cnf('tests/test_inputs/cluster_small.txt', tmp_formula_path, 2, 2, None, 0, 2)
+        num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 2)
+    
+    # A single forbidden matrix, no clustering allowed, 1 false positives and 1 false negatives allowed,
+    # no losses allowed.
+    #
+    # 2 solutions:
+    # 0 0  1 0
+    # 0 1  0 0
+    # 1 1, 1 1
+    def test_one_fn_one_fp_no_loss(self):
+        get_cnf('tests/test_inputs/simple_forbidden.txt', tmp_formula_path, 3, 2, 'tests/test_inputs/no_allowed_losses.txt', 1, 1)
+        num_sols = get_num_solutions_sharpSAT(sharpSAT_path, tmp_formula_path)
+        os.system(f'rm {tmp_formula_path}')
+
+        self.assertEqual(num_sols, 6)
 
 class CheckIndependentSupport(unittest.TestCase):
-    def test(self):
+    def test1(self):
         get_cnf('data/example.txt', tmp_formula_path, 4, 4, None, 2, 2)
         unigensampler_generator(tmp_formula_path, 'tmp.unigen', 100, 120)
 

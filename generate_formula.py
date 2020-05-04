@@ -15,7 +15,6 @@ $ python3 generate_formula.py --filename=INPUT_MATRIX_FILENAME
                             --s=NUM_CELL_CLUSTERS
                             --t=NUM_MUTATION_CLUSTERS
                             --allowed_losses=LOSSES_FILENAME
-                            --sampler=SAMPLER_TYPE
 
 Generates a boolean formula in CNF format that maps the matrix in INPUT_MATRIX_FILENAME
 to a smaller 1 dollo matrix with NUM_CELL_CLUSTERS rows and NUM_MUTATION_CLUSTERS where only losses
@@ -27,11 +26,6 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     """
     Writes a cnf formula for matrix specified in read_filename to write_filename using s
     rows and t columns for clustered matrix.
-
-    read_filename - file containing input matrix
-    write_filename - file to write formula to
-    s - number of rows in clustered matrix/cell clusters
-    t - number of columns in clustered matrix/mutation clusters
     """
     matrix = read_matrix(read_filename)
 
@@ -144,7 +138,7 @@ def get_cnf(read_filename, write_filename, s, t, losses_filename=None, fn=1, fp=
     os.system(f'rm {write_filename}.tmp')
 
     if return_num_vars_clauses:
-        return num_vars, clause_count
+        return F.var, clause_count
     else:
         return variables
 
@@ -219,12 +213,6 @@ if __name__ == '__main__':
         type=int,
         default=2,
         help='number of false positives'
-    )
-    parser.add_argument(
-        '--sampler',
-        type=int,
-        default=2,
-        help='1 to use Quicksampler, 2 to use Unigen.'
     )
     parser.add_argument(
         '--allowed_losses',

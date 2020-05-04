@@ -399,8 +399,9 @@ def encode_constraints(false_pos, false_neg, row_duplicates, col_duplicates,
         encode_at_most_k(false_pos_vars, false_pos_constraint, CNF_obj, N)
     
     false_neg_vars = [var for row in false_neg for var in row if var != 0]
-    N=math.ceil(math.log(len(false_neg_vars), 2)) # bits required to encode sum of fp variables
-    encode_at_most_k(false_neg_vars, false_neg_constraint, CNF_obj, N)
+    if (len(false_neg_vars) > 0):
+        N=math.ceil(math.log(len(false_neg_vars), 2)) # bits required to encode sum of fp variables
+        encode_at_most_k(false_neg_vars, false_neg_constraint, CNF_obj, N)
     
     N=math.ceil(math.log(len(row_duplicates), 2))
     encode_eq_k(row_duplicates, row_dup_constraint, CNF_obj, N)
