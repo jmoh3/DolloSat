@@ -3,11 +3,11 @@ import time
 import os 
 import argparse 
 import math
+import pandas as pd
 
 from generate_formula import get_cnf
 from generate_samples import unigensampler_generator
-from utils import get_matrix_info, parse_filename
-from count_num_solutions import get_num_solutions_sharpSAT, get_num_solutions
+from utils import get_matrix_info, parse_filename, get_num_solutions_sharpSAT, parse_allowed_losses
 
 total_solutions_path = 'total_solutions.csv'
 FORMULAS_DIRECTORY = 'data/formulas'
@@ -47,7 +47,7 @@ def get_info(infile, directory, num_samples, timeout):
     m = row_info['m']
     n = row_info['n']
 
-    if m*n > 36:
+    if m > 10 or n > 10:
         return None
 
     print(f'Starting {infile}')
@@ -63,19 +63,20 @@ def get_info(infile, directory, num_samples, timeout):
     row_info['num_cell_clusters'] = cell_clusters
     row_info['num_mutation_clusters'] = mutation_clusters
 
-    expected_fp = math.floor(num_ones * fp_rate)
-    expected_fn = math.floor(num_zeroes * fn_rate)
+    expected_fp = math.ceil(num_ones * fp_rate)
+    expected_fn = math.ceil(num_zeroes * fn_rate)
+
+    # allowed_losses = parse_allowed_losses(infile, directory)
+    row_info['use_loss'] = False
 
     start = time.time()
     row_info['num_variables'], row_info['num_clauses'] = get_cnf(full_filename, cnf_filename, cell_clusters,
-                                                                mutation_clusters, None, expected_fn, expected_fp, True)
+                                                                mutation_clusters, None,
+                                                                expected_fn, expected_fp, True)
     row_info['formula_gen_time'] = time.time() - start
 
     num_solutions = get_num_solutions_sharpSAT(sharpSAT_path, cnf_filename)
     print(f'Total solutions: {num_solutions}')
-
-    if num_solutions > 10**4:
-        return None
     
     total_samples, frequencies = get_unigen_frequencies(cnf_filename, num_samples, timeout)
     frequencies = [(frequency*num_solutions/(total_samples)) for frequency in frequencies]
@@ -95,37 +96,43 @@ def get_info(infile, directory, num_samples, timeout):
     
     return row_info
 
-def generate_info(files, directory, outfile, num_samples, timeout):
+def generate_info(files, directory, outfilename, num_samples, timeout):
     metrics = ['filename', 'm', 'n', 'num_cell_clusters', 'num_mutation_clusters',
-                'num_variables', 'num_clauses', 'formula_gen_time', 'is_min', 'freq']
+                'num_variables', 'num_clauses', 'formula_gen_time', 'is_min', 'freq', 'use_loss']
 
-    with open(outfile, 'w') as ofile:
+    if os.path.exists(outfilename) and os.path.isfile(outfilename):
+        # df = pd.read_csv(outfilename)
+        # seen = set(df['filename'].values)
+        # files = [file for file in files if file not in seen]
+        ofile = open(outfilename, 'a+')
+    else:
+        ofile = open(outfilename, 'w')
         ofile.write(','.join(metrics) + '\n')
 
-        sorted_files = sorted(files, key=lambda a: parse_filename(a)['m'])
+    sorted_files = sorted(files, key=lambda a: parse_filename(a)['m']*parse_filename(a)['n'])
 
-        for file in sorted_files:
-            row_info = get_info(file, directory, num_samples, timeout)
-            if row_info:
-                row = f'{file}'
-                for metric in metrics[1:-2]:
-                    row = f'{row},{row_info[metric]}'
+    for file in sorted_files:
+        row_info = get_info(file, directory, num_samples, timeout)
+        if row_info:
+            row = f'{file}'
+            for metric in metrics[1:-2]:
+                row = f'{row},{row_info[metric]}'
                 
-                min_freq = row_info['min_freq']
-                max_freq = row_info['max_freq']
-                avg_freq = row_info['average_freq']
+            min_freq = row_info['min_freq']
+            max_freq = row_info['max_freq']
+            avg_freq = row_info['average_freq']
 
-                min_row = f'{row},min,{min_freq}'
-                max_row = f'{row},max,{max_freq}'
-                avg_row = f'{row},avg,{avg_freq}'
+            min_row = f'{row},min,{min_freq}'
+            max_row = f'{row},max,{max_freq}'
+            avg_row = f'{row},avg,{avg_freq}'
 
-                print(min_row)
-                print(max_row)
-                print(avg_row)
+            print(min_row)
+            print(max_row)
+            print(avg_row)
 
-                ofile.write(f'{min_row}\n')
-                ofile.write(f'{max_row}\n')
-                ofile.write(f'{avg_row}\n')
+            ofile.write(f'{min_row}\n')
+            ofile.write(f'{max_row}\n')
+            ofile.write(f'{avg_row}\n')
 
     ofile.close()
 
@@ -135,7 +142,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/nx5/flip',
+        default='data/big_data/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(

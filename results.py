@@ -35,9 +35,6 @@ def get_info(infile, directory, num_samples, timeout, approxMC, parse_losses):
     m = row_info['m']
     n = row_info['n']
 
-    if n > 8:
-        return None
-
     print(f'Starting {infile}')
 
     fp_rate = row_info['fp_rate']
@@ -51,8 +48,8 @@ def get_info(infile, directory, num_samples, timeout, approxMC, parse_losses):
     row_info['num_cell_clusters'] = cell_clusters
     row_info['num_mutation_clusters'] = mutation_clusters
 
-    expected_fp = math.floor(num_ones * fp_rate)
-    expected_fn = math.floor(num_zeroes * fn_rate)
+    expected_fp = math.ceil(num_ones * fp_rate)
+    expected_fn = math.ceil(num_zeroes * fn_rate)
 
     if parse_losses:
         allowed_losses = parse_allowed_losses(infile, directory)
@@ -115,7 +112,7 @@ if __name__=='__main__':
     parser.add_argument(
         '--dir',
         type=str,
-        default='data/big_data/flip',
+        default='data/bigger_data/flip',
         help='directory of input matrices to generate metrics for'
     )
     parser.add_argument(

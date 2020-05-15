@@ -360,29 +360,41 @@ def to_bin_list(val,n_bits,CNF_obj):
 
 # credit to:
 # https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
-def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):    
-    constraint_bin = to_bin_list(constraint, N, CNF_obj)
+def encode_at_most_k(vars_to_sum, constraint, CNF_obj, N):
+    to_sum = [[var] for var in vars_to_sum]
 
-    Sum = [CNF_obj.false() for k in range(N)]
-    for q in vars_to_sum:
-        tmp = [CNF_obj.false() for f in range(N)]
-        tmp[0] = q
-        Sum = CNF_obj.add(Sum,tmp)
-    
-    CNF_obj.leq(Sum, constraint_bin)
+    while len(to_sum) > 1:
+        result = []
+        for i in range(0, len(to_sum) - (len(to_sum) % 2), 2):
+            to_sum[i].append(CNF_obj.false()) # pad by 1
+            to_sum[i+1].append(CNF_obj.false()) # pad by 1
+            result.append(CNF_obj.add(to_sum[i], to_sum[i+1]))
+        if len(to_sum) % 2 != 0:
+            to_sum[-1].append(CNF_obj.false())
+            result.append(to_sum[-1])
+        to_sum = result
+
+    constraint_binary = to_bin_list(constraint, len(to_sum[0]), CNF_obj)
+    CNF_obj.leq(to_sum[0], constraint_binary)
 
 # credit to:
 # https://github.com/elkebir-group/UniPPM/blob/dd650648c7b04cfa083ff0af3c4f1e0f926854ba/PPM2SAT.py#L143
 def encode_eq_k(vars_to_sum, constraint, CNF_obj, N):
-    constraint_bin = to_bin_list(constraint, N, CNF_obj)
+    to_sum = [[var] for var in vars_to_sum]
 
-    Sum = [CNF_obj.false() for k in range(N) ]
-    for q in vars_to_sum:
-        tmp = [CNF_obj.false() for f in range(N)]
-        tmp[0] = q
-        Sum = CNF_obj.add(Sum,tmp)
+    while len(to_sum) > 1:
+        result = []
+        for i in range(0, len(to_sum) - (len(to_sum) % 2), 2):
+            to_sum[i].append(CNF_obj.false()) # pad by 1
+            to_sum[i+1].append(CNF_obj.false()) # pad by 1
+            result.append(CNF_obj.add(to_sum[i], to_sum[i+1]))
+        if len(to_sum) % 2 != 0:
+            to_sum[-1].append(CNF_obj.false())
+            result.append(to_sum[-1])
+        to_sum = result
     
-    CNF_obj.eq(Sum,constraint_bin)
+    constraint_binary = to_bin_list(constraint, len(to_sum[0]), CNF_obj)
+    CNF_obj.eq(to_sum[0], constraint_binary)
 
 def encode_none(vars, CNF_obj):
     for var in vars:

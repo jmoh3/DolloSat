@@ -30,7 +30,7 @@ QUICKSAMPLER = 1
 UNIGEN = 2
 
 def unigensampler_generator(infile, outfile, num_samples, timeout):
-    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} --verbosity=0 {infile} {outfile}'
+    unigen_cmd = f'./samplers/unigen --samples={num_samples} --maxTotalTime={timeout} --verbosity=0  --threads=20 {infile} {outfile}'
 
     os.system(unigen_cmd)
 
