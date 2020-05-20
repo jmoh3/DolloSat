@@ -83,12 +83,12 @@ def get_matrix_info(matrix_filename, directory):
                 ones_count += 1
     
     data_dir = '/'.join(directory.split('/')[:-1])
-    perfect_phylogeny_filename = '_'.join(matrix_filename.split('_')[:3])
+    dollo_filename = '_'.join(matrix_filename.split('_')[:5])
 
-    perfect_phylogeny_full_filename = f'{data_dir}/perfect_phylogeny/{perfect_phylogeny_filename}.txt'
-    perfect_phylogeny_matrix = read_matrix(perfect_phylogeny_full_filename)
+    dollo_full_filename = f'{data_dir}/k_dollo/{dollo_filename}.B'
+    dollo_matrix = read_matrix(dollo_full_filename)
 
-    row_is_duplicate, col_is_duplicate = cluster_matrix(perfect_phylogeny_matrix)
+    row_is_duplicate, col_is_duplicate = cluster_matrix(dollo_matrix)
 
     num_row_duplicates = 0
     for elem in row_is_duplicate:
